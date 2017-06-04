@@ -1,0 +1,11 @@
+;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
+
+
+
+- processing/request model
+ - view request is received and placed on a queue
+ - shell (or controller wrapper) pop queue and calls controller
+  - option for multiple ruby threads in wrapper
+ - controller calls model as needed and waits for a response
+  - model must be thread safe
+  
