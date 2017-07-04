@@ -1,6 +1,21 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
+- WAB::Impl::Data
 
+- contribute
+ - coordinate before coding to avoid duplication or mismatch in 
+ - branch off of dev
+ - pr
+ - unit tests with minitest
+
+- model
+ - implement with memory cache (later write to files)
+ - unit tests
+- stdio shell (external glue)
+ - json in and out
+  - define messages in opo
+  
+ - controller API for verification (mock that makes straight through model calls)
 
 - processing/request model
  - view request is received and placed on a queue
