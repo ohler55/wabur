@@ -1,5 +1,7 @@
 # WABuR (Web Application Builder using Ruby)
 
+[![Build Status](https://img.shields.io/travis/ohler55/wabur/develop.svg)](http://travis-ci.org/ohler55/wabur?branch=develop) ![Gem](https://img.shields.io/gem/v/wabur.svg) ![Gem](https://img.shields.io/gem/dt/wabur.svg)
+
 Ruby is a great language but for performance C is a better alternative. It is
 possible to get the best of both as evident with [Oj](http://www.ohler.com/oj)
 and [Ox](http://www.ohler.com/ox). C by itself allowed
@@ -43,16 +45,28 @@ C shell that handles HTTP and data storage.
 
 [Continue reading ...](pages/Architecture.md)
 
-## Participate
+## Participate and Contribute
 
 If you like the idea and want to help out or become a core developer on the
 project send me an [email](mailto:peter@ohler.com). Get in on the ground floor
 and lets make something awesome together.
+
+### Guidelines
+
+These are the simple guidelines for contrinuting.
+
+1. Coordinate with me first before getting started to avoid duplication of
+   effort or implementing something in conflict with the plans.
+
+2. Branch of the develop branch and submit a PR.
+
+3. Write unit tests.
+
+4. Write straight forward, clean, and simple code. No magic stuff, no monkey
+   patching Ruby core classes, and no inheriting from core classes.
 
 ## Planning
 
 The plan is informal and high level until more details are defined.
 
 [Details ...](pages/Plan.md)
-
-  

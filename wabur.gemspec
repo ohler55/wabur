@@ -22,4 +22,10 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'wabur'
 
+  s.add_runtime_dependency 'oj', '>= 3.3.0'
+
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
+  s.add_development_dependency 'minitest', '~> 5'
+  
 end

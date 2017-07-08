@@ -42,5 +42,20 @@ module WAB
       @controllers[type] = controller
     end
 
+    # Create and return a new data instance with the provided initial value.
+    # The value must be a Hash or Array. The members of the Hash or Array must
+    # be nil, boolean, String, Integer, Float, BigDecimal, Array, Hash, Time,
+    # URI::HTTP, or WAB::UUID. Keys to Hashes must be Symbols.
+    #
+    # If the repair flag is true then an attempt will be made to fix the value
+    # by replacing String keys with Symbols and calling to_h or to_s on
+    # unsupported Objects.
+    #
+    # value:: initial value
+    # repair:: flag indicating invalid value should be repaired if possible
+    def data(value=nil, repair=false)
+      raise NotImplementedError.new
+    end
+
   end # Shell
 end # WAB
