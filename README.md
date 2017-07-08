@@ -58,7 +58,7 @@ These are the simple guidelines for contrinuting.
 1. Coordinate with me first before getting started to avoid duplication of
    effort or implementing something in conflict with the plans.
 
-2. Branch of the develop branch and submit a PR.
+2. Branch off the develop branch and submit a PR.
 
 3. Write unit tests.
 
