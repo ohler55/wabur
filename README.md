@@ -2,30 +2,30 @@
 
 [![Build Status](https://img.shields.io/travis/ohler55/wabur/develop.svg)](http://travis-ci.org/ohler55/wabur?branch=develop) ![Gem](https://img.shields.io/gem/v/wabur.svg) ![Gem](https://img.shields.io/gem/dt/wabur.svg)
 
-Ruby is a great language but for performance C is a better alternative. It is
+Ruby is a great language but for performance C is the better alternative. It is
 possible to get the best of both as evident with [Oj](http://www.ohler.com/oj)
 and [Ox](http://www.ohler.com/ox). C by itself allowed
-[Piper](http://piperpushcache.com), a fast push web server to be developed and
+[Piper](http://piperpushcache.com), a fast push web server to be developed, and
 is being used to develop [OpO](http://opo.technology) a high performance graph
-and JSON database. This project takes from all of those projects for a hight
+and JSON database. This project takes from all of those projects for a high
 performance Ruby web framework.
 
-Ruby on Rails has made Ruby main stream. While RoR is fine for some
+Ruby on Rails has made Ruby mainstream. While RoR is fine for some
 applications there are others that might be better served with an alternative.
 This project was started as an alternative to Ruby on Rails with a focus on
-performance and easy of use.
+performance and ease of use.
 
-Why develop an alternative to Rails? Rails popularity has been waning. It is
-still huge but not as popular as it used to be. RoR is not going away any time
-soon but for some applications alternatives are needed.
+Why develop an alternative to Rails? The popularity of Rails has been waning.
+It is still huge but not as popular as it used to be. RoR is not going away
+any time soon but for some applications, alternatives are needed.
 
 ## Goals
 
-Lets start with the assumption that we want to continue to use Ruby. The goal
-of this project is to provide a high performance, easy to use, and fully
+Lets start with the assumption that we want to continue using Ruby. The goal
+of this project is to provide a high performance, easy to use, and a fully
 featured web framework with Ruby at the core. By keeping the core, the
-business logic in Ruby but allowing options for other parts to be in different
-languages the best use of each can be utilized.
+business logic, in Ruby but allowing options for other parts to be in different
+languages, the best of each can be utilized.
 
 Targets are a throughput of 100K page fetches per second at a latency of no
 more than 1 millisecond on a desktop machine. That is more than an order of
@@ -47,13 +47,13 @@ C shell that handles HTTP and data storage.
 
 ## Participate and Contribute
 
-If you like the idea and want to help out or become a core developer on the
-project send me an [email](mailto:peter@ohler.com). Get in on the ground floor
+If you like the idea and want to help out, or become a core developer on the
+project, send me an [email](mailto:peter@ohler.com). Get in on the ground floor
 and lets make something awesome together.
 
 ### Guidelines
 
-These are the simple guidelines for contrinuting.
+These are the simple guidelines for contributing.
 
 1. Coordinate with me first before getting started to avoid duplication of
    effort or implementing something in conflict with the plans.
