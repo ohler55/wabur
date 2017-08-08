@@ -5,29 +5,22 @@ module WAB
   # class is also the default Ruby version of the shell that can be used for
   # development and small systems.
   class Shell
+    # Returns the view instance that can be used for pushing data to a view.
+    attr_reader :view
+
+    # Returns the model instance that can be used to get and modify data in
+    # the data store.
+    attr_reader :model
+
+    # Returns the path where a data type is located. The default is 'kind'.
+    attr_reader :type_key
 
     # Sets up the shell with a view, model, and type_key.
-    def initialize(view, model, type_key='kind')
+    def initialize(view, model, type_key = 'kind')
       @view = view
       @model = model
       @controllers = {}
       @type_key = type_key
-    end
-
-    # Returns the view instance that can be used for pushing data to a view.
-    def view()
-      @view
-    end
-
-    # Returns the model instance that can be used to get and modify data in
-    # the data store.
-    def model()
-      @model
-    end
-
-    # Returns the path where a data type is located. The default is 'kind'.
-    def type_key()
-      @type_key
     end
 
     # Register a controller for a named type.
