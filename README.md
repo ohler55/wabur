@@ -1,6 +1,7 @@
 # WABuR (Web Application Builder using Ruby)
 
 [![Build Status](https://img.shields.io/travis/ohler55/wabur/develop.svg)](http://travis-ci.org/ohler55/wabur?branch=develop) ![Gem](https://img.shields.io/gem/v/wabur.svg) ![Gem](https://img.shields.io/gem/dt/wabur.svg)
+[![Windows Build status](https://img.shields.io/appveyor/ci/ohler55/wabur/develop.svg?label=Windows%20build)](https://ci.appveyor.com/project/ohler55/wabur/branch/develop)
 
 Ruby is a great language but for performance C is the better alternative. It is
 possible to get the best of both as evident with [Oj](http://www.ohler.com/oj)
