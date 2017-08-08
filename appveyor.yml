@@ -1,0 +1,19 @@
+build: off
+
+install:
+  - SET PATH=C:\Ruby%RUBY_SERIES%\bin
+  - bundle install --retry 5 --jobs=%NUMBER_OF_PROCESSORS% --clean --path vendor\bundle
+
+environment:
+  matrix:
+    - RUBY_SERIES: "24"
+
+platform:
+  - x86
+  - x64
+
+test_script:
+  - ruby --version
+  - gem --version
+  - bundler --version
+  - bundle exec ruby test/impl_test.rb
