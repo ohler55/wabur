@@ -7,6 +7,7 @@ install:
 environment:
   matrix:
     - RUBY_SERIES: "24"
+    - RUBY_SERIES: "23"
 
 platform:
   - x86
