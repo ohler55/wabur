@@ -1,6 +1,9 @@
 
+lib = File.expand_path('lib', __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'date'
-require File.join(File.dirname(__FILE__), 'lib/wab/version')
+require 'wab/version'
 
 Gem::Specification.new do |s|
   s.name = "wabur"
