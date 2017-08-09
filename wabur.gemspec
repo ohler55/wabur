@@ -1,6 +1,6 @@
 
 require 'date'
-require File.join(File.dirname(__FILE__), 'lib/wab/version')
+require File.join(__dir__, 'lib/wab/version')
 
 Gem::Specification.new do |s|
   s.name = "wabur"

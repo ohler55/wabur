@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
-$: << File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), 'lib')
-$: << File.join(File.dirname(File.dirname(File.dirname(File.expand_path(__FILE__)))), 'oj', 'ext')
-$: << File.join(File.dirname(File.dirname(File.dirname(File.expand_path(__FILE__)))), 'oj', 'lib')
+$: << __dir__
+$: << File.join(File.dirname(__dir__), 'lib')
+$: << File.join(File.dirname(File.dirname(__dir__)), 'oj', 'ext')
+$: << File.join(File.dirname(File.dirname(__dir__)), 'oj', 'lib')
 
 require 'minitest'
 require 'minitest/autorun'

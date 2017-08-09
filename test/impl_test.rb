@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
-$: << File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), 'lib')
+$: << __dir__
+$: << File.join(File.dirname(__dir__), 'lib')
 
 require 'minitest'
 require 'minitest/autorun'
