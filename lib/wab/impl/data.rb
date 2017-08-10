@@ -238,7 +238,7 @@ module WAB
           value.each { |v|
             validate_value(v)
           }
-        elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
           # valid value
         else
           raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
@@ -298,7 +298,7 @@ module WAB
           old.each { |v|
             value << fix_value(v)
           }
-        elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
           # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
@@ -388,7 +388,7 @@ module WAB
             Float == value_class ||
             String == value_class
             c = value
-          elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+          elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
             c = value
           else
             c = value.clone

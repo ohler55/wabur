@@ -184,10 +184,19 @@ module WAB
           TrueClass == value_class ||
           FalseClass == value_class ||
           Integer == value_class ||
-          Float == value_class ||
-          String == value_class
+          Float == value_class
         x << value
-      elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+      elsif String == value_class
+        if 0 < value.length && '\'' == value[0] 
+          x << value[1..-1]
+        elsif /^-?\d+$/.match?(value)
+          x << value.to_i
+        elsif /^-?\d*\.?\d+([eE][-+]?\d+)?$/.match?(value)
+          x << value.to_f
+        end
+        # TBD detect other types UUID, HTTP, Time
+        
+      elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
         x << value
       else
         x << value.to_s
