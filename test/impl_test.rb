@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+$: << __dir__
+
 require 'minitest'
 require 'minitest/autorun'
 
-require_relative '../lib/wab'
-require_relative 'data_test'
+require 'wab/impl'
 
-$shell = ::WAB::Impl::Shell.new(nil, nil)
-
+require 'data_test'

@@ -1,13 +1,16 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+$: << __dir__
+$: << File.join(File.dirname(File.expand_path(__dir__)), 'lib')
+
 require 'minitest'
 require 'minitest/autorun'
 
 require 'wab'
 require 'wab/impl'
 
-$shell = ::WAB::Impl::Shell.new(nil, nil) if $shell.nil?
+$shell = ::WAB::Impl::Shell.new() if $shell.nil?
 
 class DataTest < Minitest::Test
 
@@ -34,20 +37,21 @@ class DataTest < Minitest::Test
                       a: [],
                       h: {},
                     })
+    # downcase to match Ruby 2.3 and 2.4 which encode BigDecimal differently.
     assert_equal(%|{
   "boo":true,
   "n":null,
   "num":7,
   "float":7.654,
   "str":"a string",
-  "t":"2017-01-05T15:04:33.123456789Z",
+  "t":"2017-01-05t15:04:33.123456789z",
   "big":0.6321e2,
   "uri":"http://opo.technology/sample",
   "uuid":"b0ca922d-372e-41f4-8fea-47d880188ba3",
   "a":[],
   "h":{}
 }
-|, d.json(2))
+|, d.json(2).downcase)
   end
 
   def test_validate_keys

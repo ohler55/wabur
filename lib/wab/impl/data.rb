@@ -21,10 +21,10 @@ module WAB
       #
       # value:: initial value
       # repair:: flag indicating invalid value should be repaired if possible
-      def initialize(value, repair)
+      def initialize(value, repair, check=true)
         if repair
           value = fix(value)
-        else
+        elsif check
           validate(value)
         end
         @root = value
@@ -35,23 +35,28 @@ module WAB
       # array of path node identifiers. For example, child.grandchild is the
       # same as ['child', 'grandchild'].
       def get(path)
-        path = path.to_s.split('.') unless path.is_a?(Array)
-        node = @root
-        path.each { |key|
-          if node.is_a?(Hash)
-            node = node[key.to_sym]
-          elsif node.is_a?(Array)
-            i = key.to_i
-            if 0 == i && '0' != key && 0 != key
+        if path.is_a?(Symbol)
+          node = @root[path] 
+        else
+          path = path.to_s.split('.') unless path.is_a?(Array)
+          node = @root
+          path.each { |key|
+            if node.is_a?(Hash)
+              node = node[key.to_sym]
+            elsif node.is_a?(Array)
+              i = key.to_i
+              if 0 == i && '0' != key && 0 != key
+                node = nil
+                break
+              end
+              node = node[i]
+            else
               node = nil
               break
             end
-            node = node[i]
-          else
-            node = nil
-            break
-          end
-        }
+          }
+        end
+        return Data.new(node, false, false) if node.is_a?(Hash) || node.is_a?(Array)
         node
       end
       
@@ -70,7 +75,9 @@ module WAB
       # repair:: flag indicating invalid value should be repaired if possible
       def set(path, value, repair=false)
         raise StandardError.new("path can not be empty.") if path.empty?
-        if repair
+        if value.is_a?(::WAB::Data)
+          value = value.native
+        elsif repair
           value = fix_value(value)
         else
           validate_value(value)
@@ -177,6 +184,14 @@ module WAB
         Oj.dump(@root, mode: :wab, indent: indent)
       end
 
+      # Detects and converts strings to Ruby objects following the rules:
+      # Time:: "2017-01-05T15:04:33.123456789Z", zulu only
+      # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
+      # URI:: "http://opo.technology/sample", HTTP only
+      def detect()
+        # TBD
+      end
+
       private
 
       # Raise an exception if the value is not a suitable data element. If the
@@ -223,6 +238,8 @@ module WAB
           value.each { |v|
             validate_value(v)
           }
+        elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+          # valid value
         else
           raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
         end
@@ -281,6 +298,8 @@ module WAB
           old.each { |v|
             value << fix_value(v)
           }
+        elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+          # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
           raise StandardError.new("Data values must be either a Hash or an Array") unless value.is_a?(Hash)
@@ -361,7 +380,19 @@ module WAB
           c = []
           value.each { |v| c << clone_value(v) }
         else
-          c = value.clone
+          value_class = value.class
+          if value.nil? ||
+            TrueClass == value_class ||
+            FalseClass == value_class ||
+            Integer == value_class ||
+            Float == value_class ||
+            String == value_class
+            c = value
+          elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+            c = value
+          else
+            c = value.clone
+          end
         end
         c
       end

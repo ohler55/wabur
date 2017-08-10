@@ -1,6 +1,20 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
-- WAB::Impl::Data
+- use WAB specific exceptions
+
+- AsyncController
+
+- detect branch
+ - Data.detect()
+  - change strings to UUID, Time, URI::HTTP
+
+ 
+- error message should have a :code and an :error, not :message
+
+ 
+- Wab::Sample
+ - includes a main
+
 
 - contribute
  - coordinate before coding to avoid duplication or mismatch in 

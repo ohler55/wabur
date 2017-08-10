@@ -9,7 +9,7 @@ module WAB
     class Shell < ::WAB::Shell
 
       # Sets up the shell with a view, model, and type_key.
-      def initialize(view, model, type_key='kind')
+      def initialize(type_key='kind', path_pos=0)
         super
       end
 

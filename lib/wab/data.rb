@@ -85,6 +85,14 @@ module WAB
       raise NotImplementedError.new
     end
 
+    # Detects and converts strings to Ruby objects following the rules:
+    # Time:: "2017-01-05T15:04:33.123456789Z", zulu only
+    # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
+    # URI:: "http://opo.technology/sample", HTTP only
+    def detect()
+      raise NotImplementedError.new
+    end
+
     private
 
     # This method is included only to raise an error if an attempt is made to

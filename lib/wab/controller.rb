@@ -7,29 +7,22 @@ module WAB
   #
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
-    attribute_accessor :shell
-    attribute_accessor :view
-    attribute_accessor :model
+    attr_accessor :shell
 
     # Create a instance.
-    def initialize()
-      @shell = nil
-      @view = shell.view
-      @model = shell.model
-      # TBD
+    def initialize(shell, async=false)
+      @shell = shell
+      # TBD handle async
     end
 
-    # Handler for paths that do not match the REST pattern. Only called on the
-    # default controller.
+    # Handler for paths that do not match the REST pattern or for unregistered
+    # types. Only called on the default controller.
     #
     # Processing result are passed back to the view which forward the result
-    # on to the requester. The result, is not nil, should be a Data instance.
+    # on to the requester. The result, if not nil, should be a Data instance.
     #
-    # path:: identifies operation and additional data in a / delimited
-    #        format. It is up to the controller to decide how to process the
-    #        request.
     # data:: data to be processed
-    def handle(path, data)
+    def handle(data)
       nil
     end
 
@@ -38,63 +31,90 @@ module WAB
     # they will not be called.
     private
 
-    # Should create a new data object.
+    # Create a new data object. If a query is provided it is treated as a
+    # check against an existing object with the same key/value pairs.
     #
-    # The return should be the identifier for the object created or if
-    # +with_data+ is true a Data object with an +id+ attribute and a +data+
-    # attribute that contains the full object details.
+    # The reference to the object created is returned on success.
     #
     # On error an Exception should be raised.
     #
+    # path:: array of tokens in the path.
+    # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    # with_data:: flag indicating the response should include the new object
-    def create(data, with_data=false) # :doc:
-      # TBD implement the default behavior as an example or starting point
+    def create(path, query, data) # :doc:
+      tql = { }
+      kind = path[@shell.path_pos]
+      if query.is_a?(Hash) && 0 < query.size
+        where = ['AND']
+        where << form_where_eq(@shell.type_key, kind)
+        query.each_pair { |k,v| where << form_where_eq(k, v) }
+        tql[:where] = where
+      end
+      tql[:insert] = data.native
+      shell_query(tql, kind, 'create')
     end
 
-    # Should return the object with the +id+ provided.
+    # Return the objects according to the path and query arguments.
     #
-    # The function should return the result of a fetch on the model with the
-    # provided +id+. The result should be a Data instance which is either the
-    # object data or a wrapper that include the object id in an +id+ attribute
-    # and the object data itself in a +data+ attribute depending on the value
-    # of the +with_id+ argument.
+    # If the path includes an object reference then that object is returned as
+    # the only member of the results list of a WAB::Data returned.
     #
-    # id:: identifier of the object
-    # with_id:: if true wrap the object data with an envelope that includes
-    #           the id as well as the object data.
-    def read(id, with_id=false) # :doc:
-      # TBD implement the default behavior as an example or starting point
-    end
-
-    # Should return the objects with attributes matching the +attrs+ argument.
+    # If there is no object reference in the path then the attributes are used
+    # to find matching objects. The objects that have the same key/value pairs
+    # are returned.
     #
-    # The return should be a Hash where the keys are the matching object
-    # identifiers and the value are the object data. An empty Hash or nil
-    # indicates there were no matches.
-    #
-    # attrs:: a Hash with keys matching paths into the target objects and value
-    #         equal to the target attribute values. A path can be an array of
-    #         keys used to walk a path to the target or a +.+ delimited set of
-    #         keys.
-    def read_by_attrs(attrs) # :doc:
-      # TBD implement the default behavior as an example or starting point
+    # path:: array of tokens in the path.
+    # query:: query parameters from a URL as a Hash with keys matching paths
+    #         into the target objects and value equal to the target attribute
+    #         values. A path can be an array of keys used to walk a path to
+    #         the target or a +.+ delimited set of keys.
+    def read(path, query) # :doc:
+      if @shell.path_pos + 2 == path.length # has an object reference in the path
+        ref = path[@shell.path_pos + 1].to_i
+        obj = @shell.get(ref)
+        obj = obj.native if obj.is_a?(::WAB::Data)
+        return @shell.data({ code: 0, results: [ { id: ref, data: obj } ]})
+      end
+      tql = { }
+      kind = path[@shell.path_pos]
+      # No id so must be either a simple query by attribute or a list.
+      if query.is_a?(Hash) && 0 < query.size
+        where = ['AND']
+        where << form_where_eq(@shell.type_key, kind)
+        query.each_pair { |k,v| where << form_where_eq(k, v) }
+      else
+        where = form_where_eq(@shell.type_key, kind)
+      end
+      tql[:where] = where
+      tql[:select] = { id: '$ref', data: '$' }
+      shell_query(tql, kind, 'read')
     end
 
     # Replaces the object data for the identified object.
     #
-    # The return should be the identifier for the object updated or if
-    # +with_data+ is true a Data object with an +id+ attribute and a +data+
-    # attribute that contains the full object details. Note that depending on
-    # the implemenation the identifier may change as a result of an update.
+    # The return should be the identifiers for the object updated.
     #
     # On error an Exception should be raised.
     #
-    # id:: identifier of the object to be replaced
+    # path:: array of tokens in the path.
+    # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    # with_data:: flag indicating the response should include the new object
-    def update(id, data, with_data=false) # :doc:
-      # TBD implement the default behavior as an example or starting point
+    def update(path, query, data) # :doc:
+      tql = { }
+      kind = path[@shell.path_pos]
+      if @shell.path_pos + 2 == path.length # has an object reference in the path
+        tql[:where] = path[@shell.path_pos + 1].to_i
+      elsif query.is_a?(Hash) && 0 < query.size
+        where = ['AND']
+        where << form_where_eq(@shell.type_key, kind)
+        query.each_pair { |k,v| where << form_where_eq(k, v) }
+        tql[:where] = where
+      else
+        # TBD use WAB exception
+        raise Exception.new("update on all #{kind} not allowed.")
+      end
+      tql[:update] = data.native
+      shell_query(tql, kind, 'update')
     end
 
     # Delete the identified object.
@@ -102,54 +122,30 @@ module WAB
     # On success the deleted object identifier is returned. If the object is
     # not found then nil is returned. On error an Exception should be raised.
     #
-    # id:: identifier of the object to be deleted
-    def delete(id) # :doc:
-      # TBD implement the default behavior as an example or starting point
-    end
-
-    # Delete all object that match the set of provided attribute values.
+    # If no +id+ is present in the path then the return should be a Hash where
+    # the keys are the matching object identifiers and the value are the
+    # object data. An empty Hash or nil indicates there were no matches.
     #
-    # An array of deleted object identifiers should be returned.
-    #
-    # attrs:: a Hash with keys matching paths into the target objects and value
-    #         equal to the target attribute values. A path can be an array of
-    #         keys used to walk a path to the target or a +.+ delimited set of
-    #         keys.
-    def delete_by_attrs(attrs) # :doc:
-      # TBD implement the default behavior as an example or starting point
-    end
-
-    # Return a Hash of all the objects of the type associated with the
-    # controller.
-    #
-    # The return hash keys should be the identifiers of the objects and the
-    # the values should be either nil or the object data if the +with_data+
-    # flag is true. If the response will be larger than supported one of the
-    # keys should be the empty string which indicated additional instance
-    # exists and were not provided.
-    #
-    # Note that this could return a very large set of data. If the number of
-    # instances in the type is large the +search()+ might be more appropriate
-    # as it allows for paging of results and sorting.
-    #
-    # with_data:: flag indicating the return should include object data
-    def list(with_data=false) # :doc:
-      # TBD implement the default behavior as an example or starting point
-    end
-
-    # Search using a TQL SELECT.
-    #
-    # The provided TQL[http://opo.technology/pages/doc/tql/index.html] can be
-    # either the JSON syntax or the friendly syntax. The call exists on the
-    # controller to allow filtering and permission checking before
-    # execution. Only the default controller is expected to provide a public
-    # version of this method.
-    #
-    # query:: query
-    # format:: can be one of :TQL or :TQL_JSON. The :GraphQL option is
-    #          reserved for the future.
-    def search(query, format=:TQL) # :doc:
-      # TBD implement the default behavior as an example or starting point
+    # path:: identifier of the object to be deleted
+    # query:: query parameters from a URL as a Hash with keys matching paths
+    #         into the target objects and value equal to the target attribute
+    #         values. A path can be an array of keys used to walk a path to
+    #         the target or a +.+ delimited set of keys.
+    def delete(path, query) # :doc:
+      tql = { }
+      kind = path[@shell.path_pos]
+      if @shell.path_pos + 2 == path.length # has an object reference in the path
+        tql[:where] = path[@shell.path_pos + 1].to_i
+      elsif query.is_a?(Hash) && 0 < query.size
+        where = ['AND']
+        where << form_where_eq(@shell.type_key, kind)
+        query.each_pair { |k,v| where << form_where_eq(k, v) }
+        tql[:where] = where
+      else
+        tql[:where] = form_where_eq(@shell.type_key, kind)
+      end
+      tql[:delete] = nil
+      shell_query(tql, kind, 'delete')
     end
 
     # Subscribe to changes in data pushed from the model that will be passed
@@ -168,7 +164,54 @@ module WAB
     #
     # data:: the data that has changed
     def changed(data) # :doc:
-      # TBD implement the default behavior as an example or starting point
+      # TBD filter accoding to subscriptions
+      @shell.changed(data)
+    end
+
+    # Form a EQ expression for a TQL where clause. Used as a helper to the
+    # primary API calls.
+    #
+    # key:: key in the expression
+    # value:: value portion converted to the correct format if necessary
+    def form_where_eq(key, value)
+      value_class = value.class
+      x = ['EQ', key.to_s]
+      if value.is_a?(String)
+        x << "'" + value
+      elsif Time == value_class
+        x << value.utc.iso8601(9)
+      elsif value.nil? ||
+          TrueClass == value_class ||
+          FalseClass == value_class ||
+          Integer == value_class ||
+          Float == value_class ||
+          String == value_class
+        x << value
+      elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        x << value
+      else
+        x << value.to_s
+      end
+      x
+    end
+
+    # Helper to send TQL requests to the shell either synchronously or
+    # asynchronously depending on the controller type.
+    def shell_query(tql, kind, op)
+
+      # TBD check for async or not
+
+      result = @shell.query(tql, nil) # synchronous call
+      if result.nil? || 0 != result[:code]
+        if result.nil?
+          # TBD use WAB specific exception
+          raise Exception.new("nil result on #{kind} #{op}.")
+        else
+          # TBD use WAB specific exception
+          raise Exception.new("error on #{kind} #{op}. #{result[:error]}")
+        end
+      end
+      result
     end
 
   end # Controller
