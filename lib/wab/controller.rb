@@ -110,8 +110,7 @@ module WAB
         query.each_pair { |k,v| where << form_where_eq(k, v) }
         tql[:where] = where
       else
-        # TBD use WAB exception
-        raise Exception.new("update on all #{kind} not allowed.")
+        raise ::WAB::Error.new("update on all #{kind} not allowed.")
       end
       tql[:update] = data.native
       shell_query(tql, kind, 'update')
@@ -213,11 +212,9 @@ module WAB
       result = @shell.query(tql, nil) # synchronous call
       if result.nil? || 0 != result[:code]
         if result.nil?
-          # TBD use WAB specific exception
-          raise Exception.new("nil result on #{kind} #{op}.")
+          raise ::WAB::Error.new("nil result on #{kind} #{op}.")
         else
-          # TBD use WAB specific exception
-          raise Exception.new("error on #{kind} #{op}. #{result[:error]}")
+          raise ::WAB::Error.new("error on #{kind} #{op}. #{result[:error]}")
         end
       end
       result

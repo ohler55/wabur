@@ -1,7 +1,5 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
-- use WAB specific exceptions
-
 - AsyncController
 
 - detect branch

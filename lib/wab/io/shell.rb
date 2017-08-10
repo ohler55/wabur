@@ -74,11 +74,9 @@ module WAB
         result = @engine.request(tql)
         if result.nil? || 0 != result[:code]
           if result.nil?
-            # TBD use WAB specific exception
-            raise Exception.new("nil result get of #{ref}.")
+            raise ::WAB::Error.new("nil result get of #{ref}.")
           else
-            # TBD use WAB specific exception
-            raise Exception.new("error on get of #{ref}. #{result[:error]}")
+            raise ::WAB::Error.new("error on get of #{ref}. #{result[:error]}")
           end
         end
         result[:results]
