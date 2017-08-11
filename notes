@@ -1,11 +1,11 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
 
-- timeout thread in engine
-
 - detect branch
  - Data.detect()
   - change strings to UUID, Time, URI::HTTP
+
+- handle array index in data set and get
 
 - Wab::Sample
  - includes a main

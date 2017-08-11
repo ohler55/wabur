@@ -240,6 +240,26 @@ class IoEngineTest < Minitest::Test
                   ], true)
   end
 
+  def test_timeout
+    run_fork_test([
+                   [{rid: 'rid-timeout', api: 1, body: {op: 'NEW', path: ['sample'], content: {kind: 'sample', num: 7}}},
+                    {rid: '1', api: 3, body: { insert:{ kind: 'sample', num: 7}}}],
+                   [nil,
+                    {rid: 'rid-timeout', api: 2, body: { code: -1, error: 'error on sample create. Timed out waiting for 1.', rid: 'rid-timeout'}}]
+                  ])
+  end
+
+  def test_timeout_async
+    run_fork_test([
+                   [{rid: 'rid-timeout', api: 1, body: {op: 'NEW', path: ['sample'], content: {kind: 'sample', num: 7}}},
+                    {rid: '1', api: 3, body: { insert:{ kind: 'sample', num: 7}, rid: 'rid-timeout'}}],
+                   [nil,
+                    {rid: 'rid-timeout', api: 2, body: { code: -1, error: 'Timed out waiting for 1.', rid: 'rid-timeout'}}]
+                  ], true)
+  end
+
+
+
   # Fork and create a shell in the child. For each pair in the script send the
   # first message and wait for the second. Compare second for test success of
   # failure.
@@ -257,6 +277,7 @@ class IoEngineTest < Minitest::Test
       from_r.close
 
       shell = ::WAB::IO::Shell.new(1, 'kind', 0)
+      shell.timeout = 0.5
       shell.register_controller(nil, MirrorController.new(shell, async))
       shell.start
 
@@ -268,8 +289,10 @@ class IoEngineTest < Minitest::Test
       # Shell#data should be called instead but for this test a shell is not
       # desired.
       script.each { |pair|
-        to_w.puts(::WAB::Impl::Data.new(pair[0], false).json)
-        to_w.flush
+        unless pair[0].nil?
+          to_w.puts(::WAB::Impl::Data.new(pair[0], false).json)
+          to_w.flush
+        end
 
         reply = nil
         Oj.strict_load(from_r, symbol_keys: true) { |msg| reply = msg; break }

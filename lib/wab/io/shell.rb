@@ -14,6 +14,7 @@ module WAB
 
       attr_reader :path_pos
       attr_reader :type_key
+      attr_accessor :timeout
       
       # Sets up the shell with the designated number of processing threads and
       # the type_key.
@@ -23,6 +24,7 @@ module WAB
       def initialize(tcnt, type_key='kind', path_pos=0)
         super(type_key, path_pos)
         @engine = Engine.new(self, tcnt)
+        @timeout = 2.0
       end
 
       # Starts listening and processing.
@@ -71,7 +73,7 @@ module WAB
       # ref:: object reference
       def get(ref)
         tql = { where: ref.to_i, select: '$' }
-        result = @engine.request(tql, nil)
+        result = @engine.request(tql, nil, @timeout)
         if result.nil? || 0 != result[:code]
           if result.nil?
             raise ::WAB::Error.new("nil result get of #{ref}.")
@@ -94,7 +96,7 @@ module WAB
       # tql:: query to evaluate
       # handler:: callback handler that implements the #on_result() method
       def query(tql, handler=nil)
-        @engine.request(tql, handler)
+        @engine.request(tql, handler, @timeout)
       end
 
       # Subscribe to changes in stored data and push changes to the controller

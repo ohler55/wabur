@@ -11,9 +11,12 @@ module WAB
       attr_accessor :result
       attr_accessor :thread
       attr_accessor :handler # controller
-
-      def initialize(handler, timeout=2.0)
+      attr_accessor :qrid
+      attr_accessor :giveup
+      
+      def initialize(handler, qrid, timeout=2.0)
         @rid = nil
+        @qrid = qrid
         @result = nil
         @giveup = Time.now + timeout
         @handler = handler

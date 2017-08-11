@@ -23,12 +23,9 @@ module WAB
 
       def start()
         @tcnt.times {
-          Thread.new {
-            process_msg(@queue.pop)
-          }
+          Thread.new { process_msg(@queue.pop) }
         }
-
-        # TBD create timeout thread, sync on lock to check timeout in pending, sleep for .5
+        Thread.new { timeout_check() }
 
         Oj.strict_load($stdin, symbol_keys: true) { |msg|
           api = msg[:api]
@@ -49,7 +46,7 @@ module WAB
               end
             end
           else
-            # TBD handle error
+            STDERR.puts "*-*-* Invalid api value (#{api}) in message."
           end
         }
       end
@@ -57,8 +54,8 @@ module WAB
       # Send request to the model portion of the system.
       #
       # tql:: the body of the message which should be JSON-TQL as a native Hash
-      def request(tql, handler)
-        call = Call.new(handler) # TBD make timeout seconds a parameter
+      def request(tql, handler, timeout)
+        call = Call.new(handler, tql[:rid], timeout)
         @lock.synchronize {
           @last_rid += 1
           call.rid = @last_rid.to_s
@@ -121,6 +118,36 @@ module WAB
           reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
           $stdout.puts(@shell.data({rid: rid, api: 2, body: reply_body}).json)
           $stdout.flush
+        end
+      end
+
+      def timeout_check()
+        while true
+          sleep(0.5)
+          timed_out = []
+          now = Time.now
+          @lock.synchronize {
+            @pending.delete_if { |rid,call|
+              if call.giveup <= now
+                timed_out << call
+                true
+              else
+                false
+              end
+            }
+          }
+          timed_out.each { |call|
+            body = { code: -1, error: "Timed out waiting for #{call.rid}." }
+            unless call.nil?
+              if call.handler.nil?
+                call.result = body
+                call.thread.run
+              else
+                body[:rid] = call.qrid
+                call.handler.on_result(body)
+              end
+            end
+          }
         end
       end
 

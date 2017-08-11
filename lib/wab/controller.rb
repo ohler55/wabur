@@ -14,7 +14,6 @@ module WAB
     def initialize(shell, async=false)
       @shell = shell
       @async = async
-      # TBD handle async
     end
 
     # Handler for paths that do not match the REST pattern or for unregistered
