@@ -41,8 +41,12 @@ module WAB
               call = @pending.delete(rid)
             }
             unless call.nil?
-              call.result = msg[:body]
-              call.thread.run
+              if call.handler.nil?
+                call.result = msg[:body]
+                call.thread.run
+              else
+                call.handler.on_result(msg[:body])
+              end
             end
           else
             # TBD handle error
@@ -50,12 +54,11 @@ module WAB
         }
       end
 
-
       # Send request to the model portion of the system.
       #
       # tql:: the body of the message which should be JSON-TQL as a native Hash
-      def request(tql)
-        call = Call.new() # TBD make timeout seconds a parameter
+      def request(tql, handler)
+        call = Call.new(handler) # TBD make timeout seconds a parameter
         @lock.synchronize {
           @last_rid += 1
           call.rid = @last_rid.to_s
@@ -65,52 +68,60 @@ module WAB
         # Send the message. Make sure to flush to assure it gets sent.
         $stdout.puts(data.json())
         $stdout.flush()
-        
-        # Wait for either the response to arrive or for a timeout. In both
-        # cases #run should be called on the thread.
-        Thread.stop
-        call.result
+
+        if handler.nil?
+          # Wait for either the response to arrive or for a timeout. In both
+          # cases #run should be called on the thread.
+          Thread.stop
+          call.result
+        else
+          nil
+        end
+      end
+
+      def send_error(rid, msg, bt=nil)
+        body = { code: -1, error: msg }
+        body[:backtrace] = bt unless bt.nil?
+        body[:rid] = rid unless rid.nil?
+        $stdout.puts(@shell.data({rid: rid, api: 2, body: body}).json)
+        $stdout.flush
+        nil
       end
 
       def process_msg(native)
         rid = native[:rid]
-        api = native[:api]
         body = native[:body]
-        reply = @shell.data({rid: rid, api: 2})
-        if body.nil?
-          reply.set('body.code', -1)
-          reply.set('body.error', 'No body in request.')
-        else
-          data = @shell.data(body, false)
-          data.detect()
-          controller = @shell.controller(data)
-          if controller.nil?
-            reply.set('body.code', -1)
-            reply.set('body.error', 'No handler found.')
+
+        return send_error(rid, 'No body in request.') if body.nil?
+
+        data = @shell.data(body, false)
+        data.detect()
+        controller = @shell.controller(data)
+        return send_error(rid, 'No handler found.') if controller.nil?
+
+        reply_body = nil
+        op = body[:op]
+        begin
+          if 'NEW' == op && controller.respond_to?(:create)
+            reply_body = controller.create(body[:path], body[:query], data.get(:content), rid)
+          elsif 'GET' == op && controller.respond_to?(:read)
+            reply_body = controller.read(body[:path], body[:query], rid)
+          elsif 'DEL' == op && controller.respond_to?(:delete)
+            reply_body = controller.delete(body[:path], body[:query], rid)
+          elsif 'MOD' == op && controller.respond_to?(:update)
+            reply_body = controller.update(body[:path], body[:query], data.get(:content), rid)
           else
-            op = body[:op]
-            begin
-              if 'NEW' == op && controller.respond_to?(:create)
-                reply.set('body', controller.create(body[:path], body[:query], data.get(:content)))
-              elsif 'GET' == op && controller.respond_to?(:read)
-                reply.set('body', controller.read(body[:path], body[:query]))
-              elsif 'DEL' == op && controller.respond_to?(:delete)
-                reply.set('body', controller.delete(body[:path], body[:query]))
-              elsif 'MOD' == op && controller.respond_to?(:update)
-                # Also used for TQL queries
-                reply.set('body', controller.update(body[:path], body[:query], data.get(:content)))
-              else
-                reply.set('body', controller.handle(data))
-              end
-            rescue Exception => e
-              reply.set('body.code', -1)
-              reply.set('body.error', e.message)
-              reply.set('body.backtrace', e.backtrace)
-            end
+            reply_body = controller.handle(data)
           end
+        rescue Exception => e
+          return send_error(rid, e.message, e.backtrace)
         end
-        $stdout.puts(reply.json)
-        $stdout.flush
+        # If reply_body is nil then it is async.
+        unless reply_body.nil?
+          reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
+          $stdout.puts(@shell.data({rid: rid, api: 2, body: reply_body}).json)
+          $stdout.flush
+        end
       end
 
     end # Engine

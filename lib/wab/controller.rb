@@ -8,10 +8,12 @@ module WAB
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
     attr_accessor :shell
+    attr_accessor :async
 
     # Create a instance.
     def initialize(shell, async=false)
       @shell = shell
+      @async = async
       # TBD handle async
     end
 
@@ -34,14 +36,16 @@ module WAB
     # Create a new data object. If a query is provided it is treated as a
     # check against an existing object with the same key/value pairs.
     #
-    # The reference to the object created is returned on success.
+    # The reference to the object created is returned on success unless in
+    # async mode as indicated by inclusion of an +rid+.
     #
     # On error an Exception should be raised.
     #
     # path:: array of tokens in the path.
     # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    def create(path, query, data) # :doc:
+    # rid:: optional request ID but required for async
+    def create(path, query, data, rid=nil) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       if query.is_a?(Hash) && 0 < query.size
@@ -51,7 +55,8 @@ module WAB
         tql[:where] = where
       end
       tql[:insert] = data.native
-      shell_query(tql, kind, 'create')
+      rid = nil unless @async
+      shell_query(tql, kind, 'create', rid)
     end
 
     # Return the objects according to the path and query arguments.
@@ -68,12 +73,13 @@ module WAB
     #         into the target objects and value equal to the target attribute
     #         values. A path can be an array of keys used to walk a path to
     #         the target or a +.+ delimited set of keys.
-    def read(path, query) # :doc:
+    # rid:: optional request ID but required for async
+    def read(path, query, rid=nil) # :doc:
       if @shell.path_pos + 2 == path.length # has an object reference in the path
         ref = path[@shell.path_pos + 1].to_i
         obj = @shell.get(ref)
         obj = obj.native if obj.is_a?(::WAB::Data)
-        return @shell.data({ code: 0, results: [ { id: ref, data: obj } ]})
+        return @shell.data({ code: 0, results: [{id: ref, data: obj}], rid: rid})
       end
       tql = { }
       kind = path[@shell.path_pos]
@@ -87,7 +93,8 @@ module WAB
       end
       tql[:where] = where
       tql[:select] = { id: '$ref', data: '$' }
-      shell_query(tql, kind, 'read')
+      rid = nil unless @async
+      shell_query(tql, kind, 'read', rid)
     end
 
     # Replaces the object data for the identified object.
@@ -99,7 +106,8 @@ module WAB
     # path:: array of tokens in the path.
     # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    def update(path, query, data) # :doc:
+    # rid:: optional request ID but required for async
+    def update(path, query, data, rid=nil) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       if @shell.path_pos + 2 == path.length # has an object reference in the path
@@ -113,7 +121,8 @@ module WAB
         raise ::WAB::Error.new("update on all #{kind} not allowed.")
       end
       tql[:update] = data.native
-      shell_query(tql, kind, 'update')
+      rid = nil unless @async
+      shell_query(tql, kind, 'update', rid)
     end
 
     # Delete the identified object.
@@ -130,7 +139,8 @@ module WAB
     #         into the target objects and value equal to the target attribute
     #         values. A path can be an array of keys used to walk a path to
     #         the target or a +.+ delimited set of keys.
-    def delete(path, query) # :doc:
+    # rid:: optional request ID but required for async
+    def delete(path, query, rid=nil) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       if @shell.path_pos + 2 == path.length # has an object reference in the path
@@ -144,7 +154,18 @@ module WAB
         tql[:where] = form_where_eq(@shell.type_key, kind)
       end
       tql[:delete] = nil
-      shell_query(tql, kind, 'delete')
+      rid = nil unless @async
+      shell_query(tql, kind, 'delete', rid)
+    end
+
+    # Called when an asynchronous query is made and the results become
+    # available.
+    #
+    # data:: results of the query
+    def on_result(data)
+      data = data.native if data.is_a?(::WAB::Data)
+      $stdout.puts(@shell.data({rid: data[:rid], api: 2, body: data}).json)
+      $stdout.flush
     end
 
     # Subscribe to changes in data pushed from the model that will be passed
@@ -205,19 +226,22 @@ module WAB
 
     # Helper to send TQL requests to the shell either synchronously or
     # asynchronously depending on the controller type.
-    def shell_query(tql, kind, op)
-
-      # TBD check for async or not
-
-      result = @shell.query(tql, nil) # synchronous call
-      if result.nil? || 0 != result[:code]
-        if result.nil?
-          raise ::WAB::Error.new("nil result on #{kind} #{op}.")
-        else
-          raise ::WAB::Error.new("error on #{kind} #{op}. #{result[:error]}")
+    def shell_query(tql, kind, op, rid)
+      if rid.nil?
+        result = @shell.query(tql, nil) # synchronous call
+        if result.nil? || 0 != result[:code]
+          if result.nil?
+            raise ::WAB::Error.new("nil result on #{kind} #{op}.")
+          else
+            raise ::WAB::Error.new("error on #{kind} #{op}. #{result[:error]}")
+          end
         end
+        result
+      else
+        tql[:rid] = rid
+        @shell.query(tql, self)
+        nil
       end
-      result
     end
 
   end # Controller

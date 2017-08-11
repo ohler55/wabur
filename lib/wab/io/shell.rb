@@ -71,7 +71,7 @@ module WAB
       # ref:: object reference
       def get(ref)
         tql = { where: ref.to_i, select: '$' }
-        result = @engine.request(tql)
+        result = @engine.request(tql, nil)
         if result.nil? || 0 != result[:code]
           if result.nil?
             raise ::WAB::Error.new("nil result get of #{ref}.")
@@ -94,10 +94,7 @@ module WAB
       # tql:: query to evaluate
       # handler:: callback handler that implements the #on_result() method
       def query(tql, handler=nil)
-
-        # TBD handle async, maybe just send and leave it at that
-
-        @engine.request(tql)
+        @engine.request(tql, handler)
       end
 
       # Subscribe to changes in stored data and push changes to the controller
