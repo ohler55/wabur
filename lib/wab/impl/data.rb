@@ -1,4 +1,5 @@
 
+require 'date'
 require 'uri'
 require 'oj'
 
@@ -189,7 +190,11 @@ module WAB
       # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
       # URI:: "http://opo.technology/sample", HTTP only
       def detect()
-        # TBD
+        if @root.is_a?(Hash)
+          detect_hash(@root)
+        elsif @root.is_a?(Array)
+          detect_hash(@root)
+        end
       end
 
       private
@@ -395,6 +400,57 @@ module WAB
           end
         end
         c
+      end
+
+      def detect_hash(h)
+        h.each_key { |k|
+          v = h[k]
+          vc = v.class
+          if Hash == vc
+            detect_hash(v)
+          elsif Array == vc
+            detect_array(v)
+          elsif String == vc
+            v2 = detect_string(v)
+            h[k] = v2 if v2 != v
+          end
+        }
+      end
+
+      def detect_array(a)
+        a.each_index { |i|
+          v = a[i]
+          vc = v.class
+          if Hash == vc
+            detect_hash(v)
+          elsif Array == vc
+            detect_array(v)
+          elsif String == vc
+            v2 = detect_string(v)
+            a[i] = v2 if v2 != v
+          end
+        }
+      end
+
+      def detect_string(s)
+        len = s.length
+        if 36 == len && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match?(s)
+          ::WAB::UUID.new(s)
+        elsif 30 == len && /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match?(s)
+          begin
+            DateTime.parse(s).to_time()
+          rescue
+            s
+          end
+        elsif s.downcase().start_with?('http://')
+          begin
+            URI(s)
+          rescue
+            s
+          end
+        else
+          s
+        end
       end
 
     end # Data

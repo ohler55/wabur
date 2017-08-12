@@ -195,9 +195,7 @@ module WAB
     def form_where_eq(key, value)
       value_class = value.class
       x = ['EQ', key.to_s]
-      if value.is_a?(String)
-        x << "'" + value
-      elsif Time == value_class
+      if Time == value_class
         x << value.utc.iso8601(9)
       elsif value.nil? ||
           TrueClass == value_class ||
@@ -206,15 +204,31 @@ module WAB
           Float == value_class
         x << value
       elsif String == value_class
-        if 0 < value.length && '\'' == value[0] 
-          x << value[1..-1]
+        # if the string matches a detectable type then don't quote it
+        len = value.length
+        if 0 < len && '\'' == value[0] 
+          x << value
         elsif /^-?\d+$/.match?(value)
           x << value.to_i
         elsif /^-?\d*\.?\d+([eE][-+]?\d+)?$/.match?(value)
           x << value.to_f
+        elsif 36 == len && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match?(value)
+          x << ::WAB::UUID.new(value)
+        elsif 30 == len && /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match?(value)
+          begin
+            x << DateTime.parse(value).to_time()
+          rescue
+            x << "'" + value
+          end
+        elsif value.downcase().start_with?('http://')
+          begin
+            x << URI(value)
+          rescue
+            x << "'" + value
+          end
+        else
+          x << "'" + value
         end
-        # TBD detect other types UUID, HTTP, Time
-        
       elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
         x << value
       else
