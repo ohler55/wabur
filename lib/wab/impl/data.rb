@@ -434,9 +434,9 @@ module WAB
 
       def detect_string(s)
         len = s.length
-        if 36 == len && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match?(s)
+        if 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(s).nil?
           ::WAB::UUID.new(s)
-        elsif 30 == len && /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match?(s)
+        elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(s).nil?
           begin
             DateTime.parse(s).to_time()
           rescue
