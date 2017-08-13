@@ -1,5 +1,6 @@
 
 require 'wab'
+require 'oj'
 
 module WAB
 
@@ -29,6 +30,7 @@ module WAB
 
         Oj.strict_load($stdin, symbol_keys: true) { |msg|
           api = msg[:api]
+          $stderr.puts "=> controller #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
           if 1 == api
             @queue.push(msg)
           elsif 4 == api
@@ -46,7 +48,7 @@ module WAB
               end
             end
           else
-            STDERR.puts "*-*-* Invalid api value (#{api}) in message."
+            $stderr.puts "*-*-* Invalid api value (#{api}) in message."
           end
         }
       end
@@ -61,7 +63,9 @@ module WAB
           call.rid = @last_rid.to_s
           @pending[call.rid] = call
         }
-        data = @shell.data({ rid: call.rid, api: 3, body: tql }, true)
+        msg = {rid: call.rid, api: 3, body: tql}
+        $stderr.puts "=> model: #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
+        data = @shell.data(msg, true)
         # Send the message. Make sure to flush to assure it gets sent.
         $stdout.puts(data.json())
         $stdout.flush()
@@ -116,7 +120,9 @@ module WAB
         # If reply_body is nil then it is async.
         unless reply_body.nil?
           reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
-          $stdout.puts(@shell.data({rid: rid, api: 2, body: reply_body}).json)
+          msg = {rid: rid, api: 2, body: reply_body}
+          $stderr.puts "=> view: #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
+          $stdout.puts(@shell.data(msg).json)
           $stdout.flush
         end
       end

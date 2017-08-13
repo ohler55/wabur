@@ -15,6 +15,7 @@ module WAB
       attr_reader :path_pos
       attr_reader :type_key
       attr_accessor :timeout
+      attr_accessor :verbose
       
       # Sets up the shell with the designated number of processing threads and
       # the type_key.
@@ -25,6 +26,7 @@ module WAB
         super(type_key, path_pos)
         @engine = Engine.new(self, tcnt)
         @timeout = 2.0
+        @verbose = false
       end
 
       # Starts listening and processing.

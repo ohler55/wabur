@@ -1,7 +1,5 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
 
-- handle array index in data set and get
-
 - Wab::Sample
  - includes a main

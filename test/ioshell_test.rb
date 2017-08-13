@@ -258,8 +258,6 @@ class IoEngineTest < Minitest::Test
                   ], true)
   end
 
-
-
   # Fork and create a shell in the child. For each pair in the script send the
   # first message and wait for the second. Compare second for test success of
   # failure.
@@ -278,6 +276,7 @@ class IoEngineTest < Minitest::Test
 
       shell = ::WAB::IO::Shell.new(1, 'kind', 0)
       shell.timeout = 0.5
+      shell.verbose = false # change to true to debug
       shell.register_controller(nil, MirrorController.new(shell, async))
       shell.start
 

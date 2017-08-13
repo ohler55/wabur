@@ -96,7 +96,6 @@ module WAB
             if i < node.length && -node.length < i
               node = node[i]
             else
-              # TBD if next key is a number then make an array instead
               nn = {}
               if i < -node.length
                 node.unshift(nn)
