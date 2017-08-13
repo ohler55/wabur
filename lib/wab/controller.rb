@@ -78,7 +78,9 @@ module WAB
         ref = path[@shell.path_pos + 1].to_i
         obj = @shell.get(ref)
         obj = obj.native if obj.is_a?(::WAB::Data)
-        return @shell.data({ code: 0, results: [{id: ref, data: obj}], rid: rid})
+        results = []
+        results << {id: ref, data: obj} unless obj.nil?
+        return @shell.data({ code: 0, results: results, rid: rid})
       end
       tql = { }
       kind = path[@shell.path_pos]

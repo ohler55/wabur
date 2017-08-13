@@ -1,6 +1,7 @@
 
 require 'time'
 require 'wab'
+require 'wab/impl'
 
 module WAB
 
@@ -83,7 +84,12 @@ module WAB
             raise ::WAB::Error.new("error on get of #{ref}. #{result[:error]}")
           end
         end
-        result[:results]
+        ra = result[:results]
+        if ra.nil? || 0 == ra.length
+          nil
+        else
+          ra[0]
+        end
       end
 
       # Evaluates the JSON TQL query. The TQL should be native Ruby objects
