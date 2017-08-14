@@ -60,7 +60,7 @@ module WAB
         return Data.new(node, false, false) if node.is_a?(Hash) || node.is_a?(Array)
         node
       end
-      
+
       # Sets the node value identified by the path where the path elements are
       # separated by the '.' character. The path can also be a array of path
       # node identifiers. For example, child.grandchild is the same as ['child',
@@ -91,17 +91,15 @@ module WAB
             node[key] = {} unless node.has_key?(key)
             node = node[key]
           elsif node.is_a?(Array)
-            i = key.to_i
-            raise StandardError.new("path key must be an integer for an Array.") if (0 == i && '0' != key && 0 != key)
-            if i < node.length && -node.length < i
-              node = node[i]
+            key = key_to_int(key)
+            if key < node.length && -node.length < key
+              node = node[key]
             else
-              # TBD if next key is a number then make an array instead
               nn = {}
-              if i < -node.length
+              if key < -node.length
                 node.unshift(nn)
               else
-                node[i] = nn
+                node[key] = nn
               end
               node = nn
             end
@@ -114,12 +112,11 @@ module WAB
           key = key.to_sym
           node[key] = value
         elsif node.is_a?(Array)
-          i = key.to_i
-          raise StandardError.new("path key must be an integer for an Array.") if (0 == i && '0' != key && 0 != key)
-          if i < -node.length
+          key = key_to_int(key)
+          if key < -node.length
             node.unshift(value)
           else
-            node[i] = value
+            node[key] = value
           end
         else
           raise StandardError.new("Can not set a member of an #{node.class}.")
@@ -375,6 +372,19 @@ module WAB
         else
           v0 == v1
         end
+      end
+
+      def key_to_int(key)
+        return key if key.is_a?(Integer)
+
+        key = key.to_s if key.is_a?(Symbol)
+        if key.is_a?(String)
+          i = key.to_i
+          return i if i.to_s == key
+        end
+        return key if '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && key.is_a?(Fixnum)
+
+        raise StandardError.new("path key must be an integer for an Array.") unless i.to_s == key
       end
 
       def clone_value(value)

@@ -55,11 +55,12 @@ module WAB
     # data:: data to extract the type from for lookup in the controllers
     def controller(data)
       path = data.get(:path)
-      if path.nil? || @path_pos <= path.length
+      path = path.native if path.is_a?(::WAB::Data)
+      if path.nil? || path.length <= @path_pos
         content = data.get(:content)
-        if content.is_a?(::WAB::Data)
-          @controllers[content.get(@type_key)] || @controllers[nil]
-        end
+        return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
+      else
+        return @controllers[path[@path_pos]] || @controllers[nil]
       end
       @controllers[nil]
     end

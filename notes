@@ -1,7 +1,14 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
 
-- handle array index in data set and get
-
 - Wab::Sample
- - includes a main
+ - test curl commands
+  - PUT
+  - GET
+   - by id
+   - list
+  - POST
+   - update
+   - TQL
+  - DELETE
+  

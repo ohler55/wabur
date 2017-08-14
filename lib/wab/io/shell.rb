@@ -1,6 +1,7 @@
 
 require 'time'
 require 'wab'
+require 'wab/impl'
 
 module WAB
 
@@ -15,6 +16,7 @@ module WAB
       attr_reader :path_pos
       attr_reader :type_key
       attr_accessor :timeout
+      attr_accessor :verbose
       
       # Sets up the shell with the designated number of processing threads and
       # the type_key.
@@ -25,6 +27,7 @@ module WAB
         super(type_key, path_pos)
         @engine = Engine.new(self, tcnt)
         @timeout = 2.0
+        @verbose = false
       end
 
       # Starts listening and processing.
@@ -81,7 +84,12 @@ module WAB
             raise ::WAB::Error.new("error on get of #{ref}. #{result[:error]}")
           end
         end
-        result[:results]
+        ra = result[:results]
+        if ra.nil? || 0 == ra.length
+          nil
+        else
+          ra[0]
+        end
       end
 
       # Evaluates the JSON TQL query. The TQL should be native Ruby objects

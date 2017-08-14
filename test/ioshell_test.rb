@@ -82,7 +82,7 @@ class IoEngineTest < Minitest::Test
     run_fork_test([
                    [{rid: 'rid-read-id', api: 1, body: {op: 'GET', path: ['sample', '12345']}},
                     {rid: '1', api: 3, body: {where: 12345, select: '$'}}],
-                   [{rid: '1', api: 4, body: {code: 0, results:{kind: 'sample', id: 12345, num: 7}}},
+                   [{rid: '1', api: 4, body: {code: 0, results:[{kind: 'sample', id: 12345, num: 7}]}},
                     {rid: 'rid-read-id', api: 2, body: { code: 0, results:[{ id: 12345, data: { kind: 'sample', id: 12345, num: 7}}], rid: 'rid-read-id'}}]
                   ])
   end
@@ -181,7 +181,7 @@ class IoEngineTest < Minitest::Test
     run_fork_test([
                    [{rid: 'rid-read-id', api: 1, body: {op: 'GET', path: ['sample', '12345']}},
                     {rid: '1', api: 3, body: {where: 12345, select: '$'}}],
-                   [{rid: '1', api: 4, body: {code: 0, results:{kind: 'sample', id: 12345, num: 7}, rid: 'rid-read-id'}},
+                   [{rid: '1', api: 4, body: {code: 0, results:[{kind: 'sample', id: 12345, num: 7}], rid: 'rid-read-id'}},
                     {rid: 'rid-read-id', api: 2, body: { code: 0, results:[{ id: 12345, data: { kind: 'sample', id: 12345, num: 7}}], rid: 'rid-read-id'}}]
                   ], true)
   end
@@ -258,8 +258,6 @@ class IoEngineTest < Minitest::Test
                   ], true)
   end
 
-
-
   # Fork and create a shell in the child. For each pair in the script send the
   # first message and wait for the second. Compare second for test success of
   # failure.
@@ -278,6 +276,7 @@ class IoEngineTest < Minitest::Test
 
       shell = ::WAB::IO::Shell.new(1, 'kind', 0)
       shell.timeout = 0.5
+      shell.verbose = false # change to true to debug
       shell.register_controller(nil, MirrorController.new(shell, async))
       shell.start
 
