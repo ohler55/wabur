@@ -240,7 +240,7 @@ module WAB
           value.each { |v|
             validate_value(v)
           }
-        elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        elsif WAB::Utils.pre_24_fixnum?(value)
           # valid value
         else
           raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
@@ -300,7 +300,7 @@ module WAB
           old.each { |v|
             value << fix_value(v)
           }
-        elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        elsif WAB::Utils.pre_24_fixnum?(value)
           # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
@@ -382,7 +382,7 @@ module WAB
           i = key.to_i
           return i if i.to_s == key
         end
-        return key if '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && key.is_a?(Fixnum)
+        return key if WAB::Utils.pre_24_fixnum?(key)
 
         raise StandardError.new("path key must be an integer for an Array.") unless i.to_s == key
       end
@@ -403,7 +403,7 @@ module WAB
             Float == value_class ||
             String == value_class
             c = value
-          elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+          elsif WAB::Utils.pre_24_fixnum?(value)
             c = value
           else
             c = value.clone

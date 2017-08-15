@@ -231,7 +231,7 @@ module WAB
         else
           x << "'" + value
         end
-      elsif '2' == RbConfig::CONFIG['MAJOR'] && '4' > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+      elsif WAB::Utils.pre_24_fixnum?(value)
         x << value
       else
         x << value.to_s
