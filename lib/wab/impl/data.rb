@@ -11,6 +11,7 @@ module WAB
     # not be instance of this class but rather a class that is a duck-type of
     # this class (has the same methods and behavior).
     class Data < ::WAB::Data
+      attr_reader :root
 
       # This method should not be called directly. New instances should be
       # created by using a Shell#data method.
@@ -37,10 +38,10 @@ module WAB
       # same as ['child', 'grandchild'].
       def get(path)
         if path.is_a?(Symbol)
-          node = @root[path] 
+          node = root[path]
         else
           path = path.to_s.split('.') unless path.is_a?(Array)
-          node = @root
+          node = root
           path.each { |key|
             if node.is_a?(Hash)
               node = node[key.to_sym]
@@ -83,7 +84,7 @@ module WAB
         else
           validate_value(value)
         end
-        node = @root
+        node = root
         path = path.to_s.split('.') unless path.is_a?(Array)
         path[0..-2].each { |key|
           if node.is_a?(Hash)
@@ -127,7 +128,7 @@ module WAB
       # Each child of the Data instance is provided as an argument to a block
       # when the each method is called.
       def each(&block)
-        each_node([], @root, block)
+        each_node([], root, block)
       end
 
       # Each leaf of the Data instance is provided as an argument to a block
@@ -135,21 +136,21 @@ module WAB
       # children and will be nil, a Boolean, String, Numberic, Time, WAB::UUID,
       # or URI.
       def each_leaf(&block)
-        each_leaf_node([], @root, block)
+        each_leaf_node([], root, block)
       end
 
       # Make a deep copy of the Data instance.
       def clone()
         # avoid validation by using a empty Hash for the intial value.
         c = self.class.new({}, false)
-        c.instance_variable_set(:@root, clone_value(@root))
+        c.instance_variable_set(:@root, clone_value(root))
         c
       end
 
       # Returns the instance converted to native Ruby values such as a Hash,
       # Array, etc.
       def native()
-        @root
+        root
       end
 
       # Returns true if self and other are either the same or have the same
@@ -158,28 +159,28 @@ module WAB
         # Any object that is of a class derived from the API class is a
         # candidate for being ==.
         return false unless other.is_a?(::WAB::Data)
-        values_eql?(@root, other.native)
+        values_eql?(root, other.native)
       end
       alias == eql?
       
       # Returns the length of the root element.
       def length()
-        @root.length
+        root.length
       end
 
       # Returns the number of leaves in the data tree.
       def leaf_count()
-        branch_count(@root)
+        branch_count(root)
       end
 
       # Returns the number of nodes in the data tree.
       def size()
-        branch_size(@root)
+        branch_size(root)
       end
 
       # Encode the data as a JSON string.
       def json(indent=0)
-        Oj.dump(@root, mode: :wab, indent: indent)
+        Oj.dump(root, mode: :wab, indent: indent)
       end
 
       # Detects and converts strings to Ruby objects following the rules:
@@ -187,10 +188,10 @@ module WAB
       # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
       # URI:: "http://opo.technology/sample", HTTP only
       def detect()
-        if @root.is_a?(Hash)
-          detect_hash(@root)
-        elsif @root.is_a?(Array)
-          detect_hash(@root)
+        if root.is_a?(Hash)
+          detect_hash(root)
+        elsif root.is_a?(Array)
+          detect_hash(root)
         end
       end
 
