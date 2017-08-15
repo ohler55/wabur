@@ -135,7 +135,7 @@ module WAB
             Float == value_class ||
             String == value_class
           x << value
-        elsif 2 == RbConfig::CONFIG['MAJOR'] && 4 > RbConfig::CONFIG['MINOR'] && Fixnum == value_class
+        elsif 24 > WAB::Utils.RUBY_SERIES && Fixnum == value_class
           x << value
         else
           x << value.to_s
