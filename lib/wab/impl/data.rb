@@ -41,24 +41,11 @@ module WAB
           node = root[path]
         else
           path = path.to_s.split('.') unless path.is_a?(Array)
-          node = root
-          path.each { |key|
-            if node.is_a?(Hash)
-              node = node[key.to_sym]
-            elsif node.is_a?(Array)
-              i = key.to_i
-              if 0 == i && '0' != key && 0 != key
-                node = nil
-                break
-              end
-              node = node[i]
-            else
-              node = nil
-              break
-            end
-          }
+          node = extract_node(path, root)
         end
+
         return Data.new(node, false, false) if node.is_a?(Hash) || node.is_a?(Array)
+
         node
       end
 
@@ -84,43 +71,21 @@ module WAB
         else
           validate_value(value)
         end
-        node = root
         path = path.to_s.split('.') unless path.is_a?(Array)
-        path[0..-2].each { |key|
-          if node.is_a?(Hash)
-            key = key.to_sym
-            node[key] = {} unless node.has_key?(key)
-            node = node[key]
-          elsif node.is_a?(Array)
-            key = key_to_int(key)
-            if key < node.length && -node.length < key
-              node = node[key]
-            else
-              nn = {}
-              if key < -node.length
-                node.unshift(nn)
-              else
-                node[key] = nn
-              end
-              node = nn
-            end
-          else
-            raise StandardError.new("Can not set a member of an #{node.class}.")
-          end
-        }
+        node = assign_node(path, root)
+
         key = path[-1]
+        ensure_hash_or_array(node)
         if node.is_a?(Hash)
           key = key.to_sym
           node[key] = value
-        elsif node.is_a?(Array)
+        else # node is an instance of Array
           key = key_to_int(key)
           if key < -node.length
             node.unshift(value)
           else
             node[key] = value
           end
-        else
-          raise StandardError.new("Can not set a member of an #{node.class}.")
         end
         value
       end
@@ -314,6 +279,54 @@ module WAB
           raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
         end
         value
+      end
+
+      def extract_node(path, root)
+        path.each do |key|
+          if root.is_a?(Hash)
+            root = root[key.to_sym]
+          elsif root.is_a?(Array)
+            i = key.to_i
+            if 0 == i && '0' != key && 0 != key
+              root = nil
+            end
+            root = root[i]
+          else
+            root = nil
+          end
+        end
+        root
+      end
+
+      def assign_node(path, root)
+        path[0..-2].each do |key|
+          ensure_hash_or_array(root)
+          if root.is_a?(Hash)
+            key = key.to_sym
+            root[key] = {} unless root.has_key?(key)
+            root = root[key]
+          else # root is an instance of Array
+            key = key_to_int(key)
+            if key < root.length && -root.length < key
+              root = root[key]
+            else
+              nn = {}
+              if key < -root.length
+                root.unshift(nn)
+              else
+                root[key] = nn
+              end
+              root = nn
+            end
+          end
+        end
+        root
+      end
+
+      def ensure_hash_or_array(node)
+        unless node.is_a?(Hash) || node.is_a?(Array)
+          raise StandardError.new("Can not set a member of an #{node.class}.")
+        end
       end
 
       def each_node(path, value, block)
