@@ -415,14 +415,14 @@ module WAB
       def detect_hash(h)
         h.each_key { |k|
           v = h[k]
-          vc = v.class
-          if Hash == vc
+          case v
+          when Hash
             detect_hash(v)
-          elsif Array == vc
+          when Array
             detect_array(v)
-          elsif String == vc
+          when String
             v2 = detect_string(v)
-            h[k] = v2 if v2 != v
+            h[k] = v2 unless v2 == v
           end
         }
       end
@@ -430,14 +430,14 @@ module WAB
       def detect_array(a)
         a.each_index { |i|
           v = a[i]
-          vc = v.class
-          if Hash == vc
+          case v
+          when Hash
             detect_hash(v)
-          elsif Array == vc
+          when Array
             detect_array(v)
-          elsif String == vc
+          when String
             v2 = detect_string(v)
-            a[i] = v2 if v2 != v
+            a[i] = v2 unless v2 == v
           end
         }
       end
