@@ -375,14 +375,13 @@ module WAB
       end
 
       def key_to_int(key)
-        return key if key.is_a?(Integer)
+        return key if (key.is_a?(Integer) || WAB::Utils.pre_24_fixnum?(key))
 
         key = key.to_s if key.is_a?(Symbol)
         if key.is_a?(String)
           i = key.to_i
           return i if i.to_s == key
         end
-        return key if WAB::Utils.pre_24_fixnum?(key)
 
         raise StandardError.new("path key must be an integer for an Array.") unless i.to_s == key
       end
