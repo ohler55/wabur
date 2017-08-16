@@ -2,11 +2,9 @@
 module WAB
 
   # Base for WAB errors and exceptions.
-  class Error < StandardError
-  end # Error
+  Error = Class.new(StandardError)
 
   # An Exception that is raised as a result of a error while parsing.
-  class ParseError < Error
-  end # ParseError
+  ParseError = Class.new(Error)
 
-end # Oj
+end # WAB
