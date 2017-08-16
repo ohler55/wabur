@@ -10,6 +10,9 @@ More details will be added here as progress continues. For now the high level pl
 
 ### Pending
 
+- Benchmarks - started
+  - Overall as a black box
+  - WAB::IO::Shell alone
 - Spec driven Javascript libraries
   - Define spec format
   - implement and test generic Javascript app
@@ -21,5 +24,4 @@ More details will be added here as progress continues. For now the high level pl
     - Data store
 - Embedded Ruby Runner (separate project)
 - End to end examples
-- Benchmarks
 - Advanced Javascript displays

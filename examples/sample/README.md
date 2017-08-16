@@ -98,3 +98,24 @@ Now that a record has been created the benchmarks can be run.
 
 Both calls to the hose benchmarking app will use 2 threads and open 1000
 connections at a time to the Runner.
+
+#### Results
+
+Benchmarks were run on a Razer Blade Stealth laptop with Ubuntu 17.04. A nice
+machine but still a laptop and not a server class machine by any stretch.
+
+```
+razer bin (master)> hose -p "tree/000000000000000b" -d 1.0 -t 2 127.0.0.1:6363
+127.0.0.1:6363 processed 38325 requests in 1.000 seconds for a rate of 38325 GETS/sec.
+with an average latency of 0.029 msecs
+```
+
+```
+razer bin (master)> hose -p "Article/11" -d 1.0 -t 2 127.0.0.1:6363
+127.0.0.1:6363 processed 7724 requests in 1.000 seconds for a rate of 7724 GETS/sec.
+with an average latency of 0.109 msecs
+```
+
+The performance is reasonable but there were reliability issues that will have
+to be addressed as results were not consistent with either. On macOS results
+were more consistent but significantly lower.

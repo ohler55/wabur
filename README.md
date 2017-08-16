@@ -63,7 +63,8 @@ The Ruby Runner and C Runner with embedded ruby follow the same architecture.
 
 ## Try It!
 
-A sample is now available in the ```examples/sample/``` directory.
+A sample is now available in the ```examples/sample/``` directory. There are
+some preliminary laptop benchmark results described in the README.
 
 ## Participate and Contribute
 
