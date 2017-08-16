@@ -66,3 +66,35 @@ The record can be deleted with an HTTP DELETE request.
 ```
 > curl -w "\n" -X DELETE http://localhost:6363/Article/11
 ```
+
+### Benchmarks
+
+Using the OpO Runner a Ruby HTTP client is not able to generate requests and
+process responses quick enough to reach the limits of the Runner. Instead a C
+based HTTP benchmarking tool is used. It is in the OpO download and is called
++hose+.
+
+To run the benchmarks start the +opod+ with the opo/bench.conf file. This
+turns off the verbosity on opod and on the sample Ruby app.
+
+Next add a record as done previously.
+
+There are two ways to get the JSON of the created record. Either using the
+Controller with the path ```http://localhost:6363/Article/11``` or by going
+directly to the database with the path
+```http://localhost:6363/tree/000000000000000b``` which uses the ref in hex to
+identify the record. This is interesting in that it shows the overhead of the
+calls to the Ruby Controller.
+
+Now that a record has been created the benchmarks can be run.
+
+```
+> hose -p "tree/000000000000000b" -d 1.0 -t 2 127.0.0.1:6363
+```
+
+```
+> hose -p "Article/11" -d 1.0 -t 2 127.0.0.1:6363
+```
+
+Both calls to the hose benchmarking app will use 2 threads and open 1000
+connections at a time to the Runner.
