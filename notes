@@ -1,14 +1,9 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
 
-- Wab::Sample
- - test curl commands
-  - PUT
-  - GET
-   - by id
-   - list
-  - POST
-   - update
-   - TQL
-  - DELETE
-  
+- updated README.md
+ - point to sample
+
+- release
+ - first working version, except javascript
+

@@ -2,20 +2,24 @@
 
 More details will be added here as progress continues. For now the high level plan is:
 
+### Completed
+
 - _Define APIs - initial complete_
+- _WAB::IO::Shell - complete_
+- _stdio sample - complete_
 
-- Start the WAB::Dev module
- - WAB::Dev::Data class
- - WAB::Dev::UUID class
- - WAB::Dev::Model class
- - WAB::Dev::Shell class
- - WAB::Dev::View class
- - WAB::Dev::Controller class
+### Pending
 
-- Extern Glue implemenation and test
- - this is in the WAB module
-
-- Structure Ruby Framework
- - Embedded Glue layer
- - External Glue layer
-  
+- Spec driven Javascript libraries
+  - Define spec format
+  - implement and test generic Javascript app
+- Ruby Runner
+  - Runner framework
+  - HTTP server
+  - Model
+    - In memory object management
+    - Data store
+- Embedded Ruby Runner (separate project)
+- End to end examples
+- Benchmarks
+- Advanced Javascript displays

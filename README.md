@@ -16,19 +16,21 @@ performance Ruby web framework.
 Ruby on Rails has made Ruby mainstream. While RoR is fine for some
 applications there are others that might be better served with an alternative.
 This project was started as an alternative to Ruby on Rails with a focus on
-performance and ease of use.
+performance and ease of use. The use of Javascript for views and NoSQL JSON
+databases are some of the most notable differences.
 
-Why develop an alternative to Rails? The popularity of Rails has been waning.
-It is still huge but not as popular as it used to be. RoR is not going away
-any time soon but for some applications, alternatives are needed.
+Why develop an alternative to Rails? Developers that want to make more custom
+web sites with heavier use of Javascript, Websockets, and SSE along with a
+JSON database don't fit nicely in the Rails mold. WAB attempts to address that
+area that falls outside of Rail's strengths.
 
 ## Goals
 
-Lets start with the assumption that we want to continue using Ruby. The goal
-of this project is to provide a high performance, easy to use, and a fully
-featured web framework with Ruby at the core. By keeping the core, the
-business logic, in Ruby but allowing options for other parts to be in different
-languages, the best of each can be utilized.
+Lets start with the primary assumption, that we want to continue using
+Ruby. The goal of this project is to provide a high performance, easy to use,
+and a fully featured web framework with Ruby at the core. By keeping the core,
+the business logic, in Ruby but allowing options for other parts to be in
+different languages, the best of each language can be utilized.
 
 Targets are a throughput of 100K page fetches per second at a latency of no
 more than 1 millisecond on a desktop machine. That is more than an order of
@@ -39,14 +41,29 @@ web frameworks across all languages.
 
 ## Architecture
 
-The architecture provides many options but it keeps clean and clear APIs
-between modules. This pluggable design allows for unit test drivers and
-various levels of deployment options from straight Ruby to a high performance
-C shell that handles HTTP and data storage.
+The architecture provides many options but keeps a clean and clear API between
+modules. This pluggable design allows for unit test drivers and various levels
+of deployment options from straight Ruby to a high performance C runner that
+handles HTTP and data storage.
 
-![](http://www.opo.technology/wab/wab_arch.svg)
+Three configuration are planned. One is to use a Runner that calls to the Ruby
+core controller through pipes on ```$stdin``` and ```$stdout```. A second is to implement
+a runner in Ruby. The third is to use a C Runner with embedded Ruby.
+
+A Runner that spawns (forks) and runs a Ruby Controller makes use of the
+```::WAB::IO::Shell```.
+
+![](http://www.opo.technology/wab/wab_remote_arch.svg)
+
+The Ruby Runner and C Runner with embedded ruby follow the same architecture.
+
+![](http://www.opo.technology/wab/wab_embedded_arch.svg)
 
 [Continue reading ...](pages/Architecture.md)
+
+## Try It!
+
+A sample is now available in the ```examples/sample/``` directory.
 
 ## Participate and Contribute
 
