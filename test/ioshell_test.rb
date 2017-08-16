@@ -9,40 +9,10 @@ require 'minitest/autorun'
 
 require 'wab/impl'
 require 'wab/io'
+require 'mirror_controller'
 
 
 class IoEngineTest < Minitest::Test
-
-  class MirrorController < ::WAB::Controller
-    def initialize(shell, async=false)
-      super(shell, async)
-    end
-
-    def handle(data)
-      data
-    end
-
-    def create(path, query, data, rid=nil)
-      super
-    end
-
-    def read(path, query, rid=nil)
-      super
-    end
-
-    def update(path, query, data, rid=nil)
-      super
-    end
-
-    def delete(path, query, rid=nil)
-      super
-    end
-
-    def on_result(data)
-      super
-    end
-
-  end # MirrorController
 
   def test_default_controller
     run_fork_test([
