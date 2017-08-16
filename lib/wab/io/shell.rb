@@ -77,19 +77,12 @@ module WAB
       def get(ref)
         tql = { where: ref.to_i, select: '$' }
         result = @engine.request(tql, nil, @timeout)
-        if result.nil? || 0 != result[:code]
-          if result.nil?
-            raise ::WAB::Error.new("nil result get of #{ref}.")
-          else
-            raise ::WAB::Error.new("error on get of #{ref}. #{result[:error]}")
-          end
-        end
+        raise WAB::Error.new("nil result get of #{ref}.") if result.nil?
+        raise WAB::Error.new("error on get of #{ref}. #{result[:error]}") if 0 != result[:code]
+
         ra = result[:results]
-        if ra.nil? || 0 == ra.length
-          nil
-        else
-          ra[0]
-        end
+        return nil if (ra.nil? || 0 == ra.length)
+        ra[0]
       end
 
       # Evaluates the JSON TQL query. The TQL should be native Ruby objects
