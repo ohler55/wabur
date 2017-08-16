@@ -15,16 +15,10 @@ module WAB
       attr_accessor :giveup
       
       def initialize(handler, qrid, timeout=2.0)
-        @rid = nil
         @qrid = qrid
-        @result = nil
         @giveup = Time.now + timeout
         @handler = handler
-        if handler.nil?
-          @thread = Thread.current
-        else
-          @thread = nil
-        end
+        @thread = Thread.current if handler.nil?
       end
 
     end # Call
