@@ -11,6 +11,7 @@ module WAB
     # not be instance of this class but rather a class that is a duck-type of
     # this class (has the same methods and behavior).
     class Data < ::WAB::Data
+      attr_reader :root
 
       # This method should not be called directly. New instances should be
       # created by using a Shell#data method.
@@ -30,6 +31,10 @@ module WAB
         end
         @root = value
       end
+
+      # Returns the instance converted to native Ruby values such as a Hash,
+      # Array, etc.
+      alias :native :root
 
       # Gets the Data element or value identified by the path where the path
       # elements are separated by the '.' character. The path can also be a
@@ -144,12 +149,6 @@ module WAB
         c = self.class.new({}, false)
         c.instance_variable_set(:@root, clone_value(@root))
         c
-      end
-
-      # Returns the instance converted to native Ruby values such as a Hash,
-      # Array, etc.
-      def native()
-        @root
       end
 
       # Returns true if self and other are either the same or have the same
