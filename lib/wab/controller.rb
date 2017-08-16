@@ -244,13 +244,8 @@ module WAB
     def shell_query(tql, kind, op, rid)
       if rid.nil?
         result = @shell.query(tql, nil) # synchronous call
-        if result.nil? || 0 != result[:code]
-          if result.nil?
-            raise ::WAB::Error.new("nil result on #{kind} #{op}.")
-          else
-            raise ::WAB::Error.new("error on #{kind} #{op}. #{result[:error]}")
-          end
-        end
+        raise WAB::Error.new("nil result on #{kind} #{op}.") if result.nil?
+        raise WAB::Error.new("error on #{kind} #{op}. #{result[:error]}") if 0 != result[:code]
         result
       else
         tql[:rid] = rid
