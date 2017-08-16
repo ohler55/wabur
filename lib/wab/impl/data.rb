@@ -413,22 +413,24 @@ module WAB
       end
 
       def detect_hash(h)
-        h.each_key { |k| h[k] = detect_elememt h[k] }
+        h.each_key { |k| detect_elememt(h, k) }
       end
 
       def detect_array(a)
-        a.each_index { |i| a[i] = detect_elememt a[i] }
+        a.each_index { |i| detect_elememt(a, i) }
       end
 
-      def detect_elememt(e)
-        case e
+      def detect_elememt(collection, key)
+        item = collection[key]
+
+        case item
         when Hash
-          detect_hash(e)
+          detect_hash(item)
         when Array
-          detect_array(e)
+          detect_array(item)
         when String
-          value = detect_string(e)
-          value unless value == e
+          element = detect_string(item)
+          collection[key] = element unless element == item
         end
       end
 
