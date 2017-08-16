@@ -416,9 +416,13 @@ module WAB
         h.each_key { |k|
           v = h[k]
           case v
-          when Hash   then detect_hash(v)
-          when Array  then detect_array(v)
-          when String then h[k] = detect_string(v) unless detect_string(v) == v
+          when Hash
+            detect_hash(v)
+          when Array
+            detect_array(v)
+          when String
+            v2 = detect_string(v)
+            h[k] = v2 unless v2 == v
           end
         }
       end
@@ -427,9 +431,13 @@ module WAB
         a.each_index { |i|
           v = a[i]
           case v
-          when Hash   then detect_hash(v)
-          when Array  then detect_array(v)
-          when String then a[i] = detect_string(v) unless detect_string(v) == v
+          when Hash
+            detect_hash(v)
+          when Array
+            detect_array(v)
+          when String
+            v2 = detect_string(v)
+            a[i] = v2 unless v2 == v
           end
         }
       end
