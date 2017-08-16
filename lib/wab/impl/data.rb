@@ -11,6 +11,7 @@ module WAB
     # not be instance of this class but rather a class that is a duck-type of
     # this class (has the same methods and behavior).
     class Data < ::WAB::Data
+      attr_reader :root
 
       # This method should not be called directly. New instances should be
       # created by using a Shell#data method.
@@ -37,27 +38,14 @@ module WAB
       # same as ['child', 'grandchild'].
       def get(path)
         if path.is_a?(Symbol)
-          node = @root[path] 
+          node = root[path]
         else
           path = path.to_s.split('.') unless path.is_a?(Array)
-          node = @root
-          path.each { |key|
-            if node.is_a?(Hash)
-              node = node[key.to_sym]
-            elsif node.is_a?(Array)
-              i = key.to_i
-              if 0 == i && '0' != key && 0 != key
-                node = nil
-                break
-              end
-              node = node[i]
-            else
-              node = nil
-              break
-            end
-          }
+          node = extract_node(path, root)
         end
+
         return Data.new(node, false, false) if node.is_a?(Hash) || node.is_a?(Array)
+
         node
       end
 
@@ -83,43 +71,21 @@ module WAB
         else
           validate_value(value)
         end
-        node = @root
         path = path.to_s.split('.') unless path.is_a?(Array)
-        path[0..-2].each { |key|
-          if node.is_a?(Hash)
-            key = key.to_sym
-            node[key] = {} unless node.has_key?(key)
-            node = node[key]
-          elsif node.is_a?(Array)
-            key = key_to_int(key)
-            if key < node.length && -node.length < key
-              node = node[key]
-            else
-              nn = {}
-              if key < -node.length
-                node.unshift(nn)
-              else
-                node[key] = nn
-              end
-              node = nn
-            end
-          else
-            raise StandardError.new("Can not set a member of an #{node.class}.")
-          end
-        }
+        node = assign_node(path, root)
+
         key = path[-1]
+        ensure_hash_or_array(node)
         if node.is_a?(Hash)
           key = key.to_sym
           node[key] = value
-        elsif node.is_a?(Array)
+        else # node is an instance of Array
           key = key_to_int(key)
           if key < -node.length
             node.unshift(value)
           else
             node[key] = value
           end
-        else
-          raise StandardError.new("Can not set a member of an #{node.class}.")
         end
         value
       end
@@ -127,7 +93,7 @@ module WAB
       # Each child of the Data instance is provided as an argument to a block
       # when the each method is called.
       def each(&block)
-        each_node([], @root, block)
+        each_node([], root, block)
       end
 
       # Each leaf of the Data instance is provided as an argument to a block
@@ -135,21 +101,21 @@ module WAB
       # children and will be nil, a Boolean, String, Numberic, Time, WAB::UUID,
       # or URI.
       def each_leaf(&block)
-        each_leaf_node([], @root, block)
+        each_leaf_node([], root, block)
       end
 
       # Make a deep copy of the Data instance.
       def clone()
         # avoid validation by using a empty Hash for the intial value.
         c = self.class.new({}, false)
-        c.instance_variable_set(:@root, clone_value(@root))
+        c.instance_variable_set(:@root, clone_value(root))
         c
       end
 
       # Returns the instance converted to native Ruby values such as a Hash,
       # Array, etc.
       def native()
-        @root
+        root
       end
 
       # Returns true if self and other are either the same or have the same
@@ -158,28 +124,28 @@ module WAB
         # Any object that is of a class derived from the API class is a
         # candidate for being ==.
         return false unless other.is_a?(::WAB::Data)
-        values_eql?(@root, other.native)
+        values_eql?(root, other.native)
       end
       alias == eql?
       
       # Returns the length of the root element.
       def length()
-        @root.length
+        root.length
       end
 
       # Returns the number of leaves in the data tree.
       def leaf_count()
-        branch_count(@root)
+        branch_count(root)
       end
 
       # Returns the number of nodes in the data tree.
       def size()
-        branch_size(@root)
+        branch_size(root)
       end
 
       # Encode the data as a JSON string.
       def json(indent=0)
-        Oj.dump(@root, mode: :wab, indent: indent)
+        Oj.dump(root, mode: :wab, indent: indent)
       end
 
       # Detects and converts strings to Ruby objects following the rules:
@@ -187,10 +153,10 @@ module WAB
       # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
       # URI:: "http://opo.technology/sample", HTTP only
       def detect()
-        if @root.is_a?(Hash)
-          detect_hash(@root)
-        elsif @root.is_a?(Array)
-          detect_hash(@root)
+        if root.is_a?(Hash)
+          detect_hash(root)
+        elsif root.is_a?(Array)
+          detect_hash(root)
         end
       end
 
@@ -313,6 +279,54 @@ module WAB
           raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
         end
         value
+      end
+
+      def extract_node(path, root)
+        path.each do |key|
+          if root.is_a?(Hash)
+            root = root[key.to_sym]
+          elsif root.is_a?(Array)
+            i = key.to_i
+            if 0 == i && '0' != key && 0 != key
+              root = nil
+            end
+            root = root[i]
+          else
+            root = nil
+          end
+        end
+        root
+      end
+
+      def assign_node(path, root)
+        path[0..-2].each do |key|
+          ensure_hash_or_array(root)
+          if root.is_a?(Hash)
+            key = key.to_sym
+            root[key] = {} unless root.has_key?(key)
+            root = root[key]
+          else # root is an instance of Array
+            key = key_to_int(key)
+            if key < root.length && -root.length < key
+              root = root[key]
+            else
+              nn = {}
+              if key < -root.length
+                root.unshift(nn)
+              else
+                root[key] = nn
+              end
+              root = nn
+            end
+          end
+        end
+        root
+      end
+
+      def ensure_hash_or_array(node)
+        unless node.is_a?(Hash) || node.is_a?(Array)
+          raise StandardError.new("Can not set a member of an #{node.class}.")
+        end
       end
 
       def each_node(path, value, block)
