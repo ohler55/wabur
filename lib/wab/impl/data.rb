@@ -383,7 +383,7 @@ module WAB
         end
         return key if WAB::Utils.pre_24_fixnum?(key)
 
-        raise StandardError.new("path key must be an integer for an Array.") unless i.to_s == key
+        raise StandardError.new("path key must be an integer for an Array.")
       end
 
       def clone_value(value)
