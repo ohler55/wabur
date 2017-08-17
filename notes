@@ -1,2 +1,12 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
+- Javascript
+ - spec/template
+  - straight JSON is fine for defaults
+  - replace value with directives/specs for more control
+
+- benchmark ioshell
+ - ioshell_bench.rb
+ 
+
+
