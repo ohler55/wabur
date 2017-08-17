@@ -8,14 +8,3 @@ language: ruby
 rvm:
   - 2.4.0
   - 2.3.4
-
-install:
- - gem install rake
- - gem install oj
-
-before_script:
-  - gem build wabur.gemspec
-  - gem install wabur-*
-
-script:
-  - ./test/impl_test.rb
