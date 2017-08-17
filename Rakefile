@@ -15,7 +15,7 @@ task :test_all => [:clean] do
   exitcode = 0
   status = 0
 
-  cmds = "bundle exec ruby test/impl_test.rb"
+  cmds = "bundle exec ruby test/tests.rb"
   puts "\n" + "#"*90
   puts cmds
   Bundler.with_clean_env do
