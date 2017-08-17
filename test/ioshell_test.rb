@@ -244,7 +244,7 @@ class IoEngineTest < Minitest::Test
       $stdout = from_w
       from_r.close
 
-      shell = ::WAB::IO::Shell.new(1, 'kind', 0)
+      shell = ::WAB::IO::Shell.new(2, 'kind', 0)
       shell.timeout = 0.5
       shell.verbose = false # change to true to debug
       shell.register_controller(nil, MirrorController.new(shell, async))

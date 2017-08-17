@@ -80,8 +80,12 @@ module WAB
 
         if handler.nil?
           # Wait for either the response to arrive or for a timeout. In both
-          # cases #run should be called on the thread.
-          Thread.stop
+          # cases #run should be called on the thread. Sleep is used instead
+          # of stop to avoid a race condition where a response arrives before
+          # the thread is stopped.
+          while call.result.nil?
+            sleep(0.1)
+          end
           call.result
         else
           nil

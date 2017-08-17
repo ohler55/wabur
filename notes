@@ -4,9 +4,11 @@
  - spec/template
   - straight JSON is fine for defaults
   - replace value with directives/specs for more control
+  - template only needed for create and edit, view can be what is there
 
-- benchmark ioshell
- - ioshell_bench.rb
- 
+ - editor
+  - use template if available
+  - if not then build from root up/out/down
+  
 
 
