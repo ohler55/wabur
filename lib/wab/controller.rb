@@ -210,13 +210,13 @@ module WAB
         len = value.length
         if 0 < len && '\'' == value[0] 
           x << value
-        elsif /^-?\d+$/.match?(value)
+        elsif !/^-?\d+$/.match(value).nil?
           x << value.to_i
-        elsif /^-?\d*\.?\d+([eE][-+]?\d+)?$/.match?(value)
+        elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
           x << value.to_f
-        elsif 36 == len && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match?(value)
+        elsif 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(value).nil?
           x << ::WAB::UUID.new(value)
-        elsif 30 == len && /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match?(value)
+        elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(value).nil?
           begin
             x << DateTime.parse(value).to_time()
           rescue
