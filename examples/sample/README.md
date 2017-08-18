@@ -102,32 +102,51 @@ connections at a time to the Runner.
 #### Results
 
 Benchmarks were run on a Razer Blade Stealth laptop with Ubuntu 17.04. A nice
-machine but still a laptop and not a server class machine by any stretch.
+machine but still a laptop and not a server class machine by any stretch. A
+second set is on a desktop with an i7-6700@4.00GHz with 4 cores (8
+hyperthreads.
 
 ##### Direct DB access
 
 ```
-razer bin (master)> ./hose -p tree/000000000000000b -t 2 -c 20 127.0.0.1:6363
+razer bin> ./hose -p tree/000000000000000b -t 2 -c 20 127.0.0.1:6363
 127.0.0.1:6363 processed 100292 requests in 1.000 seconds for a rate of 100292 GETS/sec.
 with an average latency of 0.254 msecs
+
+big bin> hose -t 2 -c 20 -p tree/000000000000000b localhost:6363
+localhost:6363 processed 157075 requests in 1.000 seconds for a rate of 157075 GETS/sec.
+with an average latency of 0.162 msecs
+
 ```
 
 ##### Controller in Sychronous Mode with 4 Ruby Thread
 
 ```
-razer bin (master)> ./hose -p Article/11 -t 2 -c 20 127.0.0.1:6363
+razer bin> ./hose -p Article/11 -t 2 -c 20 127.0.0.1:6363
 127.0.0.1:6363 did not respond to 3 requests.
 127.0.0.1:6363 processed 10200 requests in 1.000 seconds for a rate of 10200 GETS/sec.
 with an average latency of 4.249 msecs
+
+big bin> hose -t 2 -c 20 -p Article/11 localhost:6363
+localhost:6363 did not respond to 1 requests.
+localhost:6363 processed 17569 requests in 1.000 seconds for a rate of 17569 GETS/sec.
+with an average latency of 2.963 msecs
+
 ```
 
 ##### Controller in Asychronous Mode with 4 Ruby Thread
 
 ```
-razer bin (master)> ./hose -p Article/11 -t 2 -c 20 127.0.0.1:6363
+razer bin> ./hose -p Article/11 -t 2 -c 20 127.0.0.1:6363
 127.0.0.1:6363 did not respond to 3 requests.
 127.0.0.1:6363 processed 11743 requests in 1.000 seconds for a rate of 11743 GETS/sec.
 with an average latency of 3.844 msecs
+
+big bin> hose -t 2 -c 20 -p Article/11 localhost:6363
+localhost:6363 did not respond to 4 requests.
+localhost:6363 processed 18061 requests in 1.000 seconds for a rate of 18061 GETS/sec.
+with an average latency of 2.514 msecs
+
 ```
 
 The performance is reasonable but there were reliability issues that will have
