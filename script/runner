@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# ---------------------------------
+# USAGE:
+#   $ script/runner localhost:6363
+# ---------------------------------
+set -e
+
+bundle exec ruby test/runner_test.rb $1
