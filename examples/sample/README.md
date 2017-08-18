@@ -8,7 +8,7 @@ a request made for data. It is the most straight forward use of the WAB gem.
 WAB Controllers can be tested without a browser and Javascript. By using curl,
 HTTP requests can be sent to the shell and subsequently verify the response.
 
-First a shell is needed.
+First a Runner is needed.
 
 Say Hello to OpO, a fast triple store. It provides the HTTP server and the
 Model storage, and is able to run the sample app as a spawned app that uses
@@ -17,13 +17,23 @@ Model storage, and is able to run the sample app as a spawned app that uses
 OpO can be downloaded from
 [OpO Downloads](http://www.opo.technology/download/index.html).
 
+Two terminals are used in this example. One if for watching the +opod+ trace
+output. The other is for calling +curl+ to make HTTP requests and to receive
+responses. Open two terminals to get prepared. One will be the opo terminal
+and the other the curl terminal.
+
 ### Start OpO
 
 The confguration file for OpO is in the `opo` sub-directory, and is named
 [`opo.conf`](opo/opo.conf). The configuration specifies that the OpO disk
-storage be in the `opo/data` directory.
+storage be in the `opo/data` directory. It also turns on logging for HTTP
+requests and responses along with handler information from the Runner's
+perspective. Near the bottom of the conf file the Controller, +spawn.rb+ is
+mentioned along with command line options. The +-v+ option turns on Controller
+verbosity.
 
-Start the OpO daemon with the following command after installing:
+Start the OpO daemon with the following command in the opo terminal after
+installing:
 
 ```
  > opod -c opo/opo.conf
@@ -31,7 +41,7 @@ Start the OpO daemon with the following command after installing:
 
 ### Adding a Record
 
-The curl application is used to add a record. The record is in the
+The +curl+ application is used to add a record. The record is in the
 [`article-1.json`](article-1.json) file. Once inserted, the response body
 will include the reference number of the newly created record.
 
@@ -39,7 +49,8 @@ will include the reference number of the newly created record.
 > curl -w "\n" -T article-1.json http://localhost:6363/Article
 ```
 
-A response similar to the following should appear.
+A response similar to the following should appear in the curl terminal where
+the curl command was invoked.
 
 ```json
 {"rid":"20170814212950.147723000","api":2,"body":{"ref":11,"code":0}}
@@ -48,6 +59,9 @@ A response similar to the following should appear.
 **Note:** The *`ref`* in the `body` element is the reference number of the new
 record. It will be used later to *get* and *delete* that record.
 
+Output should also appear in the opo terminal showing the arrival of the PUT
+request with details followed by a handler trace and then traces from the
+WAB::IO::Shell indicating what is sent to each part of the WAB setup.
 
 ### Get a Record
 
