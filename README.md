@@ -59,6 +59,14 @@ The Ruby Runner and C Runner with embedded ruby follow the same architecture.
 
 ![](http://www.opo.technology/wab/wab_embedded_arch.svg)
 
+Access to data can follow two paths. A direct access to the data is possible
+as portrayed by the red line that flows from HTTP server to the runner and
+onto the Model. The other path is to dive down into the Ruby Controller and
+allow the Controller to modify and control what is returned by a request. The
+Benchmark results in the example/sample/README.md includes the latest results.
+
+![](http://www.opo.technology/wab/wab_access_paths.svg)
+
 [Continue reading ...](pages/Architecture.md)
 
 ## Try It!
