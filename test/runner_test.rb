@@ -12,13 +12,19 @@ require 'oj'
 require 'wab/impl'
 require 'wab/io'
 
-# This tests is used to test WAB Runners. The Runner should be started with
-# the MirrorController class. The host and port must be the last argument on
-# the command line when running the test.
+# -----------------------------------------------------------------------------
+# This is to verify that WAB-Runners compile as WAB expect them to.
 #
-# As an example:
-#    runner_test.rb -v localhost:6363
+# Requirements:
+#   - The Runner (e.g. OpO daemon) should be started with the MirrorController
+#     class.
+#   - The host and port must be the last argument on the command line when
+#     invoking the test.
 #
+# Example usage:
+#    runner_test.rb localhost:6363
+# -----------------------------------------------------------------------------
+
 raise ArgumentError, "Host and port not supplied." if ARGV.empty?
 
 $host, $port = ARGV[-1].split(':')
