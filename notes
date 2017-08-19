@@ -1,5 +1,6 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
+
 - Javascript
  - spec/template
   - straight JSON is fine for defaults
@@ -10,5 +11,67 @@
   - use template if available
   - if not then build from root up/out/down
   
+- pages (directory with stub/sample)
+ - home/index.html
+  - put up headers and footer
+  - load all js
+  - list classes
+   - specs are a js file
+  - pick a class
+   - create button
+   - list or query to get a list
+    - query by with apple file search like
+    - options on list
+     - view
+     - edit
+     - delete
+
+- wab namespace, define constructors in wab
+
+wab = {
+  function Obj(kind, template) {
+  }
+  this.Obj = Obj;
+}
+
+- wab.View
+ - top level pick obj to do the display stuff
+ - create Article and others and add to class list on wab.View
+ - 
+ - start with wab.ClassList(view)
+  - create and tell wab.View instance to set
+
+- wab.page
+ - base for other Wab stuff
+
+- wab.Obj
+- wab.List
+
+// how to manage instances for the Article kind
+function Article() {
+  template = { 'title': '', 'text': '' };
+  wab.Obj.call(this, 'article', template);
+}
+
+Article.prototype = Object.create(WabObj.prototype);
+Article.prototype.constructor = Article;
 
 
+wab.Obj.prototype.constructor = function(kind, template) {
+  this.kind = kind;
+  this.template = template;
+}
+WabObj.prototype.show = function(id_or_obj, some_display_thingy) {
+  // layout template elements
+  // populate
+}
+
+- spec(kind, 
+- maybe class list is
+ - class/kind
+ - func to layout
+ - func to populate layout
+ - func for create
+ - func for edit
+  - fills in fields and sets those to editable
+ 
