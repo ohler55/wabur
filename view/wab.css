@@ -1,3 +1,100 @@
-.style{
-    padding: 0px;
+* {
+  margin: 0;
+  padding: 0;
+  font-kerning: none;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1180px;
+}
+.header {
+  color: #eaeaea;
+  background: #333;
+}
+
+.header a:hover,
+.footer a:hover {
+  color: #fcfcfc;
+}
+
+.header .logo {
+  float: left;
+  padding: 15px;
+}
+
+.header .logo .brand,
+.header .logo .subtitle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.header .logo .brand {
+  padding-right: 15px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.header .logo .subtitle {
+  padding-left: 15px;
+  font-size: 13px;
+  color: #ddd;
+  border-left: 1px solid #999;
+}
+
+.header nav {
+  float: right;
+  padding: 0 15px;
+}
+
+.header nav li {
+  float: left;
+}
+
+.header nav li a {
+  display: block;
+  padding: 15px 0 12px 15px;
+  color: #aaa;
+}
+
+.footer {
+  color: #eaeaea;
+  background: #333;
+  color: #999;
+  text-align: center;
+}
+
+.footer .attribution {
+  padding: 15px 0 12px;
+}
+
+.footer .brand {
+  color: #3eb1c1;
+  font-weight: bold;
+}
+
+.content {
+  padding: 30px 15px;
+  flex: 1 0 auto;
 }

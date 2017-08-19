@@ -1,15 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>WAB</title>
-    <link rel="stylesheet" type="text/css" media="screen,print" href="wab.css" />
+    <meta charset="UTF-8" />
+    <title>Welcome to WABuR</title>
+    <link rel="stylesheet" type="text/css" media="screen, print" href="wab.css" />
   </head>
+  <body onresize="resizeList()">
+    <header class="header">
+      <div class="container">
+        <div class="logo">
+          <span class="brand">WABuR</span>
+          <span class="subtitle">Web Application Builder using Ruby</span>
+        </div>
+        <nav class="navbar">
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="https://github.com/ohler55/wabur">Contribute</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-  <body onresize="resizeList()" style="overflow: hidden">
-    <h2>WAB</h2>
+    <main class="content container">
+      <!-- dynamic content -->
+    </main>
 
-    <script type="text/javascript" src="js/wab.js"></script>
-
+    <footer class="footer">
+      <div class="container">
+        <div class="attribution">
+          Powered by <a class="brand" href="https://github.com/ohler55/wabur">WABuR</a>
+        </div>
+      </div>
+    </footer>
+    <script src="js/wab.js"></script>
   </body>
 </html>
