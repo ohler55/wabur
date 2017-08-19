@@ -98,3 +98,31 @@ ul {
   padding: 30px 15px;
   flex: 1 0 auto;
 }
+
+.type_list_title {
+    font-size: 18px;
+  font-weight: bold;
+}
+
+.list {
+    display: table;
+    border: 1px solid #404040;
+}
+
+.list_row {
+    display: table-row;
+}
+
+.list_cell {
+    display: table-column;
+    float: left;
+    font-size: 18px;
+    text-align: left;
+    padding: 2px 16px;
+    cursor: pointer;
+}
+
+.list_cell:hover {
+    display: table-row;
+    background: #f0f6ff;
+}
