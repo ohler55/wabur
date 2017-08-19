@@ -1,29 +1,33 @@
 #!/usr/bin/env ruby -wW1
 
 home = File.expand_path(".")
-name = File.basename(home)
-name = ARGV[0] unless ARGV[0].nil?
-dir = name
-dir = ARGV[1] unless ARGV[1].nil?
+name = ARGV.empty? ? File.basename(home) : ARGV[0]
 
 require File.join(home, "lib/wab/version")
 
-version = eval("WAB::VERSION")
+version = WAB::VERSION
 
-puts "Releasing #{name} gem version #{version}"
+def log(str, dash = '-')
+  puts "\n#{str}"
+  puts dash * str.to_s.length
+end
+
+log "Releasing #{name} - #{version}", '='
 
 tags = `git tag`.split("\n")
 tag = "v#{version}"
 unless tags.include?(tag)
-  puts "tagging release with #{tag}"
+  log "tagging with #{tag}.."
   `git tag -m "release #{version}" v#{version}`
+  puts "  tag '#{tag}' created."
+  puts "  pushing '#{tag}' to remote..\n\n"
   `git push --tags`
 end
 
-puts "building gem"
+log "Building gem.."
 out = `gem build #{name}.gemspec`
-exit(0) unless out.include?("Success")
+out.include?("Success") ? puts(out) : exit(0)
 
-puts "pushing #{name}-#{version}.gem"
+log "pushing #{name}-#{version}.gem.."
 out = `gem push #{name}-#{version}.gem`
 puts out
