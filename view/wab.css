@@ -29,6 +29,7 @@ ul {
   max-width: 1180px;
 }
 .header {
+  padding: 0 15px;
   color: #eaeaea;
   background: #333;
 }
@@ -74,13 +75,14 @@ ul {
 
 .header nav li a {
   display: block;
-  padding: 15px 0 12px 15px;
+  padding: 13px 0 0 15px;
   color: #aaa;
 }
 
 .footer {
-  color: #eaeaea;
-  background: #333;
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  background: #eee;
   color: #999;
   text-align: center;
 }
@@ -95,34 +97,66 @@ ul {
 }
 
 .content {
-  padding: 30px 15px;
   flex: 1 0 auto;
 }
 
-.type_list_title {
-    font-size: 18px;
-  font-weight: bold;
+.sidebar {
+  position: fixed;
+  width: 200px;
+  min-height: 100%;
+  padding: 30px 0;
+  color: #eee;
+  background: #212121;
 }
 
-.list {
-    display: table;
-    border: 1px solid #404040;
+.sidebar li {
+  border-top: 1px solid #373737;
+  border-bottom: 1px solid #0d0d0d;
 }
 
-.list_row {
-    display: table-row;
+.sidebar li:first-of-type {
+  border-top-color: transparent;
 }
 
-.list_cell {
-    display: table-column;
-    float: left;
-    font-size: 18px;
-    text-align: left;
-    padding: 2px 16px;
-    cursor: pointer;
+.sidebar li:last-of-type {
+  border-bottom-color: transparent;
 }
 
-.list_cell:hover {
-    display: table-row;
-    background: #f0f6ff;
+.sidebar li a {
+  display: block;
+  padding: 15px;
+  padding-left: 30px;
+  color: #3eb1c1;
 }
+
+.sidebar li a:hover {
+  color: #eee;
+  background: #181818;
+}
+
+.view-content {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  padding: 40px;
+}
+
+.view-content .object .object { padding-left: 15px; }
+.view-content .object .object-item {
+  display: table;
+  padding: 4px 0;
+}
+.view-content .object .key.value-object {
+  float: none;
+  padding-bottom: 2px;
+}
+
+.view-content .object .key,
+.view-content .object .value { float: left; }
+
+.view-content .object .key { font-weight: bold; }
+.view-content .object .key:after {
+  content: ":";
+  margin-right: 15px;
+}
+
+.type { margin-bottom: 15px; }

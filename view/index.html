@@ -7,29 +7,62 @@
   </head>
   <body onresize="resizeList()">
     <header class="header">
-      <div class="container">
-        <div class="logo">
-          <span class="brand">WABuR</span>
-          <span class="subtitle">Web Application Builder using Ruby</span>
-        </div>
-        <nav class="navbar">
-          <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="https://github.com/ohler55/wabur">Contribute</a></li>
-          </ul>
-        </nav>
+      <div class="logo">
+        <span class="brand">WABuR</span>
+        <span class="subtitle">Web Application Builder using Ruby</span>
       </div>
+      <nav class="navbar">
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="https://github.com/ohler55/wabur">Contribute</a></li>
+        </ul>
+      </nav>
     </header>
 
-    <main id="view" class="content container">
-      <!-- dynamic content -->
+    <main class="content">
+      <div class="sidebar">
+        <ul id="types">
+        <!--
+          <li><a href="#">Article</a></li>
+          <li><a href="#">Other</a></li>
+        -->
+        </ul>
+      </div>
+      <div id="view" class="view-content">
+      <!--
+        <h2 class="type">Article</h2>
+        <ul class="object">
+          <li class="object-item">
+            <div class="key">Key1</div>
+            <div class="value">Value1</div>
+          </li>
+          <li class="object-item">
+            <div class="key">Key2</div>
+            <div class="value">Value2</div>
+          </li>
+          <li class="object-item">
+            <div class="key value-object">Key3</div>
+            <div class="value">
+              <ul class="object">
+                <li class="object-item">
+                  <div class="key">Key3.1</div>
+                  <div class="value">Value3.1</div>
+                </li>
+                <li class="object-item">
+                  <div class="key">Key3.2</div>
+                  <div class="value">Value3.2</div>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      -->
+      </div>
     </main>
 
     <footer class="footer">
-      <div class="container">
-        <div class="attribution">
-          Powered by <a class="brand" href="https://github.com/ohler55/wabur">WABuR</a>
-        </div>
+      <div class="attribution">
+        Powered by <a class="brand" href="https://github.com/ohler55/wabur">WABuR</a>
       </div>
     </footer>
     <script src="js/wab.js"></script>
