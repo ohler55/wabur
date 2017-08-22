@@ -11,8 +11,23 @@ wab.view.register_type('Article',
                            ],
                            obj: {
                                kind: 'Article',
-                               title: '',
-                               text: ''
+                               fields: [
+                                   {
+                                       label: 'Title',
+                                       path: 'title',
+                                       type: 'text',
+                                       init: '',
+                                       width: '200px'
+                                   },
+                                   {
+                                       label: 'Text',
+                                       path: 'text',
+                                       type: 'textarea',
+                                       init: '',
+                                       width: '80%',
+                                       rows: 4
+                                   }
+                               ]
                            }
                        });
 
@@ -27,8 +42,48 @@ wab.view.register_type('Other',
                            ],
                            obj: {
                                kind: 'Other',
-                               title: '',
-                               text: ''
+                               fields: [
+                                   {
+                                       label: 'One',
+                                       path: 'one',
+                                       type: 'text',
+                                       init: '',
+                                       width: 0,
+                                       height: 1
+                                   },
+                                   {
+                                       label: 'Two',
+                                       path: 'two',
+                                       type: 'text',
+                                       init: '',
+                                       width: 0,
+                                       height: 1
+                                   },
+                                   {
+                                       label: 'Three',
+                                       path: 'three',
+                                       type: 'text',
+                                       init: '',
+                                       width: 0,
+                                       height: 1
+                                   },
+                                   {
+                                       label: 'Four',
+                                       path: 'four',
+                                       type: 'text',
+                                       init: '',
+                                       width: 0,
+                                       height: 1
+                                   },
+                                   {
+                                       label: 'Text',
+                                       path: 'text',
+                                       type: 'text',
+                                       init: '',
+                                       width: 0,
+                                       height: 4
+                                   }
+                               ]
                            }
                        });
 

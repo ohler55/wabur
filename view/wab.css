@@ -153,7 +153,8 @@ table, tr, th, td {
 }
 
 .table-wrapper {
-  overflow-x: auto;
+  overflow: auto;
+  height: 500px;
 }
 
 .obj-list-table {
@@ -211,3 +212,18 @@ table, tr, th, td {
 .obj-list-table td.actions .icon {
   font-size: 24px;
 }
+
+.obj-form-frame {
+  border: 1px solid blue;
+  padding: 8px;
+}
+.obj-form {
+  width: 100%;
+  border: 1px solid red;
+  padding: 8px;
+}
+
+.obj-form-lock {
+  font-size: 24px;
+}
+
