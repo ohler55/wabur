@@ -122,22 +122,33 @@ ul {
   border-bottom-color: transparent;
 }
 
-.sidebar li a {
+.sidebar_item {
   display: block;
-  padding: 15px;
-  padding-left: 30px;
+  padding: 10px;
+  padding-left: 20px;
   color: #3eb1c1;
 }
 
-.sidebar li a:hover {
-  color: #eee;
+.sidebar_item:hover {
+  color: #e0e0e0;
   background: #181818;
+}
+
+.sidebar_selected {
+  display: block;
+  padding: 10px;
+  padding-left: 20px;
+  color: #3eb1c1;
+  background: #606060;
+}
+.sidebar_selected:hover {
+  color: #ffffff;
 }
 
 .view-content {
   width: calc(100% - 200px);
   margin-left: 200px;
-  padding: 40px;
+  padding: 20px;
 }
 
 .view-content .object .object { padding-left: 15px; }
@@ -160,3 +171,62 @@ ul {
 }
 
 .type { margin-bottom: 15px; }
+
+.obj-list-frame {
+    width: 100%;
+    border-width: 0px;
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+}
+
+.obj-list-header {
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    border-collapse: collapse;
+    background: #404040;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: left;
+}
+
+.obj-list-header td {
+    border: 1px solid #808080;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+.obj-header-button {
+    width: 60px;
+    border: 2px;
+    padding: 0px;
+    margin: 0px;
+    border-collapse: collapse;
+}
+
+.obj-list {
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+.obj-list td {
+    border: 1px solid #808080;
+    padding: 4px 8px;
+}
+
+.obj-list-button {
+    width: 60px;
+    border: 2px;
+    padding: 0px;
+    margin: 0px;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: center;
+}
+
