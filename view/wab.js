@@ -15,6 +15,9 @@ var wab = {
         this.ref = ref;
         this.spec = spec;
         this.form = null;
+        this.lock = null;
+        this.edit = false;
+        this.save_button = null;
     },
     // The act attribute is an enum value 0=view, 1=edit, 3=delete
     list_buttons: [
@@ -94,7 +97,6 @@ function httpDelete(url, obj, cb) {
 }
 
 wab.ObjList.prototype.delete = function(ref) {
-    console.log("deleting " + ref);
     httpDelete('/v1/' + this.kind + '/' + ref, this, function(ol, resp) {
         // TBD this is probably a better way to do this.
         wab.view.set(ol);
@@ -208,29 +210,67 @@ wab.ObjList.prototype.display = function(view, edit) {
     })
 }
 
+wab.Obj.prototype.toggleLock = function() {
+    this.edit = !this.edit;
+    var child, i, j, row, cell, input;
+    while (null != (child = this.lock.firstChild)) {
+        this.lock.removeChild(child);
+    }
+    if (this.edit) {
+        this.lock.appendChild(document.createTextNode('unlocked'));
+    } else {
+        this.lock.appendChild(document.createTextNode('locked'));
+    }
+    for (i = this.form.children.length - 1; 0 <= i; i--) {
+        row = this.form.children[i];
+        for (j = row.children.length - 1; 0 <= j; j--) {
+            cell = row.children[j];
+            input = cell.firstChild;
+            if ('INPUT' == input.nodeName || 'TEXTAREA' == input.nodeName) {
+                input.readOnly = !this.edit;
+            }
+            // TBD handle nested
+        }
+    }
+    if (this.edit) {
+        // TBD set style
+        (function(o) { o.save_button.onclick = function() { o.save(); }})(this);
+    } else {
+        // TBD set style
+        (function(o) { o.save_button.onclick = function() { }})(this);
+    }
+    // TBD should modified values be flipped back to the originals?
+}
+
+wab.Obj.prototype.save = function() {
+    console.log("Save clicked for " + this.ref + ' - locked: ' + !this.edit);
+    // TBD
+}
+
 wab.Obj.prototype.display = function(view, edit) {
+    this.edit = edit;
     var frame = document.createElement('div'), form, input, row, cell;
     frame.className = 'obj-form-frame';
     view.appendChild(frame);
 
-
     // Lock icon set according to edit flag, add click to flip from edit to view.
-    var p = document.createElement('p'), btn = document.createElement('span');
+    var e = document.createElement('div'), btn = document.createElement('span');
+    this.lock = btn;
     // TBD fix this once there are icons for locked and unlocked
     if (edit) {
-        p.appendChild(document.createTextNode('unlocked'));
+        btn.appendChild(document.createTextNode('unlocked'));
     } else {
-        p.appendChild(document.createTextNode('locked'));
+        btn.appendChild(document.createTextNode('locked'));
     }
     //btn.className = 'icon-form-locked';
     //btn.setAttribute('title', 'locked');
-    //p.appendChild(btn);
-    frame.appendChild(p);
-    // TBD add onclick toggle of locked to flip between edit and view
-
+    e.appendChild(btn);
+    frame.appendChild(e);
+    (function(o) { e.onclick = function() { o.toggleLock(); }})(this);
 
     // A table aligns the labels nicely.
     form = document.createElement('table');
+    this.form = form;
     form.className = 'obj-form';
     frame.appendChild(form);
 
@@ -274,18 +314,25 @@ wab.Obj.prototype.display = function(view, edit) {
         cell.appendChild(input);
         row.appendChild(cell);
     }
-    p = document.createElement('p');
+    e = document.createElement('div')
+    btn = document.createElement('span');
+    this.save_button = e;
     // TBD change this to the correct type for a button
     if (0 != this.ref) {
-        p.appendChild(document.createTextNode('Update'));
+        btn.appendChild(document.createTextNode('Update'));
     } else {
-        p.appendChild(document.createTextNode('Create'));
+        btn.appendChild(document.createTextNode('Create'));
     }
-    frame.appendChild(p);
-    // TBD add onclick toggle of locked to flip between edit and view
+    if (edit) {
+        // TBD set style
+        (function(o) { e.onclick = function() { o.save(); }})(this);
+    } else {
+        // TBD set style
+        (function(o) { e.onclick = function() { }})(this);
+    }
+    e.appendChild(btn);
+    frame.appendChild(e);
 
-
-    this.form = form;
     if (0 != this.ref) {
         httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
             if (0 != resp.body.code) {
