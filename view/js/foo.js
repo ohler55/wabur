@@ -1,68 +1,3 @@
-// The wab namespace and constructor definitions. Everything is in this file
-// to minimize page fetchs from the server.
-
-var wab = {
-    View: function() {
-        this.view = document.getElementById("view");
-        this.page = null;
-        this.specs = {};
-    },
-    ObjList: function ObjList(kind, spec) {
-        this.kind = kind;
-        this.spec = spec;
-    },
-    Obj: function Obj(ref, spec) {
-        this.ref = ref;
-        this.spec = spec;
-        this.form = null;
-        this.lock = null;
-        this.edit = false;
-        this.save_button = null;
-    },
-    // The act attribute is an enum value 0=view, 1=edit, 2=delete
-    list_buttons: [
-        { title: 'View', icon: 'icon icon-eye', cn: 'actions', act: 0 },
-        { title: 'Edit', icon: 'icon icon-pencil', cn: 'actions', act: 1 },
-        { title: 'Delete', icon: 'icon icon-trash-o', cn: 'actions delete', act: 2 }
-    ]
-}
-
-// View methods.
-wab.View.prototype.register_type = function(kind, spec) {
-    this.specs[kind] = spec;
-}
-
-wab.View.prototype.set = function(page, edit) {
-    // Clear out any existing elements in the view.
-    var types = document.getElementById("types"), child;
-    while (null != (child = this.view.firstChild)) {
-        this.view.removeChild(child);
-    }
-    while (null != (child = types.firstChild)) {
-        types.removeChild(child);
-    }
-    // Display types in sidebar with the title associated with the page type
-    // highlighted.
-    var page_kind = '';
-    this.page = page;
-    if (null != page) {
-        page.display(this.view, edit);
-        page_kind = page.kind;
-    }
-    Object.keys(wab.view.specs).sort().forEach(function(k, i) {
-        title = document.createElement('li');
-        if (page_kind == k) {
-            title.className = 'sidebar_selected';
-        } else {
-            title.className = 'sidebar_item';
-        }
-        types.appendChild(title);
-        title.appendChild(document.createTextNode(k));
-        title.onclick = function() {
-            wab.view.set(new wab.ObjList(k, wab.view.specs[k]));
-        }
-    });
-}
 
 function httpGet(url, obj, cb) {
     var h = new XMLHttpRequest();
@@ -98,25 +33,28 @@ function httpDelete(url, obj, cb) {
 
 wab.ObjList.prototype.delete = function(ref) {
     httpDelete('/v1/' + this.kind + '/' + ref, this, function(ol, resp) {
-        // TBD this is probably a better way to do this.
         wab.view.set(ol);
     })
 }
 
 wab.ObjList.prototype.display = function(view, edit) {
-
-    // TBD add a Create button
-
     var wrapper = document.createElement('div');
     wrapper.className = 'table-wrapper';
     view.appendChild(wrapper);
+
+    e = document.createElement('div');
+    e.className = 'btn';
+    btn = document.createElement('span');
+    btn.appendChild(document.createTextNode('Create'));
+    (function(ol) { e.onclick = function() { wab.view.set(new wab.Obj(0, ol), true); }})(this);
+    e.appendChild(btn);
+    wrapper.appendChild(e);
 
     var frame = document.createElement('table'), list, row, cell;
     wrapper.appendChild(frame);
 
     row = document.createElement('tr');
     frame.appendChild(row);
-
 
     header = document.createElement('table');
     header.className = 'obj-list-table';
@@ -186,11 +124,11 @@ wab.ObjList.prototype.display = function(view, edit) {
                             b.onclick = function() { ol.delete(r); }
                             break;
                         case 1:
-                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol.spec), true); }
+                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol), true); }
                             break;
                         case 0:
                         default:
-                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol.spec), false); }
+                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol), false); }
                         }
                     })(ol, ref, btn, bi.act);
                     row.appendChild(cell);
@@ -198,6 +136,38 @@ wab.ObjList.prototype.display = function(view, edit) {
             }
         }
     })
+}
+
+wab.Obj.prototype.fetch = function() {
+    if (0 != this.ref) {
+        httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
+            if (0 != resp.body.code) {
+                alert(results.error);
+                return;
+            }
+            var results = resp.body.results;
+            if (!(typeof results === 'object')) {
+                alert('Invalid response from server');
+                return;
+            }
+            if (0 == results.length) {
+                alert('Record not found.');
+                return;
+            }
+            var obj = results[0].data, i, j, row, cell, input;
+            for (i = o.form.children.length - 1; 0 <= i; i--) {
+                row = o.form.children[i];
+                for (j = row.children.length - 1; 0 <= j; j--) {
+                    cell = row.children[j];
+                    input = cell.firstChild;
+                    if ('INPUT' == input.nodeName || 'TEXTAREA' == input.nodeName) {
+                        input.value = obj[input.path];
+                    }
+                    // TBD handle nested
+                }
+            }
+        })
+    }
 }
 
 wab.Obj.prototype.toggleLock = function() {
@@ -227,16 +197,72 @@ wab.Obj.prototype.toggleLock = function() {
     if (this.edit) {
         // TBD set style
         (function(o) { o.save_button.onclick = function() { o.save(); }})(this);
+        this.save_button.style.visibility = 'visible';
+        if (0 != this.ref) {
+            this.delete_button.style.visibility = 'visible';
+        }
     } else {
-        // TBD set style
+        this.fetch(); // refresh attributes
         (function(o) { o.save_button.onclick = function() { }})(this);
+        this.save_button.style.visibility = 'hidden';
+        this.delete_button.style.visibility = 'hidden';
     }
     // TBD should modified values be flipped back to the originals?
 }
 
 wab.Obj.prototype.save = function() {
-    console.log("Save clicked for " + this.ref + ' - locked: ' + !this.edit);
-    // TBD
+    var obj = { kind: this.spec.obj.kind }, i, row, cell, input;
+
+    for (i = this.form.children.length - 1; 0 <= i; i--) {
+        row = this.form.children[i];
+        for (j = row.children.length - 1; 0 <= j; j--) {
+            cell = row.children[j];
+            input = cell.firstChild;
+            if ('INPUT' == input.nodeName || 'TEXTAREA' == input.nodeName) {
+                // TBD convert to correct type
+                obj[input.path] = input.value;
+            }
+            // TBD handle nested
+        }
+    }
+    var method, url;
+    
+    if (0 == this.ref) {
+        method = 'PUT';
+        url = '/v1/' + this.spec.obj.kind;
+    } else {
+        method = 'POST';
+        url = '/v1/' + this.spec.obj.kind + '/' + this.ref;
+    }
+    var h = new XMLHttpRequest();
+    h.open(method, url, true);
+    h.setRequestHeader('Content-Type', 'application/json');
+    h.responseType = 'json';
+    (function(o) {
+        h.onreadystatechange = function() {
+            if (4 == h.readyState) {
+                if (200 == h.status) {
+                    if (0 == o.ref) { // create
+                        o.ref = h.response.body.ref
+                        o.delete_button.style.visibility = 'visible';
+                        o.save_button.removeChild(o.save_button.firstChild);
+                        o.save_button.appendChild(document.createTextNode('Update'));
+                    } else { // update
+                        var updated = h.response.body.updated;
+                        if (typeof updated === 'object' || 0 < updated.length) {
+                            o.ref = updated[0];
+                        } else {
+                            alert('Save to ' + url + ' returned an a null object reference.');
+                        }
+                    }
+                    o.fetch();
+                } else {
+                    alert('Save to ' + url + ' returned ' + h.status + '.');
+                }
+            }
+        }
+    })(this);
+    h.send(JSON.stringify(obj));
 }
 
 wab.Obj.prototype.display = function(view, edit) {
@@ -288,12 +314,12 @@ wab.Obj.prototype.display = function(view, edit) {
             input = document.createElement('input');
             input.className = 'form-field';
             input.setAttribute('type', f.type);
-            input.setAttribute('value', f.init);
+            input.value = f.init;
         }
         if (!edit) {
             input.readOnly = true;
         }
-        input.setAttribute('path', f.path);
+        input.path = f.path;
         cell.appendChild(input);
         row.appendChild(cell);
     }
@@ -307,47 +333,23 @@ wab.Obj.prototype.display = function(view, edit) {
     } else {
         btn.appendChild(document.createTextNode('Create'));
     }
-    if (edit) {
-        // TBD set style
-        (function(o) { e.onclick = function() { o.save(); }})(this);
-    } else {
-        // TBD set style
-        (function(o) { e.onclick = function() { }})(this);
+    (function(o) { e.onclick = function() { o.save(); }})(this);
+    if (!edit) {
+        e.style.visibility = 'hidden';
     }
     e.appendChild(btn);
     frame.appendChild(e);
 
-    if (0 != this.ref) {
-        httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
-            if (0 != resp.body.code) {
-                alert(results.error);
-                return;
-            }
-            var results = resp.body.results;
-            if (!(typeof results === 'object')) {
-                alert('Invalid response from server');
-                return;
-            }
-            if (0 == results.length) {
-                alert('Record not found.');
-                return;
-            }
-            var obj = results[0].data, i, j, row, cell, input;
-            for (i = o.form.children.length - 1; 0 <= i; i--) {
-                row = o.form.children[i];
-                for (j = row.children.length - 1; 0 <= j; j--) {
-                    cell = row.children[j];
-                    input = cell.firstChild;
-                    if ('INPUT' == input.nodeName) {
-                        input.setAttribute('value', obj[input.getAttribute('path')]);
-                    } else if ('TEXTAREA' == input.nodeName) {
-                        input.value = obj[input.getAttribute('path')];
-                    }
-                    // TBD handle nested
-                }
-            }
-        })
+    e = document.createElement('div');
+    e.className = 'btn';
+    btn = document.createElement('span');
+    this.delete_button = e;
+    btn.appendChild(document.createTextNode('Delete'));
+    (function(o, r) { e.onclick = function() { o.list.delete(r); }})(this, this.ref);
+    e.appendChild(btn);
+    frame.appendChild(e);
+    if (0 == this.ref || !this.edit) {
+        e.style.visibility = 'hidden';
     }
+    this.fetch();
 }
-
-wab.view = new wab.View();
