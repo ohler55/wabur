@@ -24,12 +24,51 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-plus:before {
+  content: "\f067";
+}
+.icon-search:before {
+  content: "\f002";
+}
 .icon-trash-o:before {
   content: "\f014";
+}
+.icon-refresh:before {
+  content: "\f021";
+}
+.icon-lock:before {
+  content: "\f023";
 }
 .icon-pencil:before {
   content: "\f040";
 }
+.icon-plus-circle:before {
+  content: "\f055";
+}
+.icon-info-circle:before {
+  content: "\f05a";
+}
 .icon-eye:before {
   content: "\f06e";
+}
+.icon-github:before {
+  content: "\f09b";
+}
+.icon-unlock:before {
+  content: "\f09c";
+}
+.icon-floppy-o:before {
+  content: "\f0c7";
+}
+.icon-save:before {
+  content: "\f0c7";
+}
+.icon-unlock-alt:before {
+  content: "\f13e";
+}
+.icon-file-text:before {
+  content: "\f15c";
+}
+.icon-diamond:before {
+  content: "\f219";
 }

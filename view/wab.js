@@ -19,7 +19,7 @@ var wab = {
         this.edit = false;
         this.save_button = null;
     },
-    // The act attribute is an enum value 0=view, 1=edit, 3=delete
+    // The act attribute is an enum value 0=view, 1=edit, 2=delete
     list_buttons: [
         { title: 'View', icon: 'icon icon-eye', cn: 'actions', act: 0 },
         { title: 'Edit', icon: 'icon icon-pencil', cn: 'actions', act: 1 },
@@ -107,48 +107,44 @@ wab.ObjList.prototype.display = function(view, edit) {
 
     // TBD add a Create button
 
+    var wrapper = document.createElement('div');
+    wrapper.className = 'table-wrapper';
+    view.appendChild(wrapper);
+
     var frame = document.createElement('table'), list, row, cell;
-    frame.className = 'obj-list-table';
-    view.appendChild(frame);
+    wrapper.appendChild(frame);
 
     row = document.createElement('tr');
     frame.appendChild(row);
-    cell = document.createElement('td');
-    row.appendChild(cell);
+
 
     header = document.createElement('table');
     header.className = 'obj-list-table';
-    cell.appendChild(header);
+    row.appendChild(header);
 
     row = document.createElement('tr');
     header.appendChild(row);
 
-    var i, cs = this.spec.list, len = cs.length;
+    var cs = this.spec.list, len = cs.length;
     for (i = 0; i < len; i++) {
         cs = this.spec.list[i];
         cell = document.createElement('th');
-        if (3 <= cs.length) {
-            cell.style.width = cs[2];
-        } else {
-            cell.style.width = 'auto';
-        }
         cell.appendChild(document.createTextNode(cs[0]));
         row.appendChild(cell);
     }
     cell = document.createElement('th');
     cell.appendChild(document.createTextNode('Actions'));
-    cell.style.width = '196px'; // TBD use a css style instead
-    //cell.className = 'obj-list-table ???';
+    cell.className = 'list-actions';
+    cell.setAttribute('colspan', 3);
     row.appendChild(cell);
 
     // Prepare list table.
     row = document.createElement('tr');
+    row.className = 'list-items';
     frame.appendChild(row);
-    cell = document.createElement('td');
-    row.appendChild(cell);
     list = document.createElement('table');
     list.className = 'obj-list-table';
-    cell.appendChild(list);
+    row.appendChild(list);
 
     this.list = list;
     
@@ -172,11 +168,6 @@ wab.ObjList.prototype.display = function(view, edit) {
                     cs = ol.spec.list[i];
                     cell = document.createElement('td');
                     cell.className = 'obj-list';
-                    if (3 <= cs.length) {
-                        cell.style.width = cs[2];
-                    } else {
-                        cell.style.width = 'auto';
-                    }
                     cell.appendChild(document.createTextNode(obj[cs[1]]));
                     row.appendChild(cell);
                 }
@@ -200,7 +191,6 @@ wab.ObjList.prototype.display = function(view, edit) {
                         case 0:
                         default:
                             b.onclick = function() { wab.view.set(new wab.Obj(r, ol.spec), false); }
-                            break;
                         }
                     })(ol, ref, btn, bi.act);
                     row.appendChild(cell);
@@ -217,9 +207,11 @@ wab.Obj.prototype.toggleLock = function() {
         this.lock.removeChild(child);
     }
     if (this.edit) {
-        this.lock.appendChild(document.createTextNode('unlocked'));
+        this.lock.className = 'icon icon-unlock';
+        this.lock.setAttribute('title', 'unlocked');
     } else {
-        this.lock.appendChild(document.createTextNode('locked'));
+        this.lock.className = 'icon icon-lock';
+        this.lock.setAttribute('title', 'locked');
     }
     for (i = this.form.children.length - 1; 0 <= i; i--) {
         row = this.form.children[i];
@@ -255,15 +247,15 @@ wab.Obj.prototype.display = function(view, edit) {
 
     // Lock icon set according to edit flag, add click to flip from edit to view.
     var e = document.createElement('div'), btn = document.createElement('span');
+    e.className = 'btn lock-btn';
     this.lock = btn;
-    // TBD fix this once there are icons for locked and unlocked
     if (edit) {
-        btn.appendChild(document.createTextNode('unlocked'));
+        btn.className = 'icon icon-unlock';
+        btn.setAttribute('title', 'unlocked');
     } else {
-        btn.appendChild(document.createTextNode('locked'));
+        btn.className = 'icon icon-lock';
+        btn.setAttribute('title', 'locked');
     }
-    //btn.className = 'icon-form-locked';
-    //btn.setAttribute('title', 'locked');
     e.appendChild(btn);
     frame.appendChild(e);
     (function(o) { e.onclick = function() { o.toggleLock(); }})(this);
@@ -282,30 +274,21 @@ wab.Obj.prototype.display = function(view, edit) {
         row = document.createElement('tr');
         form.appendChild(row);
         cell = document.createElement('td');
+        cell.className = 'field-label';
         cell.appendChild(document.createTextNode(f.label));
         row.appendChild(cell);
         cell = document.createElement('td');
         if ('textarea' == f.type) {
             input = document.createElement('textarea');
-            if (undefined != f.cols) {
-                input.setAttribute('cols', '' + f.cols);
-            }
-            if (undefined != f.rows) {
-                input.setAttribute('rows', '' + f.rows);
-            }
+            input.className = 'form-field';
             input.value = f.init;
         } else if (typeof f.init === 'object') {
             // TBD handle nested values
         } else {
             input = document.createElement('input');
+            input.className = 'form-field';
             input.setAttribute('type', f.type);
             input.setAttribute('value', f.init);
-        }
-        if (undefined != f.width) {
-            input.style.width = f.width;
-        }
-        if (undefined != f.height) {
-            input.style.heigth = f.height;
         }
         if (!edit) {
             input.readOnly = true;
@@ -314,7 +297,8 @@ wab.Obj.prototype.display = function(view, edit) {
         cell.appendChild(input);
         row.appendChild(cell);
     }
-    e = document.createElement('div')
+    e = document.createElement('div');
+    e.className = 'btn';
     btn = document.createElement('span');
     this.save_button = e;
     // TBD change this to the correct type for a button

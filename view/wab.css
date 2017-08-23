@@ -24,6 +24,8 @@ ul {
   list-style: none;
 }
 
+table { width: 100% }
+
 table, tr, th, td {
   border: 0;
   border-collapse: collapse;
@@ -35,9 +37,13 @@ table, tr, th, td {
   max-width: 1180px;
 }
 .header {
+  position: fixed;
+  width: 100%;
+  height: 50px;
   padding: 0 15px;
   color: #eaeaea;
   background: #333;
+  z-index: 2;
 }
 
 .header a:hover,
@@ -110,7 +116,7 @@ table, tr, th, td {
   position: fixed;
   width: 200px;
   min-height: 100%;
-  padding: 30px 0;
+  padding: 90px 0 30px;
   color: #eee;
   background: #212121;
 }
@@ -149,12 +155,18 @@ table, tr, th, td {
 .view-content {
   width: calc(100% - 200px);
   margin-left: 200px;
-  padding: 45px 60px;
+  padding: 100px 60px 50px;
 }
 
 .table-wrapper {
+  max-width: 1029px;
+  overflow-x: auto;
+}
+
+.list-items {
+  display: block;
+  max-height: 361px;
   overflow: auto;
-  height: 500px;
 }
 
 .obj-list-table {
@@ -176,6 +188,7 @@ table, tr, th, td {
 }
 
 .obj-list-table th {
+  width: 582px;
   text-align: left;
   color: #ffffff;
   background: #444;
@@ -183,12 +196,26 @@ table, tr, th, td {
 }
 
 .obj-list-table th:first-of-type {
+  width: 269px;
   border-left-color: #444;
 }
 
 .obj-list-table th:last-of-type {
   text-align: center;
   border-right-color: #444;
+}
+
+.obj-list-table th.list-actions {
+  min-width: 162px;
+  width: 180px;
+}
+
+.obj-list-table td {
+  width: 600px;
+}
+
+.obj-list-table td:first-of-type {
+  width: 278px;
 }
 
 .obj-list-table td.actions {
@@ -214,16 +241,48 @@ table, tr, th, td {
 }
 
 .obj-form-frame {
-  border: 1px solid blue;
-  padding: 8px;
-}
-.obj-form {
+  display: table;
   width: 100%;
-  border: 1px solid red;
-  padding: 8px;
+  padding: 15px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+}
+
+.obj-form td {
+  padding: 8px 15px;
 }
 
 .obj-form-lock {
   font-size: 24px;
 }
 
+.form-field {
+  padding: 12px;
+  width: 100%;
+  font-family: inherit;
+  border: 1px solid #ddd;
+}
+
+.btn {
+  float: left;
+  margin-bottom: 5px;
+  padding: 8px 15px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.lock-btn {
+  width: 35px;
+  padding: 8px 8px 5px;
+}
+
+.field-label {
+  width: 80px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.field-label:after {
+  content: ':'
+}
