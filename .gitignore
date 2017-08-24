@@ -51,6 +51,6 @@ Gemfile.lock
 .rvmrc
 
 
-view/.sass-cache/
+**/.sass-cache/
 view/pages/assets/css/wab*
 view/pages/assets/js/wab.js

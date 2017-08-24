@@ -94,7 +94,20 @@ def dest_dir(*contents)
   path_to('pages', 'assets', *contents)
 end
 
-puts "Generating script file.."
+def generate_css
+  src  ||= path_to('styles', 'wab.scss')
+  dest ||= dest_dir('css', 'wab.css')
+
+  FileUtils.mkdir_p dest_dir('css')
+  `sass #{src} #{dest} --style compressed`
+  success_message(dest)
+end
+
+def success_message(file)
+  path = file.sub("#{Dir.pwd}/", '')
+  puts "#{'Generated'.rjust(15)}: #{path}"
+end
+
 begin
   FileUtils.mkdir_p dest_dir('js')
   File.open(dest_dir('js', 'wab.js'), 'wb') do |file|
@@ -107,18 +120,18 @@ begin
       obj
     ).each { |src| compact_js("#{src}.js", file) }
   end
+  success_message(dest_dir('js', 'wab.js'))
 rescue => e
   puts "#{e.class}: #{e.message}"
   e.backtrace.each { |line| puts line }
 end
 
-puts "Generating stylesheet.."
-FileUtils.mkdir_p dest_dir('css')
-
 begin
-  require 'sass/exec'
-  `sass styles/wab.scss pages/assets/css/wab.css --style compressed`
-rescue Gem::LoadError
-  `gem install sass`
-  retry
+  require 'sass'
+  generate_css
+rescue LoadError
+  puts "\n'sass' gem not found. Installing.."
+  puts `gem install sass --no-ri --no-rdoc`
+  puts ''
+  generate_css
 end
