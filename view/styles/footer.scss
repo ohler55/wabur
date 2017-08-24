@@ -1,0 +1,20 @@
+.footer a:hover {
+  color: #fcfcfc;
+}
+
+.footer {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  background: #eee;
+  color: #999;
+  text-align: center;
+
+  .attribution {
+    padding: 15px 0 12px;
+  }
+
+  .brand {
+    color: #3eb1c1;
+    font-weight: bold;
+  }
+}
