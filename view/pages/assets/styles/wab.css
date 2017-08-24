@@ -1,0 +1,288 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-kerning: none;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+table { width: 100% }
+
+table, tr, th, td {
+  border: 0;
+  border-collapse: collapse;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1180px;
+}
+.header {
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  color: #eaeaea;
+  background: #333;
+  z-index: 2;
+}
+
+.header a:hover,
+.footer a:hover {
+  color: #fcfcfc;
+}
+
+.header .logo {
+  float: left;
+  padding: 15px;
+}
+
+.header .logo .brand,
+.header .logo .subtitle {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.header .logo .brand {
+  padding-right: 15px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.header .logo .subtitle {
+  padding-left: 15px;
+  font-size: 13px;
+  color: #ddd;
+  border-left: 1px solid #999;
+}
+
+.header nav {
+  float: right;
+  padding: 0 15px;
+}
+
+.header nav li {
+  float: left;
+}
+
+.header nav li a {
+  display: block;
+  padding: 13px 0 0 15px;
+  color: #aaa;
+}
+
+.footer {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  background: #eee;
+  color: #999;
+  text-align: center;
+}
+
+.footer .attribution {
+  padding: 15px 0 12px;
+}
+
+.footer .brand {
+  color: #3eb1c1;
+  font-weight: bold;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.sidebar {
+  position: fixed;
+  width: 200px;
+  min-height: 100%;
+  padding: 90px 0 30px;
+  color: #eee;
+  background: #212121;
+}
+
+.sidebar li {
+  padding: 10px;
+  padding-left: 20px;
+  color: #3eb1c1;
+  border-top: 1px solid #373737;
+  border-bottom: 1px solid #0d0d0d;
+}
+
+.sidebar li:first-of-type {
+  border-top-color: transparent;
+}
+
+.sidebar li:last-of-type {
+  border-bottom-color: transparent;
+}
+
+.sidebar_item:hover,
+.sidebar_selected {
+  color: #e0e0e0 !important;
+  background: #181818;
+}
+
+.sidebar_selected {
+  padding: 10px;
+  padding-left: 20px;
+}
+
+.sidebar_selected:hover {
+  color: #ffffff;
+}
+
+.view-content {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  padding: 100px 60px 50px;
+}
+
+.table-wrapper {
+  max-width: 1029px;
+  overflow-x: auto;
+}
+
+.list-items {
+  display: block;
+  max-height: 361px;
+  overflow: auto;
+}
+
+.obj-list-table {
+  width: 100%;
+  font-size: 14px;
+  background: #fafafa;
+  border: 0;
+  border-collapse: collapse;
+}
+
+.obj-list-table tr:hover {
+  background: #f5f5f5;
+}
+
+.obj-list-table th,
+.obj-list-table td {
+  padding: 8px 15px;
+  border: 1px solid #bbb;
+}
+
+.obj-list-table th {
+  width: 582px;
+  text-align: left;
+  color: #ffffff;
+  background: #444;
+  border: 1px solid #777;
+}
+
+.obj-list-table th:first-of-type {
+  width: 269px;
+  border-left-color: #444;
+}
+
+.obj-list-table th:last-of-type {
+  text-align: center;
+  border-right-color: #444;
+}
+
+.obj-list-table th.list-actions {
+  min-width: 162px;
+  width: 180px;
+}
+
+.obj-list-table td {
+  width: 600px;
+}
+
+.obj-list-table td:first-of-type {
+  width: 278px;
+}
+
+.obj-list-table td.actions {
+  width: 60px;
+  color: #757575;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.obj-list-table td.actions:hover {
+  color: #2186c1;
+  background: #fff;
+  opacity: 1;
+}
+
+.obj-list-table td.actions.delete:hover {
+  color: #da0b0b;
+}
+
+.obj-list-table td.actions .icon {
+  font-size: 24px;
+}
+
+.obj-form-frame {
+  display: table;
+  width: 100%;
+  padding: 15px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+}
+
+.obj-form td {
+  padding: 8px 15px;
+}
+
+.obj-form-lock {
+  font-size: 24px;
+}
+
+.form-field {
+  padding: 12px;
+  width: 100%;
+  font-family: inherit;
+  border: 1px solid #ddd;
+}
+
+.btn {
+  float: left;
+  margin-bottom: 5px;
+  padding: 8px 15px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.lock-btn {
+  width: 35px;
+  padding: 8px 8px 5px;
+}
+
+.field-label {
+  width: 80px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.field-label:after {
+  content: ':'
+}

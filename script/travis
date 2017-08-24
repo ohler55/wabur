@@ -3,3 +3,5 @@
 set -e
 
 bundle exec ruby test/tests.rb
+
+ps aux

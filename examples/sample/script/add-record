@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# ----------------------------------------------------------------------
+# Adds a record via the `curl` application.
+#
+# If the url is not provided, defaults to the following:
+# `http://localhost:4000/v1/Article`
+#
+# USAGE: (either of..)
+#   - script/add-record
+#   - script/add-record article-3.json
+#   - script/add-record article-3.json http://localhost:4000/v1/Article
+# ----------------------------------------------------------------------
+
+set -e
+
+if [ $2 ]
+  then
+  curl -w "\n" -T $1 $2
+elif [ $1 ]
+  then
+  curl -w "\n" -T $1 http://localhost:6363/v1/Article
+else
+  curl -w "\n" -T article-1.json http://localhost:6363/v1/Article
+fi

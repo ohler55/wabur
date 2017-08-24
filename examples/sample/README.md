@@ -48,7 +48,7 @@ The `curl` application is used to add a record. The record is in the
 will include the reference number of the newly created record.
 
 ```
-> curl -w "\n" -T article-1.json http://localhost:6363/Article
+> curl -w "\n" -T article-1.json http://localhost:6363/v1/Article
 ```
 
 A response similar to the following should appear in the *curl terminal* where
