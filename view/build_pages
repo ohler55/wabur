@@ -89,22 +89,22 @@ def path_to(*subdirs)
   File.expand_path(File.join(".", *subdirs), __dir__)
 end
 
-def source_dir(*contents)
+def js_src_dir(*contents)
   path_to('js', *contents)
 end
 
-def dest_dir(*contents)
+def js_dest_dir(*contents)
   path_to('pages', 'assets', 'js', *contents)
 end
 
 begin
-  FileUtils.mkdir_p dest_dir
-  df = File.open(dest_dir('wab.js'), 'wb')
+  FileUtils.mkdir_p js_dest_dir
+  df = File.open(js_dest_dir('wab.js'), 'wb')
 
-  compact_js(source_dir('wab.js'), df)
-  compact_js(source_dir('view.js'), df)
-  compact_js(source_dir('objlist.js'), df)
-  compact_js(source_dir('obj.js'), df)
+  compact_js(js_src_dir('wab.js'), df)
+  compact_js(js_src_dir('view.js'), df)
+  compact_js(js_src_dir('objlist.js'), df)
+  compact_js(js_src_dir('obj.js'), df)
 rescue => e
   puts "#{e.class}: #{e.message}"
   e.backtrace.each { |line| puts line }
