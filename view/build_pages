@@ -94,6 +94,7 @@ def dest_dir(*contents)
   path_to('pages', 'assets', *contents)
 end
 
+puts "Generating script file.."
 begin
   FileUtils.mkdir_p dest_dir('js')
   File.open(dest_dir('js', 'wab.js'), 'wb') do |file|
@@ -109,4 +110,15 @@ begin
 rescue => e
   puts "#{e.class}: #{e.message}"
   e.backtrace.each { |line| puts line }
+end
+
+puts "Generating stylesheet.."
+FileUtils.mkdir_p dest_dir('css')
+
+begin
+  require 'sass/exec'
+  `sass styles/wab.scss pages/assets/css/wab.css --style compressed`
+rescue Gem::LoadError
+  `gem install sass`
+  retry
 end
