@@ -2,8 +2,8 @@
   display: table;
   width: 100%;
   padding: 15px;
-  background: #fafafa;
-  border: 1px solid #ddd;
+  background: $light-grey;
+  border: 1px solid darken($light-grey, 11%);
 }
 
 .obj-form td {
@@ -18,7 +18,7 @@
   padding: 12px;
   width: 100%;
   font-family: inherit;
-  border: 1px solid #ddd;
+  border: 1px solid darken($light-grey, 11%);
 }
 
 .field-label {

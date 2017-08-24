@@ -6,24 +6,25 @@
   color: #444;
   text-align: center;
   cursor: pointer;
-  background: #fafafa;
+  background: $light-grey;
   border-top: 1px solid #eee;
   box-shadow: 0 1px 1px #999;
 
   &:hover {
     color: #fff;
-    background: #2186c1;
+    background: $blue;
     box-shadow: 0 0 1px #888;
     border-top-color: transparent;
+  }
+
+  .table-wrapper > & {
+    margin-left: 1px;
+    margin-bottom: 18px;
   }
 }
 
 .create-btn {
   margin-bottom: 15px;
-
-  &:hover {
-    background: #26a69a
-  }
 }
 
 .lock-btn {
@@ -37,5 +38,5 @@
 }
 
 .delete-btn:hover {
-  background: #da0b0b;
+  background: $red;
 }

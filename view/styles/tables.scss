@@ -12,7 +12,7 @@
 .obj-list-table {
   width: 100%;
   font-size: 14px;
-  background: #fafafa;
+  background: $light-grey;
   border: 0;
   border-collapse: collapse;
 
@@ -29,17 +29,17 @@
     width: 582px;
     text-align: left;
     color: #ffffff;
-    background: #444;
+    background: lighten($dark-grey, 7%);
     border: 1px solid #777;
 
     &:first-of-type {
       width: 269px;
-      border-left-color: #444;
+      border-left-color: lighten($dark-grey, 7%);
     }
 
     &:last-of-type {
       text-align: center;
-      border-right-color: #444;
+      border-right-color: lighten($dark-grey, 7%);
     }
 
     &.list-actions {
@@ -63,13 +63,13 @@
       opacity: 0.9;
 
       &:hover {
-        color: #2186c1;
+        color: $blue;
         background: #fff;
         opacity: 1;
       }
 
       &.delete:hover {
-        color: #da0b0b;
+        color: $red;
       }
 
       .icon {
