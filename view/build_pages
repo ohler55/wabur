@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+require 'fileutils'
+
 def compact_js(src, df)
   cnt = 0
   sf = File.new(src)
@@ -83,17 +85,27 @@ def compact_js_line(line)
   new_line
 end
 
-$here = __dir__
-$pages = File.join(__dir__, 'pages')
+def path_to(*subdirs)
+  File.expand_path(File.join(".", *subdirs), __dir__)
+end
+
+def source_dir(*contents)
+  path_to('js', *contents)
+end
+
+def dest_dir(*contents)
+  path_to('pages', 'assets', 'js', *contents)
+end
 
 begin
-  `mkdir -p #{File.join(__dir__, 'pages', 'assets', 'js')}`
-  df = File.open(File.join($pages, 'assets', 'js', 'wab.js'), 'w')
-  compact_js(File.join(__dir__, 'js', 'wab.js'), df)
-  compact_js(File.join(__dir__, 'js', 'view.js'), df)
-  compact_js(File.join(__dir__, 'js', 'objlist.js'), df)
-  compact_js(File.join(__dir__, 'js', 'obj.js'), df)
-rescue Exception => e
+  FileUtils.mkdir_p dest_dir
+  df = File.open(dest_dir('wab.js'), 'wb')
+
+  compact_js(source_dir('wab.js'), df)
+  compact_js(source_dir('view.js'), df)
+  compact_js(source_dir('objlist.js'), df)
+  compact_js(source_dir('obj.js'), df)
+rescue => e
   puts "#{e.class}: #{e.message}"
   e.backtrace.each { |line| puts line }
 end
