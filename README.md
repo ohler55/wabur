@@ -4,6 +4,7 @@
 [![Windows Build status](https://img.shields.io/appveyor/ci/ohler55/wabur/develop.svg?label=Windows%20build)](https://ci.appveyor.com/project/ohler55/wabur/branch/develop)
 [![Gem Version](https://badge.fury.io/rb/wabur.svg)](https://rubygems.org/gems/wabur)
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
+[![Coverage Status](https://coveralls.io/repos/github/ohler55/wabur/badge.svg?branch=develop)](https://coveralls.io/github/ohler55/wabur?branch=develop)
 
 Ruby is a great language but for performance C is the better alternative. It is
 possible to get the best of both as evident with [Oj](http://www.ohler.com/oj)
