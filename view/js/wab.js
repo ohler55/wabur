@@ -62,3 +62,8 @@ function httpDelete(url, obj, cb) {
     h.send();
 }
 
+function classifyNewElement(elem, klass) {
+    var e = document.createElement(elem);
+    e.className = klass;
+    return e;
+}

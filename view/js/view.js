@@ -21,11 +21,10 @@ wab.View.prototype.set = function(page, edit) {
         page_kind = page.kind;
     }
     Object.keys(wab.view.specs).sort().forEach(function(k, i) {
-        title = document.createElement('li');
         if (page_kind == k) {
-            title.className = 'sidebar_selected';
+            title = classifyNewElement('li', 'sidebar_selected');
         } else {
-            title.className = 'sidebar_item';
+            title = classifyNewElement('li', 'sidebar_item');
         }
         types.appendChild(title);
         title.appendChild(document.createTextNode(k));
