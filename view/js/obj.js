@@ -128,13 +128,11 @@ wab.Obj.prototype.save = function() {
 
 wab.Obj.prototype.display = function(view, edit) {
     this.edit = edit;
-    var frame = document.createElement('div'), form, input, row, cell;
-    frame.className = 'obj-form-frame';
+    var frame = classifyNewElement('div', 'obj-form-frame'), form, input, row, cell;
     view.appendChild(frame);
 
     // Lock icon set according to edit flag, add click to flip from edit to view.
-    var e = document.createElement('div'), btn = document.createElement('span');
-    e.className = 'btn lock-btn';
+    var e = classifyNewElement('div', 'btn lock-btn'), btn = document.createElement('span');
     this.lock = btn;
     if (edit) {
         btn.className = 'icon icon-unlock';
@@ -148,9 +146,8 @@ wab.Obj.prototype.display = function(view, edit) {
     (function(o) { e.onclick = function() { o.toggleLock(); }})(this);
 
     // A table aligns the labels nicely.
-    form = document.createElement('table');
+    form = classifyNewElement('table', 'obj-form');
     this.form = form;
-    form.className = 'obj-form';
     frame.appendChild(form);
 
     // Layout the attribute fields first then request the data or populate with defaults.
@@ -160,20 +157,17 @@ wab.Obj.prototype.display = function(view, edit) {
         f = fields[i];
         row = document.createElement('tr');
         form.appendChild(row);
-        cell = document.createElement('td');
-        cell.className = 'field-label';
+        cell = classifyNewElement('td', 'field-label');
         cell.appendChild(document.createTextNode(f.label));
         row.appendChild(cell);
         cell = document.createElement('td');
         if ('textarea' == f.type) {
-            input = document.createElement('textarea');
-            input.className = 'form-field';
+            input = classifyNewElement('textarea', 'form-field');
             input.value = f.init;
         } else if (typeof f.init === 'object') {
             // TBD handle nested values
         } else {
-            input = document.createElement('input');
-            input.className = 'form-field';
+            input = classifyNewElement('input', 'form-field');
             input.setAttribute('type', f.type);
             input.value = f.init;
         }
@@ -184,8 +178,7 @@ wab.Obj.prototype.display = function(view, edit) {
         cell.appendChild(input);
         row.appendChild(cell);
     }
-    e = document.createElement('div');
-    e.className = 'btn';
+    e = classifyNewElement('div', 'btn');
     btn = document.createElement('span');
     this.save_button = e;
     // TBD change this to the correct type for a button
@@ -201,8 +194,7 @@ wab.Obj.prototype.display = function(view, edit) {
     e.appendChild(btn);
     frame.appendChild(e);
 
-    e = document.createElement('div');
-    e.className = 'btn';
+    e = classifyNewElement('div', 'btn');
     btn = document.createElement('span');
     this.delete_button = e;
     btn.appendChild(document.createTextNode('Delete'));

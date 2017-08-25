@@ -6,14 +6,14 @@ wab.ObjList.prototype.delete = function(ref) {
 }
 
 wab.ObjList.prototype.display = function(view, edit) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'table-wrapper';
+    var wrapper = classifyNewElement('div', 'table-wrapper');
     view.appendChild(wrapper);
 
-    e = document.createElement('div');
-    e.className = 'btn';
+    e = classifyNewElement('div', 'btn');
+
     btn = document.createElement('span');
     btn.appendChild(document.createTextNode('Create'));
+
     (function(ol) { e.onclick = function() { wab.view.set(new wab.Obj(0, ol), true); }})(this);
     e.appendChild(btn);
     wrapper.appendChild(e);
@@ -24,8 +24,7 @@ wab.ObjList.prototype.display = function(view, edit) {
     row = document.createElement('tr');
     frame.appendChild(row);
 
-    header = document.createElement('table');
-    header.className = 'obj-list-table';
+    header = classifyNewElement('table', 'obj-list-table');
     row.appendChild(header);
 
     row = document.createElement('tr');
@@ -42,18 +41,15 @@ wab.ObjList.prototype.display = function(view, edit) {
         cell.appendChild(document.createTextNode(cs.label));
         row.appendChild(cell);
     }
-    cell = document.createElement('th');
+    cell = classifyNewElement('th', 'list-actions');
     cell.appendChild(document.createTextNode('Actions'));
-    cell.className = 'list-actions';
     cell.setAttribute('colspan', 3);
     row.appendChild(cell);
 
     // Prepare list table.
-    row = document.createElement('tr');
-    row.className = 'list-items';
+    row = classifyNewElement('tr', 'list-items');
     frame.appendChild(row);
-    list = document.createElement('table');
-    list.className = 'obj-list-table';
+    list = classifyNewElement('table', 'obj-list-table');
     row.appendChild(list);
 
     this.list = list;
@@ -71,17 +67,14 @@ wab.ObjList.prototype.display = function(view, edit) {
                 ol.list.appendChild(row);
                 for (i = 0; i < len; i++) {
                     cs = ol.spec.list[i];
-                    cell = document.createElement('td');
-                    cell.className = 'obj-list';
+                    cell = classifyNewElement('td', 'obj-list');
                     cell.appendChild(document.createTextNode(obj[cs.key]));
                     row.appendChild(cell);
                 }
                 for (i = 0; i < wab.list_buttons.length; i++) {
                     bi = wab.list_buttons[i];
-                    cell = document.createElement('td');
-                    cell.className = bi.cn;
-                    btn = document.createElement('span');
-                    btn.className = bi.icon;
+                    cell = classifyNewElement('td', bi.cn);
+                    btn = classifyNewElement('span', bi.icon);
                     btn.setAttribute('title', bi.title);
                     cell.appendChild(btn);
                     // A function is needed to copy the variables.
