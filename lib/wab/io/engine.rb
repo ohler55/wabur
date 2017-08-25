@@ -29,7 +29,7 @@ module WAB
           @proc_threads << Thread.new {
             while true
               begin
-                break if process_msg(@queue.pop)
+                break unless process_msg(@queue.pop)
               rescue Exception => e
                 $stderr.puts %|*-*-* #{e.class}: #{e.message}\n#{e.backtrace.join("\n  ")}|
               end
