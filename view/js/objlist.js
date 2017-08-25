@@ -31,11 +31,15 @@ wab.ObjList.prototype.display = function(view, edit) {
     row = document.createElement('tr');
     header.appendChild(row);
 
-    var cs = this.spec.list, len = cs.length;
+    var cs, len = this.spec.list.length, opt = '/list?'
     for (i = 0; i < len; i++) {
         cs = this.spec.list[i];
+        if (0 < i) {
+            opt += '&'
+        }
+        opt += cs.key + '=' + cs.path;
         cell = document.createElement('th');
-        cell.appendChild(document.createTextNode(cs[0]));
+        cell.appendChild(document.createTextNode(cs.label));
         row.appendChild(cell);
     }
     cell = document.createElement('th');
@@ -55,26 +59,21 @@ wab.ObjList.prototype.display = function(view, edit) {
     this.list = list;
     
     // Request content.
-    httpGet('/v1/' + this.kind, this, function(ol, resp) {
-
-        // TBD change query to be Article/list&select=title;text or Article/_select=title;text
-
+    httpGet('/v1/' + this.kind + opt, this, function(ol, resp) {
         var results = resp.body.results, btn, bi;
-        
         if (typeof results === 'object') {
-            var i, cs = ol.spec.list, len = cs.length;
+            var i, cs, len = ol.spec.list.length;
             var j, obj, rlen = results.length, ref;
             for (j = 0; j < rlen; j++) {
                 obj = results[j];
-                ref = obj.id;
-                obj = obj.data;
+                ref = obj.ref;
                 row = document.createElement('tr');
                 ol.list.appendChild(row);
                 for (i = 0; i < len; i++) {
                     cs = ol.spec.list[i];
                     cell = document.createElement('td');
                     cell.className = 'obj-list';
-                    cell.appendChild(document.createTextNode(obj[cs[1]]));
+                    cell.appendChild(document.createTextNode(obj[cs.key]));
                     row.appendChild(cell);
                 }
                 for (i = 0; i < wab.list_buttons.length; i++) {
