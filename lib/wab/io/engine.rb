@@ -20,28 +20,31 @@ module WAB
         @queue = Queue.new()
         tcnt = 1 if 0 >= tcnt
         @tcnt = tcnt
+        @timeout_thread = nil
+        @proc_threads = []
       end
 
       def start()
         @tcnt.times {
-          Thread.new {
+          @proc_threads << Thread.new {
             while true
               begin
-                process_msg(@queue.pop)
+                break if process_msg(@queue.pop)
               rescue Exception => e
                 $stderr.puts %|*-*-* #{e.class}: #{e.message}\n#{e.backtrace.join("\n  ")}|
               end
             end
           }
         }
-        Thread.new { timeout_check() }
+        @timeout_thread = Thread.new { timeout_check() }
 
         Oj.strict_load($stdin, symbol_keys: true) { |msg|
           api = msg[:api]
           $stderr.puts "=> controller #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
-          if 1 == api
+          case api
+          when 1
             @queue.push(msg)
-          elsif 4 == api
+          when 4
             rid = msg[:rid]
             call = nil
             @lock.synchronize {
@@ -55,10 +58,24 @@ module WAB
                 call.handler.on_result(msg[:body])
               end
             end
+          when -2, -3, -6, -15
+            shutdown(msg)
+            break
+          when -9
+            Thread.kill(@timeout_thread)
+            @proc_threads.each { |t| Thread.kill(t) }
+            Process.exit(0)
           else
             $stderr.puts "*-*-* Invalid api value (#{api}) in message."
           end
         }
+      end
+
+      def shutdown(msg)
+        # TBD kill timeout thread
+        Thread.kill(@timeout_thread)
+        # tell processing threads to shutdown.
+        @tcnt.times { @queue.push(msg) }
       end
 
       # Send request to the model portion of the system.
@@ -98,10 +115,14 @@ module WAB
         body[:rid] = rid unless rid.nil?
         $stdout.puts(@shell.data({rid: rid, api: 2, body: body}).json)
         $stdout.flush
-        nil
+        true
       end
 
+      # return false to exit loop
       def process_msg(native)
+        # exit loop if an interrupt (api less than 0)
+        return false if native[:api] < 0
+
         rid = native[:rid]
         body = native[:body]
 
@@ -137,6 +158,7 @@ module WAB
           $stdout.puts(@shell.data(msg).json)
           $stdout.flush
         end
+        true
       end
 
       def timeout_check()
