@@ -194,7 +194,7 @@ wab.Obj.prototype.display = function(view, edit) {
     e.appendChild(btn);
     frame.appendChild(e);
 
-    e = classifyNewElement('div', 'btn');
+    e = classifyNewElement('div', 'btn delete-btn');
     btn = document.createElement('span');
     this.delete_button = e;
     btn.appendChild(document.createTextNode('Delete'));
