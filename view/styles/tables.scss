@@ -1,0 +1,80 @@
+.table-wrapper {
+  max-width: 1029px;
+  overflow-x: auto;
+}
+
+.list-items {
+  display: block;
+  max-height: 361px;
+  overflow: auto;
+}
+
+.obj-list-table {
+  width: 100%;
+  font-size: 14px;
+  background: $light-grey;
+  border: 0;
+  border-collapse: collapse;
+
+  tr:hover {
+    background: #f5f5f5;
+  }
+
+  th, td {
+    padding: 8px 15px;
+    border: 1px solid #bbb;
+  }
+
+  th {
+    width: 582px;
+    text-align: left;
+    color: #ffffff;
+    background: lighten($dark-grey, 7%);
+    border: 1px solid #777;
+
+    &:first-of-type {
+      width: 269px;
+      border-left-color: lighten($dark-grey, 7%);
+    }
+
+    &:last-of-type {
+      text-align: center;
+      border-right-color: lighten($dark-grey, 7%);
+    }
+
+    &.list-actions {
+      min-width: 162px;
+      width: 180px;
+    }
+  }
+
+  td {
+    width: 600px;
+
+    &:first-of-type {
+      width: 278px;
+    }
+
+    &.actions {
+      width: 60px;
+      color: #757575;
+      text-align: center;
+      cursor: pointer;
+      opacity: 0.9;
+
+      &:hover {
+        color: $blue;
+        background: #fff;
+        opacity: 1;
+      }
+
+      &.delete:hover {
+        color: $red;
+      }
+
+      .icon {
+        font-size: 24px;
+      }
+    }
+  }
+}
