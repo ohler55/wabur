@@ -58,33 +58,61 @@ module WAB
       shell_query(tql, kind, 'create', rid)
     end
 
-    # Return the objects according to the path and query arguments.
+    # Return the objects according to the path and query arguments. The
+    # following patterns supported:
     #
-    # If the path includes an object reference then that object is returned as
-    # the only member of the results list of a WAB::Data returned.
-    #
-    # If there is no object reference in the path then the attributes are used
-    # to find matching objects. The objects that have the same key/value pairs
-    # are returned.
+    # * [MyType/12345] looks for MyType with reference ID of 12345
+    # * [MyType?name=fred&age=63] looks for all MyTypes with a name of 'fred'
+    #                             and an age of 63.
+    # * [MyType/list?Name=name&Age=age] returns only the name and age
+    #                                   attributes and places them in a Hash
+    #                                   with the keys :Name and :Age along
+    #                                   with the record reference as :ref.
     #
     # path:: array of tokens in the path.
-    # query:: query parameters from a URL as a Hash with keys matching paths
-    #         into the target objects and value equal to the target attribute
-    #         values. A path can be an array of keys used to walk a path to
-    #         the target or a +.+ delimited set of keys.
+    # query:: query parameters from a URL as a Hash with key and value
+    #         pairs. Note that duplicate keys will result in only the last
+    #         option being present,
     # rid:: optional request ID but required for async
     def read(path, query, rid=nil) # :doc:
-      if @shell.path_pos + 2 == path.length # has an object reference in the path
-        ref = path[@shell.path_pos + 1].to_i
+      kind = path[@shell.path_pos]
+      # Check for the type and object reference pattern as well as the list
+      # pattern.
+      if @shell.path_pos + 2 == path.length
+        ref = path[@shell.path_pos + 1]
+        return list_select(kind, query, rid) if 'list' == ref
+
+        # Read a single object/record.
+        ref = ref.to_i
         obj = @shell.get(ref)
         obj = obj.native if obj.is_a?(::WAB::Data)
         results = []
         results << {id: ref, data: obj} unless obj.nil?
-        return @shell.data({ code: 0, results: results, rid: rid})
+        @shell.data({ code: 0, results: results, rid: rid})
+      else
+        list_match(kind, query, rid)
       end
+    end
+
+    # A private method to gather sets of Hashes that include the fields
+    # specified in the fields Hash.
+    def list_select(kind, fields, rid)
       tql = { }
-      kind = path[@shell.path_pos]
-      # No id so must be either a simple query by attribute or a list.
+      select = { ref: '$ref' }
+      if fields.is_a?(Hash) && 0 < fields.size
+        fields.each_pair { |k,v| select[k] = v }
+      end
+      tql[:where] = form_where_eq(@shell.type_key, kind)
+      tql[:select] = select
+      rid = nil unless @async
+      shell_query(tql, kind, 'read', rid)
+    end
+
+    # A private method to gather a list of objects that match the query
+    # parameters.
+    def list_match(kind, query, rid)
+      tql = { }
+      # If there is a query set up a where clause.
       if query.is_a?(Hash) && 0 < query.size
         where = ['AND']
         where << form_where_eq(@shell.type_key, kind)
@@ -98,6 +126,7 @@ module WAB
       shell_query(tql, kind, 'read', rid)
     end
 
+    
     # Replaces the object data for the identified object.
     #
     # The return should be the identifiers for the object updated.
@@ -207,36 +236,45 @@ module WAB
         x << value
       elsif String == value_class
         # if the string matches a detectable type then don't quote it
-        len = value.length
-        if 0 < len && '\'' == value[0] 
-          x << value
-        elsif !/^-?\d+$/.match(value).nil?
-          x << value.to_i
-        elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
-          x << value.to_f
-        elsif 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(value).nil?
-          x << ::WAB::UUID.new(value)
-        elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(value).nil?
-          begin
-            x << DateTime.parse(value).to_time()
-          rescue
-            x << "'" + value
-          end
-        elsif value.downcase().start_with?('http://')
-          begin
-            x << URI(value)
-          rescue
-            x << "'" + value
-          end
-        else
-          x << "'" + value
-        end
+        x << detect_string(value)
       elsif WAB::Utils.pre_24_fixnum?(value)
         x << value
       else
         x << value.to_s
       end
       x
+    end
+
+    # Detects strings that are representation of something else such as an
+    # integer, UUID, Time, or URI. Used to convert URL query parameters to TQL
+    # types. That also means string are quoted for TQL unless already quoted.
+    def detect_string(value)
+      # if the string matches a detectable type then don't quote it
+      len = value.length
+      if 0 < len && '\'' == value[0] 
+        # ok as is
+      elsif !/^-?\d+$/.match(value).nil?
+        value = value.to_i
+      elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
+        value = value.to_f
+      elsif 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(value).nil?
+        value = ::WAB::UUID.new(value)
+      elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(value).nil?
+        begin
+          value = DateTime.parse(value).to_time()
+        rescue
+          value = "'" + value
+        end
+      elsif value.downcase().start_with?('http://')
+        begin
+          value = URI(value)
+        rescue
+          value = "'" + value
+        end
+      else
+        value = "'" + value
+      end
+      value
     end
 
     # Helper to send TQL requests to the shell either synchronously or
