@@ -45,77 +45,55 @@ wab.view.register_type('Other',
                        {
                            list: [
                                {
-                                   label: 'One',
-                                   path: 'one',
-                                   key: 'n1',
-                                   width: '100px'
-                               },
-                               {
-                                   label: 'Two',
-                                   path: 'two',
-                                   key: 'n2',
-                                   width: '100px'
-                               },
-                               {
-                                   label: 'Three',
-                                   path: 'three',
-                                   key: 'n3',
-                                   width: '100px'
-                               },
-                               {
-                                   label: 'Four',
-                                   path: 'four',
-                                   key: 'n4',
-                                   width: '100px'
-                               },
-                               {
-                                   label: 'Text',
-                                   path: 'text',
-                                   key: 'body',
+                                   label: 'Name',
+                                   path: 'name',
+                                   key: 'name'
                                }
                            ],
                            obj: {
                                kind: 'Other',
                                fields: [
                                    {
-                                       label: 'One',
-                                       path: 'one',
+                                       label: 'Name',
+                                       path: 'name',
                                        type: 'text',
                                        init: '',
-                                       width: 0,
-                                       height: 1
+                                       required: true,
+                                       maxlength: 8
                                    },
                                    {
-                                       label: 'Two',
-                                       path: 'two',
-                                       type: 'text',
-                                       init: '',
-                                       width: 0,
-                                       height: 1
+                                       label: 'Scale',
+                                       path: 'scale',
+                                       type: 'range',
+                                       init: '50',
+                                       min: 5,
+                                       max: 100,
+                                       step: 5
                                    },
                                    {
-                                       label: 'Three',
-                                       path: 'three',
-                                       type: 'text',
-                                       init: '',
-                                       width: 0,
-                                       height: 1
+                                       label: 'Age',
+                                       path: 'age',
+                                       type: 'number',
+                                       step: 'any',
+                                       init: '1'
                                    },
                                    {
-                                       label: 'Four',
-                                       path: 'four',
-                                       type: 'text',
-                                       init: '',
-                                       width: 0,
-                                       height: 1
+                                       label: 'Good',
+                                       path: 'good',
+                                       type: 'checkbox',
+                                       init: true
                                    },
                                    {
-                                       label: 'Text',
-                                       path: 'text',
-                                       type: 'text',
-                                       init: '',
-                                       width: 0,
-                                       height: 4
+                                       label: 'When',
+                                       path: 'when',
+                                       type: 'datetime-local',
+                                       init: ''
+                                   },
+                                   {
+                                       label: 'Password',
+                                       path: 'password',
+                                       type: 'password',
+                                       init: ''
                                    }
                                ]
                            }

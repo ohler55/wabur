@@ -36,6 +36,7 @@ $opts.parse(ARGV)
 shell = ::WAB::IO::Shell.new($thread_count, 'kind', 1)
 shell.verbose = $verbose
 shell.register_controller('Article', SampleController.new(shell, $async))
+shell.register_controller('Other', SampleController.new(shell, $async))
 #shell.register_controller(nil, SampleController.new(shell, $async))
 begin
   shell.start
