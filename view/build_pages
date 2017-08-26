@@ -116,7 +116,7 @@ begin
     %w(
       wab
       view
-      objlist
+      list
       obj
     ).each { |src| compact_js("#{src}.js", file) }
   end

@@ -22,14 +22,14 @@ wab.View.prototype.set = function(page, edit) {
     }
     Object.keys(wab.view.specs).sort().forEach(function(k, i) {
         if (page_kind == k) {
-            title = classifyNewElement('li', 'sidebar_selected');
+            title = wab.classifyNewElement('li', 'sidebar_selected');
         } else {
-            title = classifyNewElement('li', 'sidebar_item');
+            title = wab.classifyNewElement('li', 'sidebar_item');
         }
         types.appendChild(title);
         title.appendChild(document.createTextNode(k));
         title.onclick = function() {
-            wab.view.set(new wab.ObjList(k, wab.view.specs[k]));
+            wab.view.set(new wab.List(k, wab.view.specs[k]));
         }
     });
 }

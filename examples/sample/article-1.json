@@ -1,5 +1,6 @@
 {
     "kind": "Article",
     "title": "Sample",
+    "foo": 3.3,
     "text": "Just some random text."
 }

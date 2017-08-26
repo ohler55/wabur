@@ -1,7 +1,7 @@
 
 wab.Obj.prototype.fetch = function() {
     if (0 != this.ref) {
-        httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
+        wab.httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
             if (0 != resp.body.code) {
                 alert(results.error);
                 return;
@@ -24,7 +24,7 @@ wab.Obj.prototype.fetch = function() {
                     if ('INPUT' == input.nodeName || 'TEXTAREA' == input.nodeName) {
                         input.value = obj[input.path];
                     }
-                    // TBD handle nested
+                    // TBD handle nested, radio, and checkbox
                 }
             }
         })
@@ -68,7 +68,6 @@ wab.Obj.prototype.toggleLock = function() {
         this.save_button.style.visibility = 'hidden';
         this.delete_button.style.visibility = 'hidden';
     }
-    // TBD should modified values be flipped back to the originals?
 }
 
 wab.Obj.prototype.save = function() {
@@ -80,10 +79,15 @@ wab.Obj.prototype.save = function() {
             cell = row.children[j];
             input = cell.firstChild;
             if ('INPUT' == input.nodeName || 'TEXTAREA' == input.nodeName) {
-                // TBD convert to correct type
-                obj[input.path] = input.value;
+                if ('checkbox' == input.type) { 
+                    obj[input.path] = input.checked;
+                } else if ('number' == input.type || 'range' == input.type) {
+                    obj[input.path] = parseFloat(input.value);
+                } else {
+                    obj[input.path] = input.value;
+                }
             }
-            // TBD handle nested
+            // TBD handle nested and radio
         }
     }
     var method, url;
@@ -126,13 +130,40 @@ wab.Obj.prototype.save = function() {
     h.send(JSON.stringify(obj));
 }
 
+wab.Obj.prototype.createInputField = function(spec) {
+    var input;
+    if ('textarea' == spec.type) {
+        input = wab.classifyNewElement('textarea', 'form-field');
+    } else if ('radio' == spec.type) {
+        // TBD
+    } else if (typeof spec.init === 'object') {
+        // TBD handle nested values
+    } else {
+        input = wab.classifyNewElement('input', 'form-field');
+        input.type = spec.type;
+        var opt, val, i;
+        for (i = wab.inputOptions.length - 1; 0 <= i; i--) {
+            opt = wab.inputOptions[i];
+            if (undefined != (val = spec[opt]) && null != val) {
+                input[opt] = val;
+            }
+        }
+    }
+    if ('checkbox' == spec.type) {
+        input.checked = spec.init;
+    } else {
+        input.value = spec.init;
+    }
+    return input;
+}
+
 wab.Obj.prototype.display = function(view, edit) {
     this.edit = edit;
-    var frame = classifyNewElement('div', 'obj-form-frame'), form, input, row, cell;
+    var frame = wab.classifyNewElement('div', 'obj-form-frame'), form, input, row, cell;
     view.appendChild(frame);
 
     // Lock icon set according to edit flag, add click to flip from edit to view.
-    var e = classifyNewElement('div', 'btn lock-btn'), btn = document.createElement('span');
+    var e = wab.classifyNewElement('div', 'btn lock-btn'), btn = document.createElement('span');
     this.lock = btn;
     if (edit) {
         btn.className = 'icon icon-unlock';
@@ -146,7 +177,7 @@ wab.Obj.prototype.display = function(view, edit) {
     (function(o) { e.onclick = function() { o.toggleLock(); }})(this);
 
     // A table aligns the labels nicely.
-    form = classifyNewElement('table', 'obj-form');
+    form = wab.classifyNewElement('table', 'obj-form');
     this.form = form;
     frame.appendChild(form);
 
@@ -157,20 +188,11 @@ wab.Obj.prototype.display = function(view, edit) {
         f = fields[i];
         row = document.createElement('tr');
         form.appendChild(row);
-        cell = classifyNewElement('td', 'field-label');
+        cell = wab.classifyNewElement('td', 'field-label');
         cell.appendChild(document.createTextNode(f.label));
         row.appendChild(cell);
         cell = document.createElement('td');
-        if ('textarea' == f.type) {
-            input = classifyNewElement('textarea', 'form-field');
-            input.value = f.init;
-        } else if (typeof f.init === 'object') {
-            // TBD handle nested values
-        } else {
-            input = classifyNewElement('input', 'form-field');
-            input.setAttribute('type', f.type);
-            input.value = f.init;
-        }
+        input = this.createInputField(f);
         if (!edit) {
             input.readOnly = true;
         }
@@ -178,7 +200,7 @@ wab.Obj.prototype.display = function(view, edit) {
         cell.appendChild(input);
         row.appendChild(cell);
     }
-    e = classifyNewElement('div', 'btn');
+    e = wab.classifyNewElement('div', 'btn');
     btn = document.createElement('span');
     this.save_button = e;
     // TBD change this to the correct type for a button
@@ -194,7 +216,7 @@ wab.Obj.prototype.display = function(view, edit) {
     e.appendChild(btn);
     frame.appendChild(e);
 
-    e = classifyNewElement('div', 'btn delete-btn');
+    e = wab.classifyNewElement('div', 'btn delete-btn');
     btn = document.createElement('span');
     this.delete_button = e;
     btn.appendChild(document.createTextNode('Delete'));

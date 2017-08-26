@@ -1,15 +1,15 @@
 
-wab.ObjList.prototype.delete = function(ref) {
-    httpDelete('/v1/' + this.kind + '/' + ref, this, function(ol, resp) {
+wab.List.prototype.delete = function(ref) {
+    wab.httpDelete('/v1/' + this.kind + '/' + ref, this, function(ol, resp) {
         wab.view.set(ol);
     })
 }
 
-wab.ObjList.prototype.display = function(view, edit) {
-    var wrapper = classifyNewElement('div', 'table-wrapper');
+wab.List.prototype.display = function(view, edit) {
+    var wrapper = wab.classifyNewElement('div', 'table-wrapper');
     view.appendChild(wrapper);
 
-    e = classifyNewElement('div', 'btn');
+    e = wab.classifyNewElement('div', 'btn');
 
     btn = document.createElement('span');
     btn.appendChild(document.createTextNode('Create'));
@@ -18,13 +18,13 @@ wab.ObjList.prototype.display = function(view, edit) {
     e.appendChild(btn);
     wrapper.appendChild(e);
 
-    var frame = document.createElement('table'), list, row, cell;
+    var frame = document.createElement('table'), table, row, cell;
     wrapper.appendChild(frame);
 
     row = document.createElement('tr');
     frame.appendChild(row);
 
-    header = classifyNewElement('table', 'obj-list-table');
+    header = wab.classifyNewElement('table', 'obj-list-table');
     row.appendChild(header);
 
     row = document.createElement('tr');
@@ -41,56 +41,56 @@ wab.ObjList.prototype.display = function(view, edit) {
         cell.appendChild(document.createTextNode(cs.label));
         row.appendChild(cell);
     }
-    cell = classifyNewElement('th', 'list-actions');
+    cell = wab.classifyNewElement('th', 'list-actions');
     cell.appendChild(document.createTextNode('Actions'));
     cell.setAttribute('colspan', 3);
     row.appendChild(cell);
 
     // Prepare list table.
-    row = classifyNewElement('tr', 'list-items');
+    row = wab.classifyNewElement('tr', 'list-items');
     frame.appendChild(row);
-    list = classifyNewElement('table', 'obj-list-table');
-    row.appendChild(list);
+    table = wab.classifyNewElement('table', 'obj-list-table');
+    row.appendChild(table);
 
-    this.list = list;
+    this.table = table;
     
     // Request content.
-    httpGet('/v1/' + this.kind + opt, this, function(ol, resp) {
+    wab.httpGet('/v1/' + this.kind + opt, this, function(list, resp) {
         var results = resp.body.results, btn, bi;
         if (typeof results === 'object') {
-            var i, cs, len = ol.spec.list.length;
+            var i, cs, len = list.spec.list.length;
             var j, obj, rlen = results.length, ref;
             for (j = 0; j < rlen; j++) {
                 obj = results[j];
                 ref = obj.ref;
                 row = document.createElement('tr');
-                ol.list.appendChild(row);
+                list.table.appendChild(row);
                 for (i = 0; i < len; i++) {
-                    cs = ol.spec.list[i];
-                    cell = classifyNewElement('td', 'obj-list');
+                    cs = list.spec.list[i];
+                    cell = wab.classifyNewElement('td', 'obj-list');
                     cell.appendChild(document.createTextNode(obj[cs.key]));
                     row.appendChild(cell);
                 }
-                for (i = 0; i < wab.list_buttons.length; i++) {
-                    bi = wab.list_buttons[i];
-                    cell = classifyNewElement('td', bi.cn);
-                    btn = classifyNewElement('span', bi.icon);
+                for (i = 0; i < wab.listButtons.length; i++) {
+                    bi = wab.listButtons[i];
+                    cell = wab.classifyNewElement('td', bi.cn);
+                    btn = wab.classifyNewElement('span', bi.icon);
                     btn.setAttribute('title', bi.title);
                     cell.appendChild(btn);
                     // A function is needed to copy the variables.
-                    (function(ol, r, b, act) {
+                    (function(list, r, b, act) {
                         switch(act) {
                         case 2:
-                            b.onclick = function() { ol.delete(r); }
+                            b.onclick = function() { list.delete(r); }
                             break;
                         case 1:
-                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol), true); }
+                            b.onclick = function() { wab.view.set(new wab.Obj(r, list), true); }
                             break;
                         case 0:
                         default:
-                            b.onclick = function() { wab.view.set(new wab.Obj(r, ol), false); }
+                            b.onclick = function() { wab.view.set(new wab.Obj(r, list), false); }
                         }
-                    })(ol, ref, btn, bi.act);
+                    })(list, ref, btn, bi.act);
                     row.appendChild(cell);
                 }
             }
