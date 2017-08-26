@@ -31,31 +31,18 @@ var wab = {
     inputOptions: [ 'required', 'maxlength', 'pattern', 'min', 'max', 'step' ],
 
     // Helper functions.
-    httpGet: function(url, obj, cb) {
+    httpCall: function(verb, url, obj, callback) {
+        if (verb != 'GET' && verb != 'DELETE') return null;
+
         var h = new XMLHttpRequest();
-        h.open('GET', url, true);
+        h.open(verb, url, true);
         h.responseType = 'json';
         h.onreadystatechange = function() {
             if (4 == h.readyState) {
                 if (200 == h.status) {
-                    cb(obj, h.response);
+                    callback(obj, h.response);
                 } else {
-                    alert('Query to ' + url + ' returned ' + h.status + '.');
-                }
-            }
-        };
-        h.send();
-    },
-    httpDelete: function(url, obj, cb) {
-        var h = new XMLHttpRequest();
-        h.open('DELETE', url, true);
-        h.responseType = 'json';
-        h.onreadystatechange = function() {
-            if (4 == h.readyState) {
-                if (200 == h.status) {
-                    cb(obj, h.response);
-                } else {
-                    alert('Delete to ' + url + ' returned ' + h.status + '.');
+                    alert(verb + ': ' + url + ' returned ' + h.status + '.');
                 }
             }
         };
