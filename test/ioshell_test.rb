@@ -278,7 +278,7 @@ class IoEngineTest < Minitest::Test
         begin
           assert_equal(pair[1], reply)
         rescue Exception => e
-          puts
+          puts ''
           puts bt
           raise e
         end
