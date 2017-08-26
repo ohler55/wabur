@@ -1,15 +1,10 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-$: << __dir__
-$: << File.join(File.dirname(File.expand_path(__dir__)), 'lib')
-
-require 'minitest'
-require 'minitest/autorun'
+require_relative 'helper'
 
 require 'wab'
 require 'wab/impl'
-
 
 class DataTest < Minitest::Test
 
@@ -21,6 +16,7 @@ class DataTest < Minitest::Test
     def initialize(x, y)
       @h = {x: x, y: y }
     end
+
     def to_h
       @h
     end

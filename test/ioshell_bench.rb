@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
-$: << __dir__
-$: << File.join(File.dirname(File.expand_path(__dir__)), 'lib')
+require_relative 'helper'
 
 require 'benchmark'
 
