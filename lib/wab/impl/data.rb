@@ -186,11 +186,8 @@ module WAB
       # UUID:: "b0ca922d-372e-41f4-8fea-47d880188ba3"
       # URI:: "http://opo.technology/sample", HTTP only
       def detect()
-        if @root.is_a?(Hash)
-          detect_hash(@root)
-        elsif @root.is_a?(Array)
-          detect_hash(@root)
-        end
+        return detect_hash(@root) if @root.is_a?(Hash)
+        detect_array(@root) if @root.is_a?(Array)
       end
 
       private
