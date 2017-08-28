@@ -283,8 +283,14 @@ class IoEngineTest < Minitest::Test
           raise e
         end
       }
-      to_w.puts(::WAB::Impl::Data.new({ api: -2 }, false).json)
-      to_w.flush
+      # On error the pipe may be closed from the child side so the write will
+      # fail. Thats okay as the write is only to tell the child to shutdown
+      # and it already has.
+      begin
+        to_w.puts(::WAB::Impl::Data.new({ api: -2 }, false).json)
+        to_w.flush
+      rescue Exception
+      end
     end
   end
 
