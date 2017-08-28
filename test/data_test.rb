@@ -9,7 +9,7 @@ require 'wab/impl'
 class DataTest < Minitest::Test
 
   def setup
-    @shell = ::WAB::Impl::Shell.new()
+    @shell = ::WAB::Impl::Shell.new({})
   end
 
   class ToHash

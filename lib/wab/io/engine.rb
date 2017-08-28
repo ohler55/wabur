@@ -135,20 +135,26 @@ module WAB
 
         reply_body = nil
         op = body[:op]
+        path = body[:path]
+        query = body[:query]
         begin
           if 'NEW' == op && controller.respond_to?(:create)
-            reply_body = controller.create(body[:path], body[:query], data.get(:content), rid)
+            $stderr.puts "=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
+            reply_body = controller.create(path, query, data.get(:content), rid)
           elsif 'GET' == op && controller.respond_to?(:read)
-            reply_body = controller.read(body[:path], body[:query], rid)
+            $stderr.puts "=> controller.read(#{path.join('/')}#{query})" if @shell.verbose
+            reply_body = controller.read(path, query, rid)
           elsif 'DEL' == op && controller.respond_to?(:delete)
-            reply_body = controller.delete(body[:path], body[:query], rid)
+            $stderr.puts "=> controller.delete(#{path.join('/')}#{query})" if @shell.verbose
+            reply_body = controller.delete(path, query, rid)
           elsif 'MOD' == op && controller.respond_to?(:update)
-            reply_body = controller.update(body[:path], body[:query], data.get(:content), rid)
+            $stderr.puts "=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
+            reply_body = controller.update(path, query, data.get(:content), rid)
           else
             reply_body = controller.handle(data)
           end
         rescue Exception => e
-          return send_error(rid, e.message, e.backtrace)
+          return send_error(rid, "#{e.class}: #{e.message}", e.backtrace)
         end
         # If reply_body is nil then it is async.
         unless reply_body.nil?

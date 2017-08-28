@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.description = %{Web Application Builder }
   s.licenses = ['MIT']
 
-  s.files = Dir["{lib,test}/**/*.{rb,h,c}"] + ['LICENSE', 'README.md'] + Dir["pages/*.md"]
+  s.files = Dir["{lib,test}/**/*.rb"] + ['LICENSE', 'README.md'] + Dir["pages/*.md"] + Dir['bin/*']
   s.test_files = Dir["test/**/*.rb"]
 
   s.has_rdoc = true

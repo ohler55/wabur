@@ -1,7 +1,7 @@
 
 wab.List.prototype.delete = function(ref) {
-    wab.httpCall('DELETE', '/v1/' + this.kind + '/' + ref, this, function(ol, resp) {
-        wab.view.set(ol);
+    wab.httpCall('DELETE', '/v1/' + this.kind + '/' + ref, this, function(list, resp) {
+        wab.view.set(list);
     })
 }
 
@@ -56,7 +56,8 @@ wab.List.prototype.display = function(view, edit) {
     
     // Request content.
     wab.httpCall('GET', '/v1/' + this.kind + opt, this, function(list, resp) {
-        var results = resp.body.results, btn, bi;
+        var results = resp.results, btn, bi;
+
         if (typeof results === 'object') {
             var i, cs, len = list.spec.list.length;
             var j, obj, rlen = results.length, ref;

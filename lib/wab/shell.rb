@@ -36,6 +36,11 @@ module WAB
       @type_key
     end
 
+    # Returns the position of the type in a path.
+    def path_pos()
+      @path_pos
+    end
+
     # Register a controller for a named type.
     #
     # If a request is received for an unregistered type the default controller

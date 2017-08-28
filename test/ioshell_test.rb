@@ -39,7 +39,7 @@ class IoEngineTest < Minitest::Test
                    [{rid: 'rid-create-error', api: 1, body: {op: 'NEW', path: ['sample'], content: {kind: 'sample', num: 7}}},
                     {rid: '1', api: 3, body: { insert:{ kind: 'sample', num: 7}}}],
                    [{rid: '1', api: 4, body: {ref: 123, code: -1, error: "something went wrong"}},
-                    {rid: 'rid-create-error', api: 2, body: { code: -1, error: "error on sample create. something went wrong", rid: 'rid-create-error'}}]
+                    {rid: 'rid-create-error', api: 2, body: { code: -1, error: "WAB::Error: error on sample create. something went wrong", rid: 'rid-create-error'}}]
                   ])
   end
 
@@ -219,7 +219,7 @@ class IoEngineTest < Minitest::Test
                    [{rid: 'rid-timeout', api: 1, body: {op: 'NEW', path: ['sample'], content: {kind: 'sample', num: 7}}},
                     {rid: '1', api: 3, body: { insert:{ kind: 'sample', num: 7}}}],
                    [nil,
-                    {rid: 'rid-timeout', api: 2, body: { code: -1, error: 'error on sample create. Timed out waiting for 1.', rid: 'rid-timeout'}}]
+                    {rid: 'rid-timeout', api: 2, body: { code: -1, error: 'WAB::Error: error on sample create. Timed out waiting for 1.', rid: 'rid-timeout'}}]
                   ])
   end
 
