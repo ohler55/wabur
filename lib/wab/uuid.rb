@@ -15,9 +15,7 @@ module WAB
     end
 
     # Returns the string representation of the UUID.
-    def to_s
-      @id
-    end
+    alias :to_s :id
 
     def ==(other)
       other.is_a?(self.class) && @id == other.id
