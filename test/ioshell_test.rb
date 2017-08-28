@@ -283,8 +283,11 @@ class IoEngineTest < Minitest::Test
           raise e
         end
       }
-      to_w.puts(::WAB::Impl::Data.new({ api: -2 }, false).json)
-      to_w.flush
+      begin
+        to_w.puts(::WAB::Impl::Data.new({ api: -2 }, false).json)
+        to_w.flush
+      rescue Exception
+      end
     end
   end
 

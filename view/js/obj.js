@@ -1,7 +1,7 @@
 
 wab.Obj.prototype.fetch = function() {
     if (0 != this.ref) {
-        wab.httpGet('/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
+        wab.httpCall('GET', '/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
             if (0 != resp.body.code) {
                 alert(results.error);
                 return;
