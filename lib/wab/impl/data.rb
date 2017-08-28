@@ -34,7 +34,7 @@ module WAB
 
       # Returns the instance converted to native Ruby values such as a Hash,
       # Array, etc.
-      alias :native :root
+      alias native root
 
       # Gets the Data element or value identified by the path where the path
       # elements are separated by the '.' character. The path can also be a
