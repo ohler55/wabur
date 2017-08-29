@@ -54,7 +54,8 @@ class DataTest < Minitest::Test
   end
 
   def test_validate_keys
-    assert_raises() { d = @shell.data({ 'a' => 1}) }
+    assert_raises(WAB::KeyError) { d = @shell.data({ 'a' => 1}) }
+    assert_raises(WAB::TypeError) { d = @shell.data('text') }
   end
 
   def test_repair_keys

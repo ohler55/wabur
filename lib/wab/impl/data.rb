@@ -80,7 +80,7 @@ module WAB
       # value:: value to set
       # repair:: flag indicating invalid value should be repaired if possible
       def set(path, value, repair=false)
-        raise StandardError.new("path can not be empty.") if path.empty?
+        raise WAB::Error, "path can not be empty." if path.empty?
         if value.is_a?(::WAB::Data)
           value = value.native
         elsif repair
@@ -109,7 +109,7 @@ module WAB
               node = nn
             end
           else
-            raise StandardError.new("Can not set a member of an #{node.class}.")
+            raise WAB::TypeError, "Can not set a member of an #{node.class}."
           end
         }
         key = path[-1]
@@ -124,7 +124,7 @@ module WAB
             node[key] = value
           end
         else
-          raise StandardError.new("Can not set a member of an #{node.class}.")
+          raise WAB::TypeError, "Can not set a member of an #{node.class}."
         end
         value
       end
@@ -201,7 +201,7 @@ module WAB
       def validate(value)
         if value.is_a?(Hash)
           value.each_pair { |k, v| 
-            raise StandardError.new("Hash keys must be Symbols.") unless k.is_a?(Symbol)
+            raise WAB::KeyError unless k.is_a?(Symbol)
             validate_value(v)
           }
         elsif value.is_a?(Array)
@@ -209,7 +209,7 @@ module WAB
             validate_value(v)
           }
         else
-          raise StandardError.new("Data values must be either a Hash or an Array")
+          raise WAB::TypeError
         end
         value
       end
@@ -229,7 +229,7 @@ module WAB
           # valid values
         elsif Hash == value_class
           value.each_pair { |k, v| 
-            raise StandardError.new("Hash keys must be Symbols.") unless k.is_a?(Symbol)
+            raise WAB::KeyError unless k.is_a?(Symbol)
             validate_value(v)
           }
         elsif Array == value_class
@@ -239,7 +239,7 @@ module WAB
         elsif WAB::Utils.pre_24_fixnum?(value)
           # valid value
         else
-          raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
+          raise WAB::TypeError, "#{value_class} is not a valid Data value."
         end
         value
       end
@@ -262,10 +262,10 @@ module WAB
           }
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
-          raise StandardError.new("Data values must be either a Hash or an Array") unless value.is_a?(Hash)
+          raise WAB::TypeError unless value.is_a?(Hash)
           value = fix(value)
         else
-          raise StandardError.new("Data values must be either a Hash or an Array")
+          raise WAB::TypeError
         end
         value
       end
@@ -300,13 +300,13 @@ module WAB
           # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
-          raise StandardError.new("Data values must be either a Hash or an Array") unless value.is_a?(Hash)
+          raise WAB::TypeError unless value.is_a?(Hash)
           value = fix(value)
         elsif value.respond_to?(:to_s)
           value = value.to_s
           raise StandardError.new("Data values must be either a Hash or an Array") unless value.is_a?(String)
         else
-          raise StandardError.new("#{value_class.to_s} is not a valid Data value.")
+          raise WAB::TypeError, "#{value_class} is not a valid Data value."
         end
         value
       end
@@ -380,7 +380,7 @@ module WAB
         end
         return key if WAB::Utils.pre_24_fixnum?(key)
 
-        raise StandardError.new("path key must be an integer for an Array.")
+        raise WAB::Error, "path key must be an integer for an Array."
       end
 
       def clone_value(value)
