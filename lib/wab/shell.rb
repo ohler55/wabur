@@ -17,6 +17,9 @@ module WAB
   # the methods remain the same.
   class Shell
 
+    # Returns the path where a data type is located. The default is 'kind'.
+    attr_reader :type_key
+
     # Sets up the shell with a type_key and path position.
     #
     # type_key:: key for the type associated with a record

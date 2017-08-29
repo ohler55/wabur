@@ -47,7 +47,7 @@ module WAB
     def create(path, query, data, rid=nil) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
-      if query.is_a?(Hash) && 0 < query.size
+      if WAB::Utils.populated_hash?(query)
         where = ['AND']
         where << form_where_eq(@shell.type_key, kind)
         query.each_pair { |k,v| where << form_where_eq(k, v) }
@@ -99,7 +99,7 @@ module WAB
     def list_select(kind, fields, rid)
       tql = { }
       select = { ref: '$ref' }
-      if fields.is_a?(Hash) && 0 < fields.size
+      if WAB::Utils.populated_hash?(fields)
         fields.each_pair { |k,v| select[k] = v }
       end
       tql[:where] = form_where_eq(@shell.type_key, kind)
@@ -113,7 +113,7 @@ module WAB
     def list_match(kind, query, rid)
       tql = { }
       # If there is a query set up a where clause.
-      if query.is_a?(Hash) && 0 < query.size
+      if WAB::Utils.populated_hash?(query)
         where = ['AND']
         where << form_where_eq(@shell.type_key, kind)
         query.each_pair { |k,v| where << form_where_eq(k, v) }
@@ -142,7 +142,7 @@ module WAB
       kind = path[@shell.path_pos]
       if @shell.path_pos + 2 == path.length # has an object reference in the path
         tql[:where] = path[@shell.path_pos + 1].to_i
-      elsif query.is_a?(Hash) && 0 < query.size
+      elsif WAB::Utils.populated_hash?(query)
         where = ['AND']
         where << form_where_eq(@shell.type_key, kind)
         query.each_pair { |k,v| where << form_where_eq(k, v) }
