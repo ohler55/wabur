@@ -2,12 +2,12 @@
 
 - shell
 
-- expr
- - .json method
- - parse
- 
 - model
  - just hash
+
+- make all shell method raise
+ - move to code to io and impl
+ 
 - shell using runner test
 - log
 - model to disk

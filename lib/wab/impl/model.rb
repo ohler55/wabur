@@ -53,6 +53,7 @@ module WAB
       end
 
       def insert(obj, rid, where, filter)
+        # TBD check where and filter for conflicts
         ref = gen_ref
         @map[ref] = Data.new(obj, true)
         write_to_file(ref, obj)

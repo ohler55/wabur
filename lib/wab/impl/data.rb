@@ -42,7 +42,7 @@ module WAB
       # child.grandchild is the same as ['child', 'grandchild'].
       def has?(path)
         if path.is_a?(Symbol)
-          return @root.is_a?(Hash) && @root[path].has_key?
+          return @root.is_a?(Hash) && @root.has_key?(path)
         else
           path = path.to_s.split('.') unless path.is_a?(Array)
           node = @root
