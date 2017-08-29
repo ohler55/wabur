@@ -1,14 +1,14 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
-- shell
-
-- model
- - just hash
-
-- make all shell method raise
- - move to code to io and impl
  
-- shell using runner test
-- log
-- model to disk
+- make all ::WAB::Shell method raise
+ - move to code to IO and Impl shells
  
+- model save and load to/from disk
+
+- log conf
+ - directory
+ - console
+ - max size
+ - max file
+ - log level

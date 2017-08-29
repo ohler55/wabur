@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class LtTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class LtTest < ImplTest
 
   def test_lt_native
     x = ::WAB::Impl::Lt.new('num', 3)

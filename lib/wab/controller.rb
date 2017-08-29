@@ -173,16 +173,16 @@ module WAB
     def delete(path, query, rid=nil) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
-      if @shell.path_pos + 2 == path.length # has an object reference in the path
-        tql[:where] = path[@shell.path_pos + 1].to_i
-      elsif query.is_a?(Hash) && 0 < query.size
-        where = ['AND']
-        where << form_where_eq(@shell.type_key, kind)
-        query.each_pair { |k,v| where << form_where_eq(k, v) }
-        tql[:where] = where
-      else
-        tql[:where] = form_where_eq(@shell.type_key, kind)
-      end
+      tql[:where] = if @shell.path_pos + 2 == path.length # has an object reference in the path
+                      path[@shell.path_pos + 1].to_i
+                    elsif query.is_a?(Hash) && 0 < query.size
+                      where = ['AND']
+                      where << form_where_eq(@shell.type_key, kind)
+                      query.each_pair { |k,v| where << form_where_eq(k, v) }
+                      where
+                    else
+                      form_where_eq(@shell.type_key, kind)
+                    end
       tql[:delete] = nil
       rid = nil unless @async
       shell_query(tql, kind, 'delete', rid)
@@ -226,22 +226,22 @@ module WAB
     def form_where_eq(key, value)
       value_class = value.class
       x = ['EQ', key.to_s]
-      if Time == value_class
-        x << value.utc.iso8601(9)
-      elsif value.nil? ||
-          TrueClass == value_class ||
-          FalseClass == value_class ||
-          Integer == value_class ||
-          Float == value_class
-        x << value
-      elsif String == value_class
-        # if the string matches a detectable type then don't quote it
-        x << detect_string(value)
-      elsif WAB::Utils.pre_24_fixnum?(value)
-        x << value
-      else
-        x << value.to_s
-      end
+      x << if Time == value_class
+             value.utc.iso8601(9)
+           elsif value.nil? ||
+               TrueClass == value_class ||
+               FalseClass == value_class ||
+               Integer == value_class ||
+               Float == value_class
+             value
+           elsif String == value_class
+             # if the string matches a detectable type then don't quote it
+             detect_string(value)
+           elsif WAB::Utils.pre_24_fixnum?(value)
+             value
+           else
+             value.to_s
+           end
       x
     end
 

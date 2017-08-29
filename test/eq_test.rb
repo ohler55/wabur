@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class EqTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class EqTest < ImplTest
 
   def test_eq_native
     x = ::WAB::Impl::Eq.new('num', 7)

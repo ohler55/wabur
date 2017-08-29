@@ -4,7 +4,13 @@ require 'wab/impl/boolexpr'
 module WAB
   module Impl
 
+    # A logical AND expression.
     class And < BoolExpr
+
+      # Create an AND expression with the provided arguments which must be
+      # instances of subclasses of the Expr class.
+      #
+      # args:: argument to the AND expression
       def initialize(*args)
         super
       end
@@ -17,9 +23,7 @@ module WAB
       end
 
       def native()
-        n = ['AND']
-        @args.each { |a| n << a.native }
-        n
+        @args.map { |a| a.native }.unshift('AND')
       end
 
     end # And

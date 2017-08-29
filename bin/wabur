@@ -7,6 +7,7 @@ while (index = ARGV.index('-I'))
 end
 
 require 'optparse'
+require 'logger'
 
 require 'wab'
 require 'wab/impl'
@@ -17,15 +18,16 @@ cfg = {
   'http.dir' => '.',
   'controller' => 'BasicController',
   'http.port' => 6363,
-  'verbose' => false
+  'verbose' => Logger::WARN
 }
 cfg_file = nil
+verbose_cnt = 0
 
 opts = OptionParser.new(%{Usage: wabur [options]
 
 A WAB Runner that is configured with a unix style conf file.
 })
-opts.on('-v', 'verbose')                                     { cfg['verbose'] = true }
+opts.on('-v', 'verbose')                                     { verbose_cnt += 1 }
 opts.on('-c', '--conf String', String, 'configuration file') { |c| cfg_file = c }
 opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
@@ -73,8 +75,19 @@ unless cfg_file.nil?
   }
 end
 
+if 0 < verbose_cnt
+  v = cfg['verbose'].to_i - verbose_cnt
+  v = 0 if v < 0
+  cfg['verbose'] = v
+end
+
 shell = ::WAB::Impl::Shell.new(cfg)
+
+# TBD configure logger better
+shell.logger = Logger.new(STDOUT)
+shell.logger.level = cfg['verbose'].to_i
+
 controller = Object.const_get(cfg['controller']).new(shell, false)
 shell.register_controller(nil, controller)
-puts "*** starting #{shell}"
+
 shell.start()

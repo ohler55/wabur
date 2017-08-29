@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class GteTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class GteTest < ImplTest
 
   def test_gte_native
     x = ::WAB::Impl::Gte.new('num', 3)

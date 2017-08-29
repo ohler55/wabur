@@ -6,6 +6,10 @@ module WAB
 
     class BoolExpr < Expr
 
+      # Create an expression with the provided arguments which must be
+      # instances of subclasses of the Expr class.
+      #
+      # args:: argument to the expression
       def initialize(*args)
         @args = args
       end

@@ -35,7 +35,9 @@ module WAB
         not: Not,
       }
 
-      # Parses an Array into a set of Expr and subsclasses.
+      # Parses an Array into a set of Expr subsclasses.
+      #
+      # native:: native Ruby representation of the expression.
       def self.parse(native)
         raise ::WAB::Error.new('Invalid expression. Must be an Array.') unless native.is_a?(Array)
         op = native[0]
@@ -44,11 +46,19 @@ module WAB
         raise ::WAB::Error.new("#{op} is not a valid expression function.") if xclass.nil?
         args = []
         native[1..-1].each { |n|
-          if n.is_a?(Array)
-            args << parse(n)
-          else
-            args << n
-          end
+          args << if n.is_a?(Array)
+                    parse(n)
+                  elsif n.is_a?(String)
+                    if 0 < n.length
+                      if '\'' == n[0]
+                        n[1..-1]
+                      else
+                        ::WAB::Impl::Data.detect_string(n)
+                      end
+                    end
+                  else
+                    n
+                  end
         }
         xclass.new(*args)
       end

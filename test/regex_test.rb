@@ -6,11 +6,7 @@ require_relative 'helper'
 require 'wab'
 require 'wab/impl'
 
-class RegexTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class RegexTest < ImplTest
 
   def test_regex_native
     x = ::WAB::Impl::Regex.new('str', '^a *.')

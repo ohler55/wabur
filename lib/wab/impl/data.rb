@@ -218,7 +218,7 @@ module WAB
         if @root.is_a?(Hash)
           detect_hash(@root)
         elsif @root.is_a?(Array)
-          detect_hash(@root)
+          detect_array(@root)
         end
       end
 
@@ -457,12 +457,12 @@ module WAB
         when Array
           detect_array(item)
         when String
-          element = detect_string(item)
+          element = ::WAB::Impl::Data.detect_string(item)
           collection[key] = element unless element == item
         end
       end
 
-      def detect_string(s)
+      def self.detect_string(s)
         len = s.length
         if 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(s).nil?
           ::WAB::UUID.new(s)

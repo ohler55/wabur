@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class NotTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class NotTest < ImplTest
 
   def test_not_native
     x = ::WAB::Impl::Not.new(::WAB::Impl::Eq.new('num', 7))

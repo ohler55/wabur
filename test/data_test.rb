@@ -6,11 +6,7 @@ require_relative 'helper'
 require 'wab'
 require 'wab/impl'
 
-class DataTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class DataTest < ImplTest
 
   class ToHash
     def initialize(x, y)
@@ -23,19 +19,7 @@ class DataTest < Minitest::Test
   end
 
   def test_json
-    d = @shell.data({
-                      boo: true,
-                      n: nil,
-                      num: 7,
-                      float: 7.654,
-                      str: 'a string',
-                      t: Time.gm(2017, 1, 5, 15, 4, 33.123456789),
-                      big: BigDecimal('63.21'),
-                      uri: URI('http://opo.technology/sample'),
-                      uuid: ::WAB::UUID.new('b0ca922d-372e-41f4-8fea-47d880188ba3'),
-                      a: [],
-                      h: {},
-                    })
+    d = make_sample_data()
     # downcase to match Ruby 2.3 and 2.4 which encode BigDecimal differently.
     assert_equal(%|{
   "boo":true,

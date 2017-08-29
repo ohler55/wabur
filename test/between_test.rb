@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class BetweenTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class BetweenTest < ImplTest
 
   def test_between_native
     x = ::WAB::Impl::Between.new('num', 3, 7, true, false)

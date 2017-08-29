@@ -25,7 +25,7 @@ class ModelTest < Minitest::Test
     # get and verify object was stored.
     obj = model.get(ref)
 
-    assert_equal({code: 0, results: [{id: 1, data: {kind: 'Person', name: 'Peter', age: 63}}]}, obj, 'obj get mismatch')
+    assert_equal({kind: 'Person', name: 'Peter', age: 63}, obj.native, 'obj get mismatch')
   end
 
 end # ModelTest

@@ -3,11 +3,7 @@
 
 require_relative 'helper'
 
-class HasTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class HasTest < ImplTest
 
   def test_has_int
     d = make_sample_data()

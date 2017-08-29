@@ -5,6 +5,11 @@ module WAB
   module Impl
 
     class Regex < PathExpr
+
+      # Creates a new instance with the provided parameters.
+      #
+      # path:: path to the value to compare
+      # rx:: regexp to match against a string value from the path lookup
       def initialize(path, rx)
         super(path)
         if rx.is_a?(Regexp)
