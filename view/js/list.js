@@ -58,6 +58,7 @@ wab.List.prototype.display = function(view, edit) {
     wab.httpCall('GET', '/v1/' + this.kind + opt, this, function(list, resp) {
         var results = resp.results, btn, bi;
 
+        console.log("list - " + JSON.stringify(resp));
         if (typeof results === 'object') {
             var i, cs, len = list.spec.list.length;
             var j, obj, rlen = results.length, ref;

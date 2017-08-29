@@ -2,7 +2,13 @@
 
 - shell
 
- - conf
-  - read from conf file in sample
-  - create bin/wabur
-  
+- expr
+ - .json method
+ - parse
+ 
+- model
+ - just hash
+- shell using runner test
+- log
+- model to disk
+ 

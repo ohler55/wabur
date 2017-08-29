@@ -17,19 +17,32 @@ module WAB
       end
 
       def get(ref)
-        @map[ref]
+        { code: 0, results: [ { id: ref, data: @map[ref].native } ] }
       end
 
       def query(tql)
-        puts "*** TQL: #{tql}"
+        rid = tql[:rid]
+        where = nil
+        filter = nil
+        if tql.has_key?(:where)
+          w = tql[:where]
+          if w.is_a?(Array)
+            where = Expr.parse(w)
+          else
+            where = w
+          end
+        end
+        filter = Expr.parse(tql[:filter]) if tql.has_key?(:filter)
+        
+        #puts "*** TQL: #{tql}"
         if tql.has_key?(:insert)
-          insert(tql)
+          insert(tql[:insert], rid, where, filter)
         elsif tql.has_key?(:update)
-          update(tql)
+          update(tql[:update], rid, where, filter)
         elsif tql.has_key?(:delete)
-          delete(tql)
+          delete(tql[:delete], rid, where, filter)
         else
-          select(tql)
+          select(tql[:select], rid, where, filter)
         end
       end
 
@@ -39,12 +52,13 @@ module WAB
         }
       end
 
-      def insert(tql)
+      def insert(obj, rid, where, filter)
         ref = gen_ref
-        obj = tql[:insert]
-        @map[ref] = obj
+        @map[ref] = Data.new(obj, true)
         write_to_file(ref, obj)
-        { code: 0, ref: ref }
+        result = { code: 0, ref: ref }
+        result[:rid] = rid unless rid.nil?
+        result
       end
 
       def select(tql)
@@ -60,14 +74,13 @@ module WAB
         }
       end
       
-      def update(tql)
+      def update(obj, rid, where, filter)
         # TBD
       end
       
-      def delete(tql)
-        where = tql[:where]
+      def delete(del_opt, rid, where, filter)
         deleted = []
-        if where.is_a?(Array)
+        if where.is_a?(Expr)
           # TBD and expression
         else
           # A reference.

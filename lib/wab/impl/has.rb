@@ -4,20 +4,19 @@ require 'wab/impl/pathexpr'
 module WAB
   module Impl
 
-    class Eq < PathExpr
-      def initialize(path, value)
+    class Has < PathExpr
+      def initialize(path)
         super(path)
-        @value = value
       end
 
       def eval(data)
-        data.get(@path) == @value
+        data.has?(@path)
       end
 
       def native()
-        ['EQ', @path, @value]
+        ['HAS', @path]
       end
 
-    end # Eq
+    end # Has
   end # Impl
 end # WAB

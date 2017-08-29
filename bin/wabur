@@ -76,4 +76,5 @@ end
 shell = ::WAB::Impl::Shell.new(cfg)
 controller = Object.const_get(cfg['controller']).new(shell, false)
 shell.register_controller(nil, controller)
+puts "*** starting #{shell}"
 shell.start()
