@@ -6,7 +6,7 @@ require_relative 'helper'
 require 'wab'
 require 'wab/impl'
 
-class RegexTest < ImplTest
+class TestExprRegex < ImplTest
 
   def test_regex_native
     x = ::WAB::Impl::Regex.new('str', '^a *.')
@@ -27,4 +27,4 @@ class RegexTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # RegexTest
+end # TestExprRegex

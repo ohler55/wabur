@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class OrTest < ImplTest
+class TestExprOr < ImplTest
 
   def test_or_native
     x = ::WAB::Impl::Or.new(::WAB::Impl::Has.new('num'), ::WAB::Impl::Eq.new('num', 7))
@@ -21,4 +21,4 @@ class OrTest < ImplTest
 
   # TBD tests with no args, with one, with more than 2, test using append_arg
 
-end # OrTest
+end # TestExprOr

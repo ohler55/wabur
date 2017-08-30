@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class LteTest < ImplTest
+class TestExprLte < ImplTest
 
   def test_lte_native
     x = ::WAB::Impl::Lte.new('num', 3)
@@ -21,4 +21,4 @@ class LteTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # LteTest
+end # TestExprLte

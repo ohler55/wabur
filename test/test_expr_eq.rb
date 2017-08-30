@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class EqTest < ImplTest
+class TestExprEq < ImplTest
 
   def test_eq_native
     x = ::WAB::Impl::Eq.new('num', 7)
@@ -21,4 +21,4 @@ class EqTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # EqTest
+end # TestExprEq

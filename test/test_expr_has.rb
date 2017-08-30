@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class HasTest < ImplTest
+class TestExprHas < ImplTest
 
   def test_has_int
     d = make_sample_data()
@@ -16,4 +16,4 @@ class HasTest < ImplTest
 
   # TBD test with path as an array, tests with symbol path
   
-end # HasTest
+end # TestExprHas

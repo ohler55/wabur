@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class AndTest < ImplTest
+class TestExprAnd < ImplTest
 
   def test_and_native
     x = ::WAB::Impl::And.new(::WAB::Impl::Has.new('num'), ::WAB::Impl::Eq.new('num', 7))
@@ -21,4 +21,4 @@ class AndTest < ImplTest
 
   # TBD tests with no args, with one, with more than 2, test using append_arg
 
-end # AndTest
+end # TestExprAnd

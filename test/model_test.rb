@@ -5,7 +5,7 @@ require_relative 'helper'
 
 require 'wab/impl/model'
 
-class ModelTest < Minitest::Test
+class ModelTest < ImplTest
 
   def test_model_create
     # nil arg indicates don't save to disk

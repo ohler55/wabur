@@ -5,25 +5,21 @@ require_relative 'helper'
 
 require 'wab/impl/exprparse'
 
-require 'between_test'
-require 'eq_test'
-require 'gt_test'
-require 'gte_test'
-require 'has_test'
-require 'in_test'
-require 'lt_test'
-require 'lte_test'
-require 'regex_test'
+require 'test_expr_between'
+require 'test_expr_eq'
+require 'test_expr_gt'
+require 'test_expr_gte'
+require 'test_expr_has'
+require 'test_expr_in'
+require 'test_expr_lt'
+require 'test_expr_lte'
+require 'test_expr_regex'
 
-require 'not_test'
-require 'and_test'
-require 'or_test'
+require 'test_expr_not'
+require 'test_expr_and'
+require 'test_expr_or'
 
-class ExprTest < Minitest::Test
-
-  def setup
-    @shell = ::WAB::Impl::Shell.new({})
-  end
+class ExprTest < ImplTest
 
   def test_expr_parse
     natives = [
