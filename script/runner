@@ -6,4 +6,4 @@
 # ---------------------------------
 set -e
 
-bundle exec ruby test/runner_test.rb $1
+bundle exec ruby test/test_runner.rb $1

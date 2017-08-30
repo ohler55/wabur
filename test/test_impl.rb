@@ -5,7 +5,7 @@ require_relative 'helper'
 
 require 'wab/impl'
 
-class ImplTest < Minitest::Test
+class TestImpl < Minitest::Test
 
   def setup
     @shell = ::WAB::Impl::Shell.new({})
@@ -26,8 +26,8 @@ class ImplTest < Minitest::Test
                   h: {},
                 })
   end
-end # ImplTest
+end # TestImpl
 
-require 'data_test'
-require 'expr_test'
-require 'model_test'
+require 'test_data'
+require 'test_expr'
+require 'test_model'

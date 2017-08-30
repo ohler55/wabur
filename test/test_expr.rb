@@ -19,7 +19,7 @@ require 'test_expr_not'
 require 'test_expr_and'
 require 'test_expr_or'
 
-class ExprTest < ImplTest
+class TestExpr < TestImpl
 
   def test_expr_parse
     natives = [

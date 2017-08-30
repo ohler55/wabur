@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestExprLte < ImplTest
+class TestExprLte < TestImpl
 
   def test_lte_native
     x = ::WAB::Impl::Lte.new('num', 3)

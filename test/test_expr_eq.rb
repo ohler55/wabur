@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestExprEq < ImplTest
+class TestExprEq < TestImpl
 
   def test_eq_native
     x = ::WAB::Impl::Eq.new('num', 7)

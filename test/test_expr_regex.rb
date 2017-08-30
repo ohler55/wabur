@@ -6,7 +6,7 @@ require_relative 'helper'
 require 'wab'
 require 'wab/impl'
 
-class TestExprRegex < ImplTest
+class TestExprRegex < TestImpl
 
   def test_regex_native
     x = ::WAB::Impl::Regex.new('str', '^a *.')

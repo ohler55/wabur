@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestExprOr < ImplTest
+class TestExprOr < TestImpl
 
   def test_or_native
     x = ::WAB::Impl::Or.new(::WAB::Impl::Has.new('num'), ::WAB::Impl::Eq.new('num', 7))

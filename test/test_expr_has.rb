@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class TestExprHas < ImplTest
+class TestExprHas < TestImpl
 
   def test_has_int
     d = make_sample_data()
