@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# ----------------------------------------------------------------------
+# USAGE:
+# ----------------------------------------------------------------------
+# # Start Ruby runner after compiling source files(script files and sass
+# # partials). Recommended for the initial run and after making changes
+# # to the source files.
+#   $ script/run-sample -b
+#
+# # Start Ruby runner without compiling source files.
+#   $ script/run-sample
+# ----------------------------------------------------------------------
+
+set -e
+
+while getopts :b opt
+do
+  case $opt in
+    b)
+      echo "  Compiling source files.."
+      ruby view/build_pages
+      ;;
+  esac
+done
+
+echo -e "\n  Starting Ruby Runner"
+bundle exec wabur -c examples/sample/wabur/wabur.conf
