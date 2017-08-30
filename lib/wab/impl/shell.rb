@@ -82,7 +82,6 @@ module WAB
         res.status = 200
         res['Content-Type'] = 'application/json'
         @shell.logger.debug("Reply: #{result.json}") if @shell.logger.debug?
-        res.keep_alive = false
         res.body = result.json
       end
 
