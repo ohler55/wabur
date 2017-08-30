@@ -11,7 +11,7 @@ module WAB
     # and Model. Since the View and Model APIs are asynchronous and Controller
     # calls are synchronous for simplicity some effort is required to block
     # where needed to achieve the difference in behavior.
-    class Shell < ::WAB::Shell
+    class Shell
 
       attr_reader :path_pos
       attr_reader :type_key
@@ -24,7 +24,9 @@ module WAB
       # tcnt:: processing thread count
       # type_key:: key to use for the record type
       def initialize(tcnt, type_key='kind', path_pos=0)
-        super(type_key, path_pos)
+        @controllers = {}
+        @type_key = type_key
+        @path_pos = path_pos
         @engine = Engine.new(self, tcnt)
         @timeout = 2.0
         @verbose = false
@@ -35,6 +37,42 @@ module WAB
         @engine.start()
       end
       
+      # Register a controller for a named type.
+      #
+      # If a request is received for an unregistered type the default controller
+      # will be used. The default controller is registered with a +nil+ key.
+      #
+      # type:: type name
+      # controller:: Controller instance for handling requests for the identified +type+
+      def register_controller(type, controller)
+        controller.shell = self
+        @controllers[type] = controller
+      end
+
+      # Returns the controller associated with the type key found in the
+      # data. If a controller has not be registered under that key the default
+      # controller is returned if there is one.
+      #
+      # data:: data to extract the type from for lookup in the controllers
+      def controller(data)
+        path = data.get(:path)
+        path = path.native if path.is_a?(::WAB::Data)
+        if path.nil? || path.length <= @path_pos
+          content = data.get(:content)
+          return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
+        else
+          return @controllers[path[@path_pos]] || @controllers[nil]
+        end
+        @controllers[nil]
+      end
+
+      # Returns the controller according to the type in the path.
+      #
+      # path: path Array such as from a URL
+      def path_controller(path)
+        @controllers[path[@path_pos]] || @controllers[nil]
+      end
+
       # Create and return a new data instance with the provided initial value.
       # The value must be a Hash or Array. The members of the Hash or Array
       # must be nil, boolean, String, Integer, Float, BigDecimal, Array, Hash,

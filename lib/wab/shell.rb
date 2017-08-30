@@ -17,31 +17,19 @@ module WAB
   # the methods remain the same.
   class Shell
 
-    # Returns the path where a data type is located. The default is 'kind'.
-    attr_reader :type_key
-
-    # Sets up the shell with a type_key and path position.
-    #
-    # type_key:: key for the type associated with a record
-    # path_pos:: position in a URL path that is the class or type
-    def initialize(type_key='kind', path_pos=0)
-      @controllers = {}
-      @type_key = type_key
-      @path_pos = path_pos
-    end
-
     # Starts the shell.
     def start()
+      raise NotImplementedError.new
     end
 
     # Returns the path where a data type is located. The default is 'kind'.
     def type_key()
-      @type_key
+      raise NotImplementedError.new
     end
 
     # Returns the position of the type in a path.
     def path_pos()
-      @path_pos
+      raise NotImplementedError.new
     end
 
     # Register a controller for a named type.
@@ -52,8 +40,7 @@ module WAB
     # type:: type name
     # controller:: Controller instance for handling requests for the identified +type+
     def register_controller(type, controller)
-      controller.shell = self
-      @controllers[type] = controller
+      raise NotImplementedError.new
     end
 
     # Returns the controller associated with the type key found in the
@@ -62,15 +49,14 @@ module WAB
     #
     # data:: data to extract the type from for lookup in the controllers
     def controller(data)
-      path = data.get(:path)
-      path = path.native if path.is_a?(::WAB::Data)
-      if path.nil? || path.length <= @path_pos
-        content = data.get(:content)
-        return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
-      else
-        return @controllers[path[@path_pos]] || @controllers[nil]
-      end
-      @controllers[nil]
+      raise NotImplementedError.new
+    end
+
+    # Returns the controller according to the type in the path.
+    #
+    # path: path Array such as from a URL
+    def path_controller(path)
+      raise NotImplementedError.new
     end
 
     # Create and return a new data instance with the provided initial value.
