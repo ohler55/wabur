@@ -5,7 +5,7 @@ require_relative 'helper'
 
 require 'wab/impl/model'
 
-class ModelTest < Minitest::Test
+class TestModel < TestImpl
 
   def test_model_create
     # nil arg indicates don't save to disk
@@ -28,4 +28,4 @@ class ModelTest < Minitest::Test
     assert_equal({kind: 'Person', name: 'Peter', age: 63}, obj.native, 'obj get mismatch')
   end
 
-end # ModelTest
+end # TestModel

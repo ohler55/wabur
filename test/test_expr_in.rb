@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class InTest < ImplTest
+class TestExprIn < TestImpl
 
   def test_in_native
     x = ::WAB::Impl::In.new('num', 3, 4, 5)
@@ -21,4 +21,4 @@ class InTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # InTest
+end # TestExprIn

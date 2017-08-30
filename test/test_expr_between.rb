@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class BetweenTest < ImplTest
+class TestExprBetween < TestImpl
 
   def test_between_native
     x = ::WAB::Impl::Between.new('num', 3, 7, true, false)
@@ -41,4 +41,4 @@ class BetweenTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # BetweenTest
+end # TestExprBetween

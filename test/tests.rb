@@ -3,5 +3,5 @@
 
 require_relative 'helper'
 
-require 'impl_test'
-require 'ioshell_test'
+require 'test_impl'
+require 'test_io_shell'

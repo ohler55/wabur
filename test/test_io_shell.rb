@@ -7,7 +7,7 @@ require 'wab/impl'
 require 'wab/io'
 require 'mirror_controller'
 
-class IoEngineTest < Minitest::Test
+class TestIoShell < Minitest::Test
 
   def test_default_controller
     run_fork_test([

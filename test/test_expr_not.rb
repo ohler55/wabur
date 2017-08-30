@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class NotTest < ImplTest
+class TestExprNot < TestImpl
 
   def test_not_native
     x = ::WAB::Impl::Not.new(::WAB::Impl::Eq.new('num', 7))
@@ -19,4 +19,4 @@ class NotTest < ImplTest
     refute(x.eval(d), 'checking NOT mismatch')
   end
 
-end # NotTest
+end # TestExprNot

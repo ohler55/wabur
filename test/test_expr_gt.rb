@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-class GtTest < ImplTest
+class TestExprGt < TestImpl
 
   def test_gt_native
     x = ::WAB::Impl::Gt.new('num', 3)
@@ -21,4 +21,4 @@ class GtTest < ImplTest
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
 
-end # GtTest
+end # TestExprGt

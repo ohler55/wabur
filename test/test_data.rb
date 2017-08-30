@@ -6,7 +6,7 @@ require_relative 'helper'
 require 'wab'
 require 'wab/impl'
 
-class DataTest < ImplTest
+class TestImplData < TestImpl
 
   class ToHash
     def initialize(x, y)
@@ -259,4 +259,4 @@ class DataTest < ImplTest
     assert_equal(::WAB::UUID, d.get('sub.uuid').class)
   end
 
-end # DataTest
+end # TestImplData

@@ -27,7 +27,7 @@ raise ArgumentError, "Host and port not supplied." if ARGV.empty?
 $host, $port = ARGV[-1].split(':')
 $port = $port.to_i
 
-class RunnerTest < Minitest::Test
+class TestRunner < Minitest::Test
 
   # The Runner or rather it's storage is stateful so all steps in the test
   # must be made in order to keep the test self contained. Each step is a
@@ -175,4 +175,4 @@ class RunnerTest < Minitest::Test
   # TBD test no matches on update and delete
   # TBD test queries
 
-end # RunnerTest
+end # TestRunner
