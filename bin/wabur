@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+while (index = ARGV.index('-I'))
+  _, path = ARGV.slice!(index, 2)
+  $: << path
+end
+
+require 'optparse'
+require 'logger'
+
+require 'wab'
+require 'wab/impl'
+
+cfg = {
+  'handler.path' => '/v1',
+  'type_key' => 'kind',
+  'http.dir' => '.',
+  'controller' => 'BasicController',
+  'http.port' => 6363,
+  'verbose' => Logger::WARN
+}
+cfg_file = nil
+verbose_cnt = 0
+
+opts = OptionParser.new(%{Usage: wabur [options]
+
+A WAB Runner that is configured with a unix style conf file.
+})
+opts.on('-v', 'verbose')                                     { verbose_cnt += 1 }
+opts.on('-c', '--conf String', String, 'configuration file') { |c| cfg_file = c }
+opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
+opts.parse(ARGV)
+
+class BasicController < ::WAB::Controller
+
+  def initialize(shell, async=false)
+    super(shell, async)
+  end
+
+  def handle(data)
+    super
+  end
+
+  def create(path, query, data, rid=nil)
+    super
+  end
+
+  def read(path, query, rid=nil)
+    super
+  end
+
+  def update(path, query, data, rid=nil)
+    super
+  end
+
+  def delete(path, query, rid=nil)
+    super
+  end
+
+  def on_result(data)
+    super
+  end
+
+end # BasicController
+
+unless cfg_file.nil?
+  File.open(File.expand_path(cfg_file)) { |f|
+    f.each_line() { |line|
+      line.strip!
+      next if 0 == line.length || '#' == line[0]
+      k, v = line.split('=')
+      cfg[k.strip] = v.strip
+    }
+  }
+end
+
+if 0 < verbose_cnt
+  v = cfg['verbose'].to_i - verbose_cnt
+  v = 0 if v < 0
+  cfg['verbose'] = v
+end
+
+shell = ::WAB::Impl::Shell.new(cfg)
+
+# TBD configure logger better
+shell.logger = Logger.new(STDOUT)
+shell.logger.level = cfg['verbose'].to_i
+
+controller = Object.const_get(cfg['controller']).new(shell, false)
+shell.register_controller(nil, controller)
+
+shell.start()

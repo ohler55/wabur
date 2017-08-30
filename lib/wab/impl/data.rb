@@ -36,6 +36,35 @@ module WAB
       # Array, etc.
       alias native root
 
+      # Returns true if the Data element or value identified by the path
+      # exists where the path elements are separated by the '.' character. The
+      # path can also be a array of path node identifiers. For example,
+      # child.grandchild is the same as ['child', 'grandchild'].
+      def has?(path)
+        if path.is_a?(Symbol)
+          return @root.is_a?(Hash) && @root.has_key?(path)
+        else
+          path = path.to_s.split('.') unless path.is_a?(Array)
+          node = @root
+          path.each { |key|
+            if node.is_a?(Hash)
+              key = key.to_sym
+              return false unless node.has_key?(key)
+              node = node[key]
+            elsif node.is_a?(Array)
+              i = key.to_i
+              return false if 0 == i && '0' != key && 0 != key
+              len = node.length
+              return false unless -len <= i && i < len
+              node = node[i]
+            else
+              return false
+            end
+          }
+        end
+        true
+      end
+
       # Gets the Data element or value identified by the path where the path
       # elements are separated by the '.' character. The path can also be a
       # array of path node identifiers. For example, child.grandchild is the
@@ -425,12 +454,12 @@ module WAB
         when Array
           detect_array(item)
         when String
-          element = detect_string(item)
+          element = ::WAB::Impl::Data.detect_string(item)
           collection[key] = element unless element == item
         end
       end
 
-      def detect_string(s)
+      def self.detect_string(s)
         len = s.length
         if 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(s).nil?
           ::WAB::UUID.new(s)

@@ -5,3 +5,5 @@ $LOAD_PATH << File.expand_path('../lib', __dir__)
 
 require 'minitest'
 require 'minitest/autorun'
+
+require 'wab/impl'

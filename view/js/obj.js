@@ -2,11 +2,11 @@
 wab.Obj.prototype.fetch = function() {
     if (0 != this.ref) {
         wab.httpCall('GET', '/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
-            if (0 != resp.body.code) {
+            if (0 != resp.code) {
                 alert(results.error);
                 return;
             }
-            var results = resp.body.results;
+            var results = resp.results;
             if (!(typeof results === 'object')) {
                 alert('Invalid response from server');
                 return;
@@ -108,12 +108,12 @@ wab.Obj.prototype.save = function() {
             if (4 == h.readyState) {
                 if (200 == h.status) {
                     if (0 == o.ref) { // create
-                        o.ref = h.response.body.ref
+                        o.ref = h.response.ref
                         o.delete_button.style.visibility = 'visible';
                         o.save_button.removeChild(o.save_button.firstChild);
                         o.save_button.appendChild(document.createTextNode('Update'));
                     } else { // update
-                        var updated = h.response.body.updated;
+                        var updated = h.response.updated;
                         if (typeof updated === 'object' || 0 < updated.length) {
                             o.ref = updated[0];
                         } else {

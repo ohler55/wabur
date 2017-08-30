@@ -34,6 +34,16 @@ module WAB
     def start()
     end
 
+    # Returns the path where a data type is located. The default is 'kind'.
+    def type_key()
+      @type_key
+    end
+
+    # Returns the position of the type in a path.
+    def path_pos()
+      @path_pos
+    end
+
     # Register a controller for a named type.
     #
     # If a request is received for an unregistered type the default controller
