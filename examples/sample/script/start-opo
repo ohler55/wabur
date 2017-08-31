@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# -----------------------------------------------------------------
-# Starts the OpO Daemon runner. Requires OpO to be installed first.
-# -----------------------------------------------------------------
-
-set -e
-
-opod -c opo/opo.conf

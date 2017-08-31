@@ -15,7 +15,7 @@ def compact_js(src, dest)
       line = remove_js_comment(line)
       line = compact_js_line(line)
     end
-    dest.puts(line) unless 0 == line.length
+    dest.puts(line) unless line.empty?
   end
 end
 
@@ -26,12 +26,12 @@ def remove_js_comment(line)
   line.each_char { |c|
     i += 1
     if quote.nil?
-      if '"' == c || '\'' == c
+      if '"' == c || "'" == c
         quote = c
       elsif '/' == c
         slash += 1
         if 2 <= slash
-          return line[0,i - 2]
+          return line[0, i - 2]
         end
       else
         slash = 0
@@ -54,11 +54,11 @@ def compact_js_line(line)
   new_line = ''
   line.each_char { |c|
     if quote.nil?
-      if '"' == c || '\'' == c
+      if '"' == c || "'" == c
         quote = c
         past_punc = false
         new_line += c
-      elsif ' ' == c || '\t' == c
+      elsif ' ' == c || "\t" == c
         space = !past_punc
         past_punc = false
       else
@@ -87,7 +87,7 @@ def compact_js_line(line)
 end
 
 def path_to(*subdirs)
-  File.expand_path(File.join(".", *subdirs), __dir__)
+  File.expand_path(File.join("..", "view", *subdirs), __dir__)
 end
 
 def dest_dir(*contents)
