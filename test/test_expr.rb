@@ -3,7 +3,7 @@
 
 require_relative 'helper'
 
-require 'wab/impl/exprparse'
+require 'wab/impl/expr_parser'
 
 require 'test_expr_between'
 require 'test_expr_eq'
@@ -21,15 +21,15 @@ require 'test_expr_or'
 
 class TestExpr < TestImpl
 
-  def test_expr_parse
+  def test_expr_parser_parse
     natives = [
                ['EQ', 'num', 7],
                ['AND', ['HAS', 'str'], ['EQ', 'num', 7]],
               ]
     natives.each { |n|
-      x = ::WAB::Impl::Expr.parse(n)
+      x = ::WAB::Impl::ExprParser.parse(n)
       assert_equal(n, x.native, "parsed failed for #{n}")
     }
   end
 
-end # ExprTest
+end # TestExpr

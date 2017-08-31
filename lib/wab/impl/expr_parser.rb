@@ -1,25 +1,7 @@
 
-require 'wab'
-
-# Require the concrete Expr classes so a mapping table can be created for the
-# parser.
-require 'wab/impl/between'
-require 'wab/impl/eq'
-require 'wab/impl/gt'
-require 'wab/impl/gte'
-require 'wab/impl/has'
-require 'wab/impl/in'
-require 'wab/impl/lt'
-require 'wab/impl/lte'
-require 'wab/impl/regex'
-
-require 'wab/impl/and'
-require 'wab/impl/or'
-require 'wab/impl/not'
-
 module WAB
   module Impl
-    class Expr
+    class ExprParser
       @xmap = {
         between: Between,
         eq: Eq,
@@ -63,6 +45,6 @@ module WAB
         xclass.new(*args)
       end
 
-    end # Expr
+    end # ExprParser
   end # Impl
 end # WAB
