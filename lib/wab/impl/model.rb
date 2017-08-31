@@ -20,7 +20,7 @@ module WAB
       #
       # dir:: directory to store data in
       def initialize(dir)
-        @dir = dir.nil? ? nil : ::File.expand_path(dir)
+        @dir = dir.nil? ? nil : File.expand_path(dir)
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new()
