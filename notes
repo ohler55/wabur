@@ -1,6 +1,11 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
  
+- make all ::WAB::Shell method raise
+ - move to code to IO and Impl shells
+ 
+- model save and load to/from disk
+
 - log conf
  - directory
  - console
