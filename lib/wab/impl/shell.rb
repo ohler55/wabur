@@ -98,18 +98,22 @@ module WAB
     end # Handler
 
     # The shell for reference Ruby implementation.
-    class Shell < ::WAB::Shell
+    class Shell
       attr_accessor :verbose
       attr_accessor :logger
+
+      # Returns the path where a data type is located. The default is 'kind'.
+      attr_reader :type_key
+      attr_reader :path_pos
 
       # Sets up the shell with the supplied configuration data.
       #
       # cfg:: configuration Hash
       def initialize(cfg)
+        @controllers = {}
         pre_path = cfg['handler.path'] || '/v1'
-        path_pos = pre_path.split('/').length - 1
-        type_key = cfg['type_key'] || 'kind'
-        super(type_key, path_pos)
+        @path_pos = pre_path.split('/').length - 1
+        @type_key = cfg['type_key'] || 'kind'
         @http_dir = File.expand_path(cfg['http.dir'] || '.')
         if cfg.has_key?('http.port')
           @http_port = cfg['http.port'].to_i
@@ -143,6 +147,42 @@ module WAB
         server.start
       end
 
+      # Register a controller for a named type.
+      #
+      # If a request is received for an unregistered type the default controller
+      # will be used. The default controller is registered with a +nil+ key.
+      #
+      # type:: type name
+      # controller:: Controller instance for handling requests for the identified +type+
+      def register_controller(type, controller)
+        controller.shell = self
+        @controllers[type] = controller
+      end
+
+      # Returns the controller associated with the type key found in the
+      # data. If a controller has not be registered under that key the default
+      # controller is returned if there is one.
+      #
+      # data:: data to extract the type from for lookup in the controllers
+      def controller(data)
+        path = data.get(:path)
+        path = path.native if path.is_a?(::WAB::Data)
+        if path.nil? || path.length <= @path_pos
+          content = data.get(:content)
+          return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
+        else
+          return path_controllers(path)
+        end
+        @controllers[nil]
+      end
+
+      # Returns the controller according to the type in the path.
+      #
+      # path: path Array such as from a URL
+      def path_controller(path)
+        @controllers[path[@path_pos]] || @controllers[nil]
+      end
+
       # Create and return a new data instance with the provided initial value.
       # The value must be a Hash or Array. The members of the Hash or Array
       # must be nil, boolean, String, Integer, Float, BigDecimal, Array, Hash,
@@ -166,11 +206,6 @@ module WAB
       # Calls the model.
       def query(tql, handler=nil)
         @model.query(tql)
-      end
-
-      # Returns the controller according to the type in the path.
-      def path_controller(path)
-        @controllers[path[@path_pos]] || @controllers[nil]
       end
 
     end # Shell
