@@ -20,11 +20,7 @@ module WAB
       #
       # dir:: directory to store data in
       def initialize(dir)
-        if dir.nil?
-          @dir = nil
-        else
-          @dir = ::File.expand_path(dir)
-        end
+        @dir = dir.nil? ? nil : ::File.expand_path(dir)
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new()
@@ -193,7 +189,7 @@ module WAB
       def write_to_file(ref, obj)
         unless @dir.nil?
           obj.native if obj.is_a?(::WAB::Data)
-          File.open(File.join(@dir, "%016x.json" % ref), "w") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
+          File.open(File.join(@dir, "%016x.json" % ref), "wb") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
         end
       end
 
