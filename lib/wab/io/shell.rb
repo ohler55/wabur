@@ -61,7 +61,7 @@ module WAB
           content = data.get(:content)
           return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
         else
-          return @controllers[path[@path_pos]] || @controllers[nil]
+          return path_controller(path)
         end
         @controllers[nil]
       end
