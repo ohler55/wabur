@@ -3,29 +3,53 @@
 This simple example demonstrates the use of a WAB Controller to orchestrate
 a request made for data. It is the most straight forward use of the WAB gem.
 
-## Run without a browser
+## Setting up
 
-WAB Controllers can be tested without a browser and Javascript. By using curl,
-HTTP requests can be sent to the shell and subsequently verify the response.
+The `script` directory at the root of the repository contains several script
+files to easily get started with serving the Sample App.
 
-First a Runner is needed. The two choices are OpO or the Pure Ruby Runner.
+**Note:** *All scripts are recommended to be run from the root of the
+repository unless otherwise stated.*
 
-Two terminal windows are to be used in this example. While one is for
-displaying the `runner` trace output, the other is for calling `curl` to make
-HTTP requests and to receive responses. *Mentally designate* the two terminal
-windows as *runner* and *curl* terminals
+If you have the Bundler gem installed, run the following in your terminal to
+install all the necessary dependencies:
 
+```sh
+$ script/setup
+```
+
+## Usage
+
+The Sample App can be tested on a local browser with Javascript enabled, and
+can be served with choice between the following runners:
+
+  * a pure [Ruby Runner](#ruby-runner), built using `WEBrick`
+  * a high-performance runner written in C, [OpO](#opo) (*Not supported on Windows*).
+
+Additionally, the files necessary to render the App view needs to be compiled
+from their source. The source files are located in the [`view`](../../view)
+directory, and they get compiled into the [`assets`](../../view/pages/assets)
+directory.
+
+They need to be re-compiled manually if the source-files get edited.
+
+### Ruby Runner
+
+For development on Windows the Ruby Runner is the only choice. As far as the
+Controller is concerned it operates exactly the same as other runner except
+that it does not support asynchronous handling of requests without the use of
+threads in the WEBrick which is used as the HTTP server.
+
+The configuration file for this runner is placed in `wabur` sub-directory
+and is named [`wabur.conf`](wabur/wabur.conf)
 
 ### OpO
 
-Say Hello to OpO, a fast triple store. It provides the HTTP server and the
-Model storage, and is able to run the sample app as a spawned app that uses
-`$stdin` and `$stdout` for IO.
+OpO provides the HTTP server and the Model storage, and is able to run the
+sample app as a spawned app that uses `$stdin` and `$stdout` for IO.
 
 OpO can be downloaded from
 [OpO Downloads](http://www.opo.technology/download/index.html).
-
-#### Start OpO
 
 The confguration file for OpO is in the `opo` sub-directory, and is named
 [`opo.conf`](opo/opo.conf). The configuration specifies that the OpO disk
@@ -37,25 +61,38 @@ Near the bottom of the conf file, the Controller `spawn.rb` is mentioned
 along with command line options. The `-v` option turns on Controller
 verbosity.
 
-Start the OpO daemon with the following command in the *runner terminal* after
-installing:
+### Running the App
 
-```
- > opod -c opo/opo.conf
-```
+Compiling and running the App with a runner of your choice can be easily
+by using the [`start-sample`](../../script/start-sample) BASH script.
 
-### Pure Ruby Runner (PRR)
+It accepts two options:
 
-For development on Windows the PRR is the only choice. As far as the
-Controller is concerned it operates exactly the same as other runner except
-that it does not support asynchronous handling of requests without the use of
-threads in the WEBrick which is used as the HTTP server.
+  * `-b` &mdash; Compile view files and then execute the default Ruby Runner.
+    (Compiling is necessary to generate and update the files required to
+    properly render the App view.)
+  * `-o` &mdash; Serve the app using the OpO runner without any compiling.
 
-Start the PRR with the following command in the *runner terminal*.
+  **Note:** Alternatively, the two options can be passed together as `-bo` to
+            *compile* and *execute the OpO runner* back-to-back.
 
-```
- > wabur -c wabur/wabur.conf
-```
+The Sample App has been configured on both runners to serve at
+`http://localhost:6363` by default and can changed in the concerned config
+files.
+
+
+## Running without a browser
+
+WAB Controllers can be tested without a browser and Javascript. By using curl,
+HTTP requests can be sent to the runner and subsequently verify the response.
+
+Two terminal windows are to be used in this method. While one is for displaying
+the `runner` trace output, the other is for calling `curl` to make HTTP
+requests and to receive responses. *Mentally designate* the two terminal
+windows as *runner* and *curl* terminals.
+
+Run the shell script `start-view` with necessary [options](#running-the-app) to
+serve the runner of your choice.
 
 ### Adding a Record
 
@@ -104,7 +141,7 @@ The record can be deleted with an HTTP `DELETE` request.
 > curl -w "\n" -X DELETE http://localhost:6363/v1/Article/11
 ```
 
-### Benchmarks
+## Benchmarks
 
 Using the OpO Runner, a Ruby HTTP client is not able to generate requests and
 process responses quick enough to reach the limits of the Runner. Instead a C
@@ -136,14 +173,14 @@ Now that a record has been created, the benchmarks can be run.
 Both calls to the hose benchmarking app will use 2 threads and open 1000
 connections at a time to the Runner.
 
-#### Results
+### Results
 
 Benchmarks were run on a Razer Blade Stealth laptop with Ubuntu 17.04. A nice
 machine but still a laptop and not a server class machine by any stretch. A
 second set is on a desktop with an i7-6700@4.00GHz with 4 cores (8
 hyperthreads.
 
-##### Direct DB access
+#### Direct DB access
 
 ```
 razer bin> ./hose -p tree/000000000000000b -t 2 -c 20 127.0.0.1:6363
@@ -156,7 +193,7 @@ with an average latency of 0.162 msecs
 
 ```
 
-##### Controller in Sychronous Mode with 4 Ruby Thread
+#### Controller in Sychronous Mode with 4 Ruby Thread
 
 ```
 razer bin> ./hose -p v1/Article/11 -t 2 -c 20 127.0.0.1:6363
@@ -171,7 +208,7 @@ with an average latency of 2.963 msecs
 
 ```
 
-##### Controller in Asychronous Mode with 4 Ruby Thread
+#### Controller in Asychronous Mode with 4 Ruby Thread
 
 ```
 razer bin> ./hose -p v1/Article/11 -t 2 -c 20 127.0.0.1:6363
