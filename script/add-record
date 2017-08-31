@@ -4,7 +4,7 @@
 # Adds a record via the `curl` application.
 #
 # If the url is not provided, defaults to the following:
-# `http://localhost:4000/v1/Article`
+# `http://localhost:6363/v1/Article`
 #
 # USAGE: (either of..)
 #   - script/add-record
@@ -14,12 +14,14 @@
 
 set -e
 
+sampledir=examples/sample
+
 if [ $2 ]
   then
-  curl -w "\n" -T $1 $2
+  curl -w "\n" -T $sampledir/$1 $2
 elif [ $1 ]
   then
-  curl -w "\n" -T $1 http://localhost:6363/v1/Article
+  curl -w "\n" -T $sampledir/$1 http://localhost:6363/v1/Article
 else
-  curl -w "\n" -T article-1.json http://localhost:6363/v1/Article
+  curl -w "\n" -T $sampledir/article-1.json http://localhost:6363/v1/Article
 fi
