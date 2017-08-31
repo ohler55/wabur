@@ -1,8 +1,5 @@
 
 require 'oj'
-require 'wab'
-require 'wab/impl/expr'
-require 'wab/impl/exprparse'
 
 module WAB
   module Impl
@@ -48,9 +45,9 @@ module WAB
         filter = nil
         if tql.has_key?(:where)
           w = tql[:where]
-          where = (w.is_a?(Array) ? Expr.parse(w) : w)
+          where = (w.is_a?(Array) ? ExprParser.parse(w) : w)
         end
-        filter = Expr.parse(tql[:filter]) if tql.has_key?(:filter)
+        filter = ExprParser.parse(tql[:filter]) if tql.has_key?(:filter)
         
         if tql.has_key?(:insert)
           insert(tql[:insert], rid, where, filter)

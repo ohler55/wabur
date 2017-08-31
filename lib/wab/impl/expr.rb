@@ -1,6 +1,4 @@
 
-require 'wab'
-
 module WAB
   module Impl
 

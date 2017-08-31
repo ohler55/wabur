@@ -1,6 +1,4 @@
 
-require 'wab/impl/boolexpr'
-
 module WAB
   module Impl
 
