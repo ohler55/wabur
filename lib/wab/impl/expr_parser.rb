@@ -2,7 +2,7 @@
 module WAB
   module Impl
     class ExprParser
-      @xmap = {
+      XMAP = {
         between: Between,
         eq: Eq,
         gt: Gt,
@@ -15,7 +15,7 @@ module WAB
         and: And,
         or: Or,
         not: Not,
-      }
+      }.freeze
 
       class << self
         # Parses an Array into a set of Expr subsclasses.
@@ -27,7 +27,7 @@ module WAB
           op = native[0]
           op = op.downcase.to_sym unless op.is_a?(Symbol)
 
-          xclass = @xmap[op]
+          xclass = XMAP[op]
           raise WAB::Error.new("#{op} is not a valid expression function.") if xclass.nil?
 
           args = []
