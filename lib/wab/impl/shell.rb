@@ -129,7 +129,6 @@ module WAB
             @verbose = v
           end
         end
-        puts "*** #{cfg}"
         @model = Model.new(cfg['dir'])
       end
 
