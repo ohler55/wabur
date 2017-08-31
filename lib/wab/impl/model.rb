@@ -20,6 +20,7 @@ module WAB
       #
       # dir:: directory to store data in
       def initialize(dir)
+        puts "*** model inited with '#{dir}'"
         @dir = dir
         if dir.nil?
           @dir = nil
