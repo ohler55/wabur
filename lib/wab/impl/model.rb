@@ -87,25 +87,25 @@ module WAB
         result
       end
 
+      def extract_matches(format, ref, rid, obj)
+        if format.nil?
+          { id: ref, data: obj.native }
+        else
+          format_obj(format, ref, rid, obj)
+        end
+      end
+
       def select(format, rid, where, filter)
         matches = []
         @lock.synchronize {
           if where.nil? && filter.nil?
             @map.each { |ref,obj|
-              if format.nil?
-                matches << { id: ref, data: obj.native }
-              else
-                matches << format_obj(format, ref, rid, obj)
-              end
+              matches << extract_matches(format, ref, rid, obj)
             }
           else
             @map.each { |ref,obj|
               if where.eval(obj) && (filter.nil? || filter.eval(obj))
-                if format.nil?
-                  matches << { id: ref, data: obj.native }
-                else
-                  matches << format_obj(format, ref, rid, obj)
-                end
+                matches << extract_matches(format, ref, rid, obj)
               end
             }
           end
