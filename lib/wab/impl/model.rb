@@ -1,4 +1,5 @@
 
+require 'oj'
 require 'wab'
 require 'wab/impl/expr'
 require 'wab/impl/exprparse'
@@ -19,11 +20,20 @@ module WAB
       #
       # dir:: directory to store data in
       def initialize(dir)
+        puts "*** model inited with '#{dir}'"
         @dir = dir
+        if dir.nil?
+          @dir = nil
+        else
+          @dir = ::File.expand_path(dir)
+        end
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new()
-        # TBD load from files in dir
+        unless @dir.nil?
+          Dir.mkdir(@dir) unless Dir.exist?(@dir)
+        end
+        load_files()
       end
 
       # Get a single record in the database. A ::WAB::Impl::Data object is
@@ -174,12 +184,30 @@ module WAB
         end
       end
 
+      def load_files()
+        unless @dir.nil?
+          Dir.foreach(@dir) { |fn|
+            next if '.' == fn[0]
+            ref = fn[0..-6]
+            path = File.join(@dir, fn);
+            @map[ref.to_i(16)] = Data.new(Oj.load_file(path, mode: :wab), true)
+          }
+        end
+      end
+      
       def write_to_file(ref, obj)
-        # TBD
+        unless @dir.nil?
+          path = File.join(@dir, "%016x.json" % ref)
+          obj.native if obj.is_a?(::WAB::Data)
+          File.open(path, "w") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
+        end
       end
 
       def remove_file(ref)
-        # TBD
+        unless @dir.nil?
+          path = File.join(@dir, "%016x.json" % ref)
+          File.delete(path)
+        end
       end
 
     end # Model
