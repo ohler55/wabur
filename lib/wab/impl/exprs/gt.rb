@@ -1,14 +1,12 @@
 
-require 'wab/impl/pathexpr'
-
 module WAB
   module Impl
 
-    # Matches a node that has a value less than or equal to the provided
-    # value. If a integer or float is provided then both integer and floats
-    # are checked. If the value provided is a time then only time nodes are
+    # Matches a node that has a value greater than the provided value. If a
+    # integer or float is provided then both integer and floats are
+    # checked. If the value provided is a time then only time nodes are
     # checked. Any other type results in an error.
-    class Lte < PathExpr
+    class Gt < PathExpr
 
       # Creates a new instance with the provided parameters.
       #
@@ -20,13 +18,13 @@ module WAB
       end
 
       def eval(data)
-        data.get(@path) <= @value
+        data.get(@path) > @value
       end
 
       def native()
-        ['LTE', @path, @value]
+        ['GT', @path, @value]
       end
 
-    end # Lte
+    end # Gt
   end # Impl
 end # WAB

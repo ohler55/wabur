@@ -1,8 +1,5 @@
 
 require 'oj'
-require 'wab'
-require 'wab/impl/expr'
-require 'wab/impl/exprparse'
 
 module WAB
   module Impl
@@ -48,9 +45,9 @@ module WAB
         filter = nil
         if tql.has_key?(:where)
           w = tql[:where]
-          where = (w.is_a?(Array) ? Expr.parse(w) : w)
+          where = (w.is_a?(Array) ? ExprParser.parse(w) : w)
         end
-        filter = Expr.parse(tql[:filter]) if tql.has_key?(:filter)
+        filter = ExprParser.parse(tql[:filter]) if tql.has_key?(:filter)
         
         if tql.has_key?(:insert)
           insert(tql[:insert], rid, where, filter)
@@ -87,25 +84,25 @@ module WAB
         result
       end
 
+      def extract_matches(format, ref, rid, obj)
+        if format.nil?
+          { id: ref, data: obj.native }
+        else
+          format_obj(format, ref, rid, obj)
+        end
+      end
+
       def select(format, rid, where, filter)
         matches = []
         @lock.synchronize {
           if where.nil? && filter.nil?
             @map.each { |ref,obj|
-              if format.nil?
-                matches << { id: ref, data: obj.native }
-              else
-                matches << format_obj(format, ref, rid, obj)
-              end
+              matches << extract_matches(format, ref, rid, obj)
             }
           else
             @map.each { |ref,obj|
               if where.eval(obj) && (filter.nil? || filter.eval(obj))
-                if format.nil?
-                  matches << { id: ref, data: obj.native }
-                else
-                  matches << format_obj(format, ref, rid, obj)
-                end
+                matches << extract_matches(format, ref, rid, obj)
               end
             }
           end
