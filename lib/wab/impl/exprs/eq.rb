@@ -1,6 +1,4 @@
 
-require 'wab/impl/pathexpr'
-
 module WAB
   module Impl
 
