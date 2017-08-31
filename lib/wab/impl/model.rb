@@ -20,7 +20,6 @@ module WAB
       #
       # dir:: directory to store data in
       def initialize(dir)
-        @dir = dir
         if dir.nil?
           @dir = nil
         else
@@ -29,9 +28,7 @@ module WAB
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new()
-        unless @dir.nil?
-          Dir.mkdir(@dir) unless Dir.exist?(@dir)
-        end
+        Dir.mkdir(@dir) unless !@dir.nil? && !Dir.exist?(@dir)
         load_files()
       end
 
@@ -188,25 +185,20 @@ module WAB
           Dir.foreach(@dir) { |fn|
             next if '.' == fn[0]
             ref = fn[0..-6]
-            path = File.join(@dir, fn);
-            @map[ref.to_i(16)] = Data.new(Oj.load_file(path, mode: :wab), true)
+            @map[ref.to_i(16)] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
           }
         end
       end
       
       def write_to_file(ref, obj)
         unless @dir.nil?
-          path = File.join(@dir, "%016x.json" % ref)
           obj.native if obj.is_a?(::WAB::Data)
-          File.open(path, "w") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
+          File.open(File.join(@dir, "%016x.json" % ref), "w") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
         end
       end
 
       def remove_file(ref)
-        unless @dir.nil?
-          path = File.join(@dir, "%016x.json" % ref)
-          File.delete(path)
-        end
+        File.delete(File.join(@dir, "%016x.json" % ref)) unless @dir.nil?
       end
 
     end # Model
