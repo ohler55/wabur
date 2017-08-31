@@ -24,7 +24,7 @@ module WAB
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new()
-        Dir.mkdir(@dir) unless !@dir.nil? && !Dir.exist?(@dir)
+        Dir.mkdir(@dir) unless @dir.nil? || Dir.exist?(@dir)
         load_files()
       end
 
