@@ -7,18 +7,15 @@ module WAB
 
     class Call
 
-      attr_accessor :rid
       attr_accessor :result
       attr_accessor :thread
-      attr_accessor :handler # controller
-      attr_accessor :qrid
+      attr_accessor :rid
       attr_accessor :giveup
       
-      def initialize(handler, qrid, timeout=2.0)
-        @qrid = qrid
+      def initialize(timeout=2.0)
+        @rid = rid
         @giveup = Time.now + timeout
-        @handler = handler
-        @thread = Thread.current if handler.nil?
+        @thread = Thread.current
       end
 
     end # Call

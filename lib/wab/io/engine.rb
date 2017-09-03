@@ -51,12 +51,8 @@ module WAB
               call = @pending.delete(rid)
             }
             unless call.nil?
-              if call.handler.nil?
-                call.result = msg[:body]
-                call.thread.run
-              else
-                call.handler.on_result(msg[:body])
-              end
+              call.result = msg[:body]
+              call.thread.run
             end
           when -2, -3, -6, -15
             shutdown(msg)
@@ -81,8 +77,8 @@ module WAB
       # Send request to the model portion of the system.
       #
       # tql:: the body of the message which should be JSON-TQL as a native Hash
-      def request(tql, handler, timeout)
-        call = Call.new(handler, tql[:rid], timeout)
+      def request(tql, timeout)
+        call = Call.new(timeout)
         @lock.synchronize {
           @last_rid += 1
           call.rid = @last_rid.to_s
@@ -95,24 +91,17 @@ module WAB
         $stdout.puts(data.json())
         $stdout.flush()
 
-        if handler.nil?
-          # Wait for either the response to arrive or for a timeout. In both
-          # cases #run should be called on the thread. Sleep is used instead
-          # of stop to avoid a race condition where a response arrives before
-          # the thread is stopped.
-          while call.result.nil?
-            sleep(0.1)
-          end
-          call.result
-        else
-          nil
-        end
+        # Wait for either the response to arrive or for a timeout. In both
+        # cases #run should be called on the thread. Sleep is used instead of
+        # stop to avoid a race condition where a response arrives before the
+        # thread is stopped.
+        sleep(0.1) while call.result.nil?
+        call.result
       end
 
       def send_error(rid, msg, bt=nil)
         body = { code: -1, error: msg }
         body[:backtrace] = bt unless bt.nil?
-        body[:rid] = rid unless rid.nil?
         $stdout.puts(@shell.data({rid: rid, api: 2, body: body}).json)
         $stdout.flush
         true
@@ -140,16 +129,16 @@ module WAB
         begin
           if 'NEW' == op && controller.respond_to?(:create)
             $stderr.puts "=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
-            reply_body = controller.create(path, query, data.get(:content), rid)
+            reply_body = controller.create(path, query, data.get(:content))
           elsif 'GET' == op && controller.respond_to?(:read)
             $stderr.puts "=> controller.read(#{path.join('/')}#{query})" if @shell.verbose
-            reply_body = controller.read(path, query, rid)
+            reply_body = controller.read(path, query)
           elsif 'DEL' == op && controller.respond_to?(:delete)
             $stderr.puts "=> controller.delete(#{path.join('/')}#{query})" if @shell.verbose
-            reply_body = controller.delete(path, query, rid)
+            reply_body = controller.delete(path, query)
           elsif 'MOD' == op && controller.respond_to?(:update)
             $stderr.puts "=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
-            reply_body = controller.update(path, query, data.get(:content), rid)
+            reply_body = controller.update(path, query, data.get(:content))
           else
             reply_body = controller.handle(data)
           end
@@ -185,13 +174,8 @@ module WAB
           timed_out.each { |call|
             body = { code: -1, error: "Timed out waiting for #{call.rid}." }
             unless call.nil?
-              if call.handler.nil?
-                call.result = body
-                call.thread.run
-              else
-                body[:rid] = call.qrid
-                call.handler.on_result(body)
-              end
+              call.result = body
+              call.thread.run
             end
           }
         end
