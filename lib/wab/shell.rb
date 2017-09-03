@@ -17,11 +17,6 @@ module WAB
   # the methods remain the same.
   class Shell
 
-    # Starts the shell.
-    def start()
-      raise NotImplementedError.new
-    end
-
     # Returns the path where a data type is located. The default is 'kind'.
     def type_key()
       raise NotImplementedError.new
