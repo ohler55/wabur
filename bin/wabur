@@ -34,27 +34,27 @@ opts.parse(ARGV)
 
 class BasicController < ::WAB::Controller
 
-  def initialize(shell, async=false)
-    super(shell, async)
+  def initialize(shell)
+    super(shell)
   end
 
   def handle(data)
     super
   end
 
-  def create(path, query, data, rid=nil)
+  def create(path, query, data)
     super
   end
 
-  def read(path, query, rid=nil)
+  def read(path, query)
     super
   end
 
-  def update(path, query, data, rid=nil)
+  def update(path, query, data)
     super
   end
 
-  def delete(path, query, rid=nil)
+  def delete(path, query)
     super
   end
 
@@ -87,7 +87,7 @@ shell = ::WAB::Impl::Shell.new(cfg)
 shell.logger = Logger.new(STDOUT)
 shell.logger.level = cfg['verbose'].to_i
 
-controller = Object.const_get(cfg['controller']).new(shell, false)
+controller = Object.const_get(cfg['controller']).new(shell)
 shell.register_controller(nil, controller)
 
 shell.start()

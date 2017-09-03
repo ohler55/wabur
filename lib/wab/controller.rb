@@ -8,12 +8,10 @@ module WAB
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
     attr_accessor :shell
-    attr_accessor :async
 
     # Create a instance.
-    def initialize(shell, async=false)
+    def initialize(shell)
       @shell = shell
-      @async = async
     end
 
     # Handler for paths that do not match the REST pattern or for unregistered
@@ -35,16 +33,12 @@ module WAB
     # Create a new data object. If a query is provided it is treated as a
     # check against an existing object with the same key/value pairs.
     #
-    # The reference to the object created is returned on success unless in
-    # async mode as indicated by inclusion of an +rid+.
-    #
     # On error an Exception should be raised.
     #
     # path:: array of tokens in the path.
     # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    # rid:: optional request ID but required for async
-    def create(path, query, data, rid=nil) # :doc:
+    def create(path, query, data) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       if WAB::Utils.populated_hash?(query)
@@ -54,8 +48,7 @@ module WAB
         tql[:where] = where
       end
       tql[:insert] = data.native
-      rid = nil unless @async
-      shell_query(tql, kind, 'create', rid)
+      shell_query(tql, kind, 'create')
     end
 
     # Return the objects according to the path and query arguments. The
@@ -73,14 +66,13 @@ module WAB
     # query:: query parameters from a URL as a Hash with key and value
     #         pairs. Note that duplicate keys will result in only the last
     #         option being present,
-    # rid:: optional request ID but required for async
-    def read(path, query, rid=nil) # :doc:
+    def read(path, query) # :doc:
       kind = path[@shell.path_pos]
       # Check for the type and object reference pattern as well as the list
       # pattern.
       if @shell.path_pos + 2 == path.length
         ref = path[@shell.path_pos + 1]
-        return list_select(kind, query, rid) if 'list' == ref
+        return list_select(kind, query) if 'list' == ref
 
         # Read a single object/record.
         ref = ref.to_i
@@ -88,15 +80,15 @@ module WAB
         obj = obj.native if obj.is_a?(::WAB::Data)
         results = []
         results << {id: ref, data: obj} unless obj.nil?
-        @shell.data({ code: 0, results: results, rid: rid})
+        @shell.data({ code: 0, results: results})
       else
-        list_match(kind, query, rid)
+        list_match(kind, query)
       end
     end
 
     # A private method to gather sets of Hashes that include the fields
     # specified in the fields Hash.
-    def list_select(kind, fields, rid)
+    def list_select(kind, fields)
       tql = { }
       select = { ref: '$ref' }
       if WAB::Utils.populated_hash?(fields)
@@ -104,13 +96,12 @@ module WAB
       end
       tql[:where] = form_where_eq(@shell.type_key, kind)
       tql[:select] = select
-      rid = nil unless @async
-      shell_query(tql, kind, 'read', rid)
+      shell_query(tql, kind, 'read')
     end
 
     # A private method to gather a list of objects that match the query
     # parameters.
-    def list_match(kind, query, rid)
+    def list_match(kind, query)
       tql = { }
       # If there is a query set up a where clause.
       if WAB::Utils.populated_hash?(query)
@@ -122,8 +113,7 @@ module WAB
       end
       tql[:where] = where
       tql[:select] = { id: '$ref', data: '$' }
-      rid = nil unless @async
-      shell_query(tql, kind, 'read', rid)
+      shell_query(tql, kind, 'read')
     end
 
     
@@ -136,8 +126,7 @@ module WAB
     # path:: array of tokens in the path.
     # query:: query parameters from a URL.
     # data:: the data to use as a new object.
-    # rid:: optional request ID but required for async
-    def update(path, query, data, rid=nil) # :doc:
+    def update(path, query, data) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       if @shell.path_pos + 2 == path.length # has an object reference in the path
@@ -151,8 +140,7 @@ module WAB
         raise ::WAB::Error.new("update on all #{kind} not allowed.")
       end
       tql[:update] = data.native
-      rid = nil unless @async
-      shell_query(tql, kind, 'update', rid)
+      shell_query(tql, kind, 'update')
     end
 
     # Delete the identified object.
@@ -169,8 +157,7 @@ module WAB
     #         into the target objects and value equal to the target attribute
     #         values. A path can be an array of keys used to walk a path to
     #         the target or a +.+ delimited set of keys.
-    # rid:: optional request ID but required for async
-    def delete(path, query, rid=nil) # :doc:
+    def delete(path, query) # :doc:
       tql = { }
       kind = path[@shell.path_pos]
       tql[:where] = if @shell.path_pos + 2 == path.length # has an object reference in the path
@@ -184,8 +171,7 @@ module WAB
                       form_where_eq(@shell.type_key, kind)
                     end
       tql[:delete] = nil
-      rid = nil unless @async
-      shell_query(tql, kind, 'delete', rid)
+      shell_query(tql, kind, 'delete')
     end
 
     # Called when an asynchronous query is made and the results become
@@ -277,19 +263,12 @@ module WAB
       value
     end
 
-    # Helper to send TQL requests to the shell either synchronously or
-    # asynchronously depending on the controller type.
-    def shell_query(tql, kind, op, rid)
-      if rid.nil?
-        result = @shell.query(tql, nil) # synchronous call
-        raise WAB::Error.new("nil result on #{kind} #{op}.") if result.nil?
-        raise WAB::Error.new("error on #{kind} #{op}. #{result[:error]}") if 0 != result[:code]
-        result
-      else
-        tql[:rid] = rid
-        @shell.query(tql, self)
-        nil
-      end
+    # Helper to send TQL requests to the shell.
+    def shell_query(tql, kind, op)
+      result = @shell.query(tql)
+      raise WAB::Error.new("nil result on #{kind} #{op}.") if result.nil?
+      raise WAB::Error.new("error on #{kind} #{op}. #{result[:error]}") if 0 != result[:code]
+      result
     end
 
   end # Controller

@@ -57,14 +57,6 @@ module WAB
       raise NotImplementedError.new
     end
 
-    # Reply asynchronously to a view request.
-    #
-    # rid:: request identifier the reply is associated with
-    # data:: content of the reply to be sent to the view
-    def reply(rid, data)
-      raise NotImplementedError.new
-    end
-
     ### Model related methods.
 
     # Returns a WAB::Data that matches the object reference or nil if there
@@ -79,14 +71,8 @@ module WAB
     # that correspond to the TQL JSON format but using Symbol keys instead
     # of strings.
     #
-    # If a +handler+ is provided the call is evaluated asynchronously and
-    # the handler is called with the result of the query. If a +handler+ is
-    # supplied the +tql+ must contain an +:rid+ element that is unique
-    # across all handlers.
-    #
     # tql:: query to evaluate
-    # handler:: callback handler that implements the #on_result() method
-    def query(tql, handler=nil)
+    def query(tql)
       raise NotImplementedError.new
     end
 

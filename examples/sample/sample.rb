@@ -5,8 +5,8 @@ require 'wab'
 
 class SampleController < ::WAB::Controller
 
-  def initialize(shell, async=false)
-    super(shell, async)
+  def initialize(shell)
+    super(shell)
   end
 
   def handle(data)
@@ -14,19 +14,19 @@ class SampleController < ::WAB::Controller
     super
   end
 
-  def create(path, query, data, rid=nil)
+  def create(path, query, data)
     super
   end
 
-  def read(path, query, rid=nil)
+  def read(path, query)
     super
   end
 
-  def update(path, query, data, rid=nil)
+  def update(path, query, data)
     super
   end
 
-  def delete(path, query, rid=nil)
+  def delete(path, query)
     super
   end
 

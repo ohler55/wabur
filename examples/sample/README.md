@@ -36,9 +36,7 @@ They need to be re-compiled manually if the source-files get edited.
 ### Ruby Runner
 
 For development on Windows the Ruby Runner is the only choice. As far as the
-Controller is concerned it operates exactly the same as other runner except
-that it does not support asynchronous handling of requests without the use of
-threads in the WEBrick which is used as the HTTP server.
+Controller is concerned it operates exactly the same as other runners.
 
 The configuration file for this runner is placed in `wabur` sub-directory
 and is named [`wabur.conf`](wabur/wabur.conf)
@@ -156,7 +154,7 @@ Next add a record as done previously.
 There are two ways to get the JSON of the created record:
   * Using the Controller with the path `http://localhost:6363/v1/Article/11` *(or)*
   * By going directly to the database with the path
-    `http://localhost:6363/tree/000000000000000b` which uses the ref in hex to
+    `http://localhost:6363/json/000000000000000b` which uses the ref in hex to
     identify the record. This is interesting in that it shows the overhead of
     the calls to the Ruby Controller.
 
@@ -193,7 +191,7 @@ with an average latency of 0.162 msecs
 
 ```
 
-#### Controller in Sychronous Mode with 4 Ruby Thread
+#### Controller with 4 Ruby Thread
 
 ```
 razer bin> ./hose -p v1/Article/11 -t 2 -c 20 127.0.0.1:6363
@@ -207,23 +205,3 @@ localhost:6363 processed 17569 requests in 1.000 seconds for a rate of 17569 GET
 with an average latency of 2.963 msecs
 
 ```
-
-#### Controller in Asychronous Mode with 4 Ruby Thread
-
-```
-razer bin> ./hose -p v1/Article/11 -t 2 -c 20 127.0.0.1:6363
-127.0.0.1:6363 did not respond to 3 requests.
-127.0.0.1:6363 processed 11743 requests in 1.000 seconds for a rate of 11743 GETS/sec.
-with an average latency of 3.844 msecs
-
-big bin> hose -t 2 -c 20 -p v1/Article/11 localhost:6363
-localhost:6363 did not respond to 4 requests.
-localhost:6363 processed 18061 requests in 1.000 seconds for a rate of 18061 GETS/sec.
-with an average latency of 2.514 msecs
-
-```
-
-The performance is reasonable but there were reliability issues that will have
-to be addressed to determine why some messages are lost. On macOS results were
-significantly slower which is expected as the macOS networking does not
-perform as well as Linux.
