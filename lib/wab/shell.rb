@@ -32,33 +32,6 @@ module WAB
       raise NotImplementedError.new
     end
 
-    # Register a controller for a named type.
-    #
-    # If a request is received for an unregistered type the default controller
-    # will be used. The default controller is registered with a +nil+ key.
-    #
-    # type:: type name
-    # controller:: Controller instance for handling requests for the identified +type+
-    def register_controller(type, controller)
-      raise NotImplementedError.new
-    end
-
-    # Returns the controller associated with the type key found in the
-    # data. If a controller has not be registered under that key the default
-    # controller is returned if there is one.
-    #
-    # data:: data to extract the type from for lookup in the controllers
-    def controller(data)
-      raise NotImplementedError.new
-    end
-
-    # Returns the controller according to the type in the path.
-    #
-    # path: path Array such as from a URL
-    def path_controller(path)
-      raise NotImplementedError.new
-    end
-
     # Create and return a new data instance with the provided initial value.
     # The value must be a Hash or Array. The members of the Hash or Array must
     # be nil, boolean, String, Integer, Float, BigDecimal, Array, Hash, Time,
