@@ -142,7 +142,7 @@ class TestIoShell < Minitest::Test
 
       shell = ::WAB::IO::Shell.new(2, 'kind', 0)
       shell.timeout = 0.5
-      shell.verbose = false # change to true to debug
+      shell.logger.level = Logger::WARN # change to Logger::INFO for debugging
       shell.register_controller(nil, MirrorController.new(shell))
       shell.start
 

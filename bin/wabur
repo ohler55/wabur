@@ -81,6 +81,7 @@ if 0 < verbose_cnt
   cfg['verbose'] = v
 end
 
+puts "*** verbose: #{cfg['verbose']}"
 shell = ::WAB::Impl::Shell.new(cfg)
 
 # TBD configure logger better

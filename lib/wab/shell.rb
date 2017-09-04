@@ -83,5 +83,41 @@ module WAB
       raise NotImplementedError.new
     end
 
+    # Returns true if error logging is turned on.
+    def error?
+      raise NotImplementedError.new
+    end
+
+    # Returns true if warn logging is turned on.
+    def warn?
+      raise NotImplementedError.new
+    end
+
+    # Returns true if info logging is turned on.
+    def info?
+      raise NotImplementedError.new
+    end
+
+    # Logs an error with the shell logger.
+    #
+    # message:: message to log
+    def error(message)
+      raise NotImplementedError.new
+    end
+
+    # Logs a warning with the shell logger.
+    #
+    # message:: message to log
+    def warn(message)
+      raise NotImplementedError.new
+    end
+
+    # Logs an info with the shell logger.
+    #
+    # message:: message to log
+    def info(message)
+      raise NotImplementedError.new
+    end
+    
   end # Shell
 end # WAB
