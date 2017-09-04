@@ -34,7 +34,7 @@ var wab = {
     httpCall: function(verb, url, obj, callback) {
         if (verb != 'GET' && verb != 'DELETE') return null;
 
-        var h = new XMLHttpRequest();
+        var h = new XMLHttpRequest({keepAlive: false}); // force send of request
         h.open(verb, url, true);
         h.responseType = 'json';
         h.onreadystatechange = function() {
