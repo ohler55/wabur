@@ -173,10 +173,10 @@ module WAB
       end
 
       # Make a deep copy of the Data instance.
-      def clone()
+      def deep_dup()
         # avoid validation by using a empty Hash for the intial value.
         c = self.class.new({}, false)
-        c.instance_variable_set(:@root, clone_value(@root))
+        c.instance_variable_set(:@root, deep_dup_value(@root))
         c
       end
 
@@ -412,13 +412,13 @@ module WAB
         raise WAB::Error, "path key must be an integer for an Array."
       end
 
-      def clone_value(value)
+      def deep_dup_value(value)
         if value.is_a?(Hash)
           c = {}
-          value.each_pair { |k, v| c[k] = clone_value(v) }
+          value.each_pair { |k, v| c[k] = deep_dup_value(v) }
         elsif value.is_a?(Array)
           c = []
-          value.each { |v| c << clone_value(v) }
+          value.each { |v| c << deep_dup_value(v) }
         else
           value_class = value.class
           if value.nil? ||
@@ -431,7 +431,7 @@ module WAB
           elsif WAB::Utils.pre_24_fixnum?(value)
             c = value
           else
-            c = value.clone
+            c = value.dup
           end
         end
         c
