@@ -228,9 +228,9 @@ class TestImplData < TestImpl
     assert(!(d == d4), "same keys different values should not be eql")
   end
 
-  def test_clone
+  def test_deep_dup
     d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
-    c = d.clone
+    c = d.deep_dup
     assert(d == c)
   end
 
