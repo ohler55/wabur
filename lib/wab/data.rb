@@ -49,7 +49,7 @@ module WAB
     end
 
     # Make a deep copy of the Data instance.
-    def clone()
+    def deep_dup()
       raise NotImplementedError.new
     end
 
