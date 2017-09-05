@@ -40,7 +40,7 @@ module WAB
 
         Oj.strict_load($stdin, symbol_keys: true) { |msg|
           api = msg[:api]
-          $stderr.puts "=> controller #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
+          @shell.info("=> controller #{Oj.dump(msg, mode: :strict)}") if @shell.info?
           case api
           when 1
             @queue.push(msg)
@@ -85,7 +85,7 @@ module WAB
           @pending[call.rid] = call
         }
         msg = {rid: call.rid, api: 3, body: tql}
-        $stderr.puts "=> model: #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
+        @shell.info("=> model: #{Oj.dump(msg, mode: :strict)}") if @shell.info?
         data = @shell.data(msg, true)
         # Send the message. Make sure to flush to assure it gets sent.
         $stdout.puts(data.json())
@@ -128,16 +128,16 @@ module WAB
         query = body[:query]
         begin
           if 'NEW' == op && controller.respond_to?(:create)
-            $stderr.puts "=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
+            @shell.info("=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})") if @shell.info?
             reply_body = controller.create(path, query, data.get(:content))
           elsif 'GET' == op && controller.respond_to?(:read)
-            $stderr.puts "=> controller.read(#{path.join('/')}#{query})" if @shell.verbose
+            @shell.info("=> controller.read(#{path.join('/')}#{query})") if @shell.info?
             reply_body = controller.read(path, query)
           elsif 'DEL' == op && controller.respond_to?(:delete)
-            $stderr.puts "=> controller.delete(#{path.join('/')}#{query})" if @shell.verbose
+            @shell.info("=> controller.delete(#{path.join('/')}#{query})") if @shell.info?
             reply_body = controller.delete(path, query)
           elsif 'MOD' == op && controller.respond_to?(:update)
-            $stderr.puts "=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})" if @shell.verbose
+            @shell.info("=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})") if @shell.info?
             reply_body = controller.update(path, query, data.get(:content))
           else
             reply_body = controller.handle(data)
@@ -149,7 +149,7 @@ module WAB
         unless reply_body.nil?
           reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
           msg = {rid: rid, api: 2, body: reply_body}
-          $stderr.puts "=> view: #{Oj.dump(msg, mode: :strict)}" if @shell.verbose
+          @shell.info("=> view: #{Oj.dump(msg, mode: :strict)}") if @shell.info?
           $stdout.puts(@shell.data(msg).json)
           $stdout.flush
         end
