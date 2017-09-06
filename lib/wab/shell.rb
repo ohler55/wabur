@@ -16,6 +16,7 @@ module WAB
   # management but those features can be implemented in other ways as long as
   # the methods remain the same.
   class Shell
+    include WAB::ShellLogger
 
     # Returns the path where a data type is located. The default is 'kind'.
     def type_key()
@@ -80,42 +81,6 @@ module WAB
     # controller:: the controller to notify of changed
     # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
     def subscribe(controller, filter)
-      raise NotImplementedError.new
-    end
-
-    # Returns true if error logging is turned on.
-    def error?
-      raise NotImplementedError.new
-    end
-
-    # Returns true if warn logging is turned on.
-    def warn?
-      raise NotImplementedError.new
-    end
-
-    # Returns true if info logging is turned on.
-    def info?
-      raise NotImplementedError.new
-    end
-
-    # Logs an error with the shell logger.
-    #
-    # message:: message to log
-    def error(message)
-      raise NotImplementedError.new
-    end
-
-    # Logs a warning with the shell logger.
-    #
-    # message:: message to log
-    def warn(message)
-      raise NotImplementedError.new
-    end
-
-    # Logs an info with the shell logger.
-    #
-    # message:: message to log
-    def info(message)
       raise NotImplementedError.new
     end
     
