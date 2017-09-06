@@ -118,6 +118,6 @@ module WAB
     def info(message)
       raise NotImplementedError.new
     end
-    
+
   end # Shell
 end # WAB

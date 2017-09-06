@@ -12,11 +12,11 @@ module WAB
     # calls are synchronous for simplicity some effort is required to block
     # where needed to achieve the difference in behavior.
     class Shell
+      include WAB::ShellLogger
 
       attr_reader :path_pos
       attr_reader :type_key
       attr_accessor :timeout
-      attr_accessor :logger
       
       # Sets up the shell with the designated number of processing threads and
       # the type_key.
@@ -136,42 +136,6 @@ module WAB
       # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
       def subscribe(controller, filter)
         raise NotImplementedError.new
-      end
-
-      # Returns true if error logging is turned on.
-      def error?
-        @logger.error?
-      end
-
-      # Returns true if warn logging is turned on.
-      def warn?
-        @logger.warn?
-      end
-
-      # Returns true if info logging is turned on.
-      def info?
-        @logger.info?
-      end
-
-      # Logs an error with the shell logger.
-      #
-      # message:: message to log
-      def error(message)
-        @logger.error(message)
-      end
-
-      # Logs a warning with the shell logger.
-      #
-      # message:: message to log
-      def warn(message)
-        @logger.warn(message)
-      end
-
-      # Logs an info with the shell logger.
-      #
-      # message:: message to log
-      def info(message)
-        @logger.info(message)
       end
 
       private
