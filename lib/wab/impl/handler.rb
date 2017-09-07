@@ -78,7 +78,7 @@ module WAB
         else
           body = Oj.strict_load(req.body, symbol_keys: true)
           body = Data.new(body, false)
-          body.detect()
+          body.detect
         end
         [@shell.path_controller(path), path, query, body]
       end

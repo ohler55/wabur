@@ -44,7 +44,6 @@ module WAB
         @http_dir    = File.expand_path(config['http.dir'] || '.')
         @http_port   = config.has_key?('http.port') ? config['http.port'].to_i : 6363
         @controllers = {}
-
       end
 
       # Start listening. This should be called after registering Controllers
