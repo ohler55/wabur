@@ -15,38 +15,47 @@ module WAB
       end
 
       def do_GET(req, res)
-        ctrl, path, query = extract_req(req)
-        log_response('controller.read', path, query) if @shell.logger.info?
-        send_result(compute_result('GET', ctrl, path, query), res)
-      rescue Exception => e
-        send_error(e, res)
+        handle('GET', req, res)
       end
 
       def do_PUT(req, res)
-        ctrl, path, query, body = extract_req(req)
-        log_response('controller.create', path, query, body) if @shell.logger.info?
-        send_result(compute_result('PUT', ctrl, path, query, body), res)
-      rescue Exception => e
-        send_error(e, res)
+        handle('PUT', req, res)
       end
 
       def do_POST(req, res)
-        ctrl, path, query, body = extract_req(req)
-        log_response('controller.update', path, query, body) if @shell.logger.info?
-        send_result(compute_result('POST', ctrl, path, query, body), res)
-      rescue Exception => e
-        send_error(e, res)
+        handle('POST', req, res)
       end
 
       def do_DELETE(req, res)
-        ctrl, path, query = extract_req(req)
-        log_response('controller.delete', path, query) if @shell.logger.info?
-        send_result(compute_result('DELETE', ctrl, path, query), res)
-      rescue Exception => e
-        send_error(e, res)
+        handle('DELETE', req, res)
       end
 
       private
+
+      # core function that handles the commonly-used HTTP methods:
+      # GET, PUT, POST, DELETE
+      def handle(method, request, response)
+        controller, path, query, body = extract_req(request)
+        log_response(caller(method), path, query, body) if @shell.logger.info?
+        send_result(
+          compute_result(method, controller, path, query, body), response
+        )
+      rescue Exception => e
+        send_error(e, response)
+      end
+
+      # Return caller strings for logger message, based on the HTTP method
+      def caller(method)
+        if method == 'GET'
+          'controller.read'
+        elsif method == 'PUT'
+          'controller.create'
+        elsif method == 'POST'
+          'controller.update'
+        elsif method == 'DELETE'
+          'controller.delete'
+        end
+      end
 
       def log_response(caller, path, query, body=nil)
         msg = if body.nil?
