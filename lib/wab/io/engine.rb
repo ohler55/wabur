@@ -38,9 +38,9 @@ module WAB
         }
         @timeout_thread = Thread.new { timeout_check() }
 
-        Oj.strict_load($stdin, symbol_keys: true) { |msg|
+        Oj.load($stdin, mode: :wab, symbol_keys: true) { |msg|
           api = msg[:api]
-          @shell.info("=> controller #{Oj.dump(msg, mode: :strict)}") if @shell.info?
+          @shell.info("=> controller #{Oj.dump(msg, mode: :wab)}") if @shell.info?
           case api
           when 1
             @queue.push(msg)
@@ -85,7 +85,7 @@ module WAB
           @pending[call.rid] = call
         }
         msg = {rid: call.rid, api: 3, body: tql}
-        @shell.info("=> model: #{Oj.dump(msg, mode: :strict)}") if @shell.info?
+        @shell.info("=> model: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
         data = @shell.data(msg, true)
         # Send the message. Make sure to flush to assure it gets sent.
         $stdout.puts(data.json())
@@ -128,7 +128,7 @@ module WAB
         query = body[:query]
         begin
           if 'NEW' == op && controller.respond_to?(:create)
-            @shell.info("=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})") if @shell.info?
+            @shell.info("=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
             reply_body = controller.create(path, query, data.get(:content))
           elsif 'GET' == op && controller.respond_to?(:read)
             @shell.info("=> controller.read(#{path.join('/')}#{query})") if @shell.info?
@@ -137,7 +137,7 @@ module WAB
             @shell.info("=> controller.delete(#{path.join('/')}#{query})") if @shell.info?
             reply_body = controller.delete(path, query)
           elsif 'MOD' == op && controller.respond_to?(:update)
-            @shell.info("=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :strict)})") if @shell.info?
+            @shell.info("=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
             reply_body = controller.update(path, query, data.get(:content))
           else
             reply_body = controller.handle(data)
@@ -149,7 +149,7 @@ module WAB
         unless reply_body.nil?
           reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
           msg = {rid: rid, api: 2, body: reply_body}
-          @shell.info("=> view: #{Oj.dump(msg, mode: :strict)}") if @shell.info?
+          @shell.info("=> view: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
           $stdout.puts(@shell.data(msg).json)
           $stdout.flush
         end
