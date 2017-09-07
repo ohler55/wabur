@@ -19,7 +19,6 @@ module WAB
         begin
           ctrl, path, query, _ =  extract_req(req)
           @shell.logger.info("controller.read(#{path.join('/')}#{query})") if @loggable?
-          result = ctrl.read(path, query)
           send_result(ctrl.read(path, query), res)
         rescue Exception => e
           send_error(e, res)
