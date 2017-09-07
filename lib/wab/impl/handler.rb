@@ -40,7 +40,7 @@ module WAB
         send_result(
           compute_result(method, controller, path, query, body), response
         )
-      rescue Exception => e
+      rescue StandardError => e
         send_error(e, response)
       end
 
