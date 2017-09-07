@@ -15,7 +15,7 @@ module WAB
       end
 
       def do_GET(req, res)
-        ctrl, path, query, _ = extract_req(req)
+        ctrl, path, query = extract_req(req)
         log_response('controller.read', path, query) if @shell.logger.info?
         send_result(ctrl.read(path, query), res)
       rescue Exception => e
@@ -39,7 +39,7 @@ module WAB
       end
 
       def do_DELETE(req, res)
-        ctrl, path, query, _ = extract_req(req)
+        ctrl, path, query = extract_req(req)
         log_response('controller.delete', path, query) if @shell.logger.info?
         send_result(ctrl.delete(path, query), res)
       rescue Exception => e
