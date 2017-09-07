@@ -15,43 +15,35 @@ module WAB
       end
 
       def do_GET(req, res)
-        begin
-          ctrl, path, query, _ =  extract_req(req)
-          log_response('controller.read', path, query) if @shell.logger.info?
-          send_result(ctrl.read(path, query), res)
-        rescue Exception => e
-          send_error(e, res)
-        end
+        ctrl, path, query, _ = extract_req(req)
+        log_response('controller.read', path, query) if @shell.logger.info?
+        send_result(ctrl.read(path, query), res)
+      rescue Exception => e
+        send_error(e, res)
       end
 
       def do_PUT(req, res)
-        begin
-          ctrl, path, query, body =  extract_req(req)
-          log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
-          send_result(ctrl.create(path, query, body), res)
-        rescue Exception => e
-          send_error(e, res)
-        end
+        ctrl, path, query, body = extract_req(req)
+        log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
+        send_result(ctrl.create(path, query, body), res)
+      rescue Exception => e
+        send_error(e, res)
       end
 
       def do_POST(req, res)
-        begin
-          ctrl, path, query, body =  extract_req(req)
-          log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
-          send_result(ctrl.update(path, query, body), res)
-        rescue Exception => e
-          send_error(e, res)
-        end
+        ctrl, path, query, body = extract_req(req)
+        log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
+        send_result(ctrl.update(path, query, body), res)
+      rescue Exception => e
+        send_error(e, res)
       end
 
       def do_DELETE(req, res)
-        begin
-          ctrl, path, query, _ =  extract_req(req)
-          log_response('controller.delete', path, query) if @shell.logger.info?
-          send_result(ctrl.delete(path, query), res)
-        rescue Exception => e
-          send_error(e, res)
-        end
+        ctrl, path, query, _ = extract_req(req)
+        log_response('controller.delete', path, query) if @shell.logger.info?
+        send_result(ctrl.delete(path, query), res)
+      rescue Exception => e
+        send_error(e, res)
       end
 
       private
