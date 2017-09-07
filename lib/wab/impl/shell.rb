@@ -110,37 +110,31 @@ module WAB
       #
       # cfg:: configuration Hash
       def initialize(cfg)
-        @controllers = {}
-        pre_path = cfg['handler.path'] || '/v1'
+        pre_path  = cfg['handler.path'] || '/v1'
         @path_pos = pre_path.split('/').length - 1
+
+        @model    = Model.new(cfg['dir'])
         @type_key = cfg['type_key'] || 'kind'
-        @http_dir = File.expand_path(cfg['http.dir'] || '.')
-        if cfg.has_key?('http.port')
-          @http_port = cfg['http.port'].to_i
-        else
-          @http_port = 6363
-        end
-        if cfg.has_key?('verbose')
-          v = cfg['verbose']
-          if v.is_a?(String)
-            v = v.downcase
-            if 'true' == v
-              @verbose = true
-            elsif 'false' == v
-              @verbose = false
-            end
-          elsif v == true || v == false
-            @verbose = v
-          end
-        end
-        @model = Model.new(cfg['dir'])
+
+        @verbose  = if cfg.has_key?('verbose')
+                      verbosity = cfg['verbose'].to_s.downcase
+                      if verbosity == 'true'
+                        true
+                      elsif verbosity == 'false'
+                        false
+                      end
+                    end
+
+        @http_dir    = File.expand_path(cfg['http.dir'] || '.')
+        @http_port   = cfg.has_key?('http.port') ? cfg['http.port'].to_i : 6363
+        @controllers = {}
+
       end
 
       # Start listening. This should be called after registering Controllers
       # with the Shell.
       def start()
         server = WEBrick::HTTPServer.new(Port: @http_port, DocumentRoot: @http_dir)
-
         server.mount('/v1', ::WAB::Impl::Handler, self)
 
         trap 'INT' do server.shutdown end
