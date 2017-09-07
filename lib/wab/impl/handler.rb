@@ -17,7 +17,7 @@ module WAB
       def do_GET(req, res)
         ctrl, path, query = extract_req(req)
         log_response('controller.read', path, query) if @shell.logger.info?
-        send_result(ctrl.read(path, query), res)
+        send_result(compute_result('GET', ctrl, path, query), res)
       rescue Exception => e
         send_error(e, res)
       end
@@ -25,7 +25,7 @@ module WAB
       def do_PUT(req, res)
         ctrl, path, query, body = extract_req(req)
         log_response('controller.create', path, query, body) if @shell.logger.info?
-        send_result(ctrl.create(path, query, body), res)
+        send_result(compute_result('PUT', ctrl, path, query, body), res)
       rescue Exception => e
         send_error(e, res)
       end
@@ -33,7 +33,7 @@ module WAB
       def do_POST(req, res)
         ctrl, path, query, body = extract_req(req)
         log_response('controller.update', path, query, body) if @shell.logger.info?
-        send_result(ctrl.update(path, query, body), res)
+        send_result(compute_result('POST', ctrl, path, query, body), res)
       rescue Exception => e
         send_error(e, res)
       end
@@ -41,7 +41,7 @@ module WAB
       def do_DELETE(req, res)
         ctrl, path, query = extract_req(req)
         log_response('controller.delete', path, query) if @shell.logger.info?
-        send_result(ctrl.delete(path, query), res)
+        send_result(compute_result('DELETE', ctrl, path, query), res)
       rescue Exception => e
         send_error(e, res)
       end
@@ -72,6 +72,18 @@ module WAB
           body.detect()
         end
         [@shell.path_controller(path), path, query, body]
+      end
+
+      def compute_result(method, ctrl, path, query, body=nil)
+        if method == 'GET'
+          ctrl.read(path, query)
+        elsif method == 'PUT'
+          ctrl.create(path, query, body)
+        elsif method == 'POST'
+          ctrl.update(path, query, body)
+        elsif method == 'DELETE'
+          ctrl.delete(path, query)
+        end
       end
 
       # Sends the results from a controller request.
