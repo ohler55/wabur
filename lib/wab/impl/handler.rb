@@ -24,7 +24,7 @@ module WAB
 
       def do_PUT(req, res)
         ctrl, path, query, body = extract_req(req)
-        log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
+        log_response('controller.create', path, query, body) if @shell.logger.info?
         send_result(ctrl.create(path, query, body), res)
       rescue Exception => e
         send_error(e, res)
@@ -32,7 +32,7 @@ module WAB
 
       def do_POST(req, res)
         ctrl, path, query, body = extract_req(req)
-        log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
+        log_response('controller.update', path, query, body) if @shell.logger.info?
         send_result(ctrl.update(path, query, body), res)
       rescue Exception => e
         send_error(e, res)
@@ -48,12 +48,14 @@ module WAB
 
       private
 
-      def log_response(caller, path, query)
-        @shell.logger.info("#{caller}(#{path.join('/')}#{query})")
-      end
+      def log_response(caller, path, query, body=nil)
+        msg = if body.nil?
+                "#{caller}(#{path.join('/')}#{query})"
+              else
+                "#{caller}(#{path.join('/')}#{query}, #{body.json})"
+              end
 
-      def log_response_with_body(caller, path, query, body)
-        @shell.logger.info("#{caller}(#{path.join('/')}#{query}, #{body.json})")
+        @shell.logger.info(msg)
       end
 
       # Pulls and converts the request path, query, and body. Also returns the
