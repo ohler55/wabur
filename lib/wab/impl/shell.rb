@@ -99,12 +99,16 @@ module WAB
     # The shell for reference Ruby implementation.
     class Shell
       include WAB::ShellLogger
+      extend Forwardable
 
       attr_accessor :verbose
 
       # Returns the path where a data type is located. The default is 'kind'.
       attr_reader :type_key
       attr_reader :path_pos
+
+      # Call the Model instance with these methods.
+      def_delegators :@model, :get, :query
 
       # Sets up the shell with the supplied configuration data.
       #
@@ -190,16 +194,6 @@ module WAB
       # repair:: flag indicating invalid value should be repaired if possible
       def data(value={}, repair=false)
         Data.new(value, repair)
-      end
-
-      # Calls the model.
-      def get(ref)
-        @model.get(ref)
-      end
-
-      # Calls the model.
-      def query(tql, handler=nil)
-        @model.query(tql)
       end
 
     end # Shell
