@@ -83,15 +83,16 @@ module WAB
         [@shell.path_controller(path), path, query, body]
       end
 
-      def compute_result(method, ctrl, path, query, body=nil)
+      # Formulate results from the controller
+      def compute_result(method, controller, path, query, body=nil)
         if method == 'GET'
-          ctrl.read(path, query)
+          controller.read(path, query)
         elsif method == 'PUT'
-          ctrl.create(path, query, body)
+          controller.create(path, query, body)
         elsif method == 'POST'
-          ctrl.update(path, query, body)
+          controller.update(path, query, body)
         elsif method == 'DELETE'
-          ctrl.delete(path, query)
+          controller.delete(path, query)
         end
       end
 
