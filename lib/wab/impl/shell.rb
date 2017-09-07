@@ -24,16 +24,16 @@ module WAB
 
       # Sets up the shell with the supplied configuration data.
       #
-      # cfg:: configuration Hash
-      def initialize(cfg)
-        pre_path  = cfg['handler.path'] || '/v1'
+      # config:: configuration Hash
+      def initialize(config)
+        pre_path  = config['handler.path'] || '/v1'
         @path_pos = pre_path.split('/').length - 1
 
-        @model    = Model.new(cfg['dir'])
-        @type_key = cfg['type_key'] || 'kind'
+        @model    = Model.new(config['dir'])
+        @type_key = config['type_key'] || 'kind'
 
-        @verbose  = if cfg.has_key?('verbose')
-                      verbosity = cfg['verbose'].to_s.downcase
+        @verbose  = if config.has_key?('verbose')
+                      verbosity = config['verbose'].to_s.downcase
                       if verbosity == 'true'
                         true
                       elsif verbosity == 'false'
@@ -41,8 +41,8 @@ module WAB
                       end
                     end
 
-        @http_dir    = File.expand_path(cfg['http.dir'] || '.')
-        @http_port   = cfg.has_key?('http.port') ? cfg['http.port'].to_i : 6363
+        @http_dir    = File.expand_path(config['http.dir'] || '.')
+        @http_port   = config.has_key?('http.port') ? config['http.port'].to_i : 6363
         @controllers = {}
 
       end
