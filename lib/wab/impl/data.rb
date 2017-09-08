@@ -180,31 +180,6 @@ module WAB
         c
       end
 
-      # Returns true if self and other are either the same or have the same
-      # contents. This is a deep comparison.
-      def eql?(other)
-        # Any object that is of a class derived from the API class is a
-        # candidate for being ==.
-        return false unless other.is_a?(::WAB::Data)
-        values_eql?(@root, other.native)
-      end
-      alias == eql?
-      
-      # Returns the length of the root element.
-      def length()
-        @root.length
-      end
-
-      # Returns the number of leaves in the data tree.
-      def leaf_count()
-        branch_count(@root)
-      end
-
-      # Returns the number of nodes in the data tree.
-      def size()
-        branch_size(@root)
-      end
-
       # Encode the data as a JSON string.
       def json(indent=0)
         Oj.dump(@root, mode: :wab, indent: indent)
@@ -356,46 +331,6 @@ module WAB
           value.each_index { |i| each_leaf_node(path + [i], value[i], block) }
         else
           block.call(path, value)
-        end
-      end
-
-      def branch_count(value)
-        cnt = 0
-        if value.is_a?(Hash)
-          value.each_value { |v| cnt += branch_count(v) }
-        elsif value.is_a?(Array)
-          value.each { |v| cnt += branch_count(v) }
-        else
-          cnt = 1
-        end
-        cnt
-      end
-
-      def branch_size(value)
-        cnt = 1
-        if value.is_a?(Hash)
-          value.each_value { |v| cnt += branch_size(v) }
-        elsif value.is_a?(Array)
-          value.each { |v| cnt += branch_size(v) }
-        end
-        cnt
-      end
-
-      def values_eql?(v0, v1)
-        return false unless v0.class == v1.class
-        if v0.is_a?(Hash)
-          return false unless v0.length == v1.length
-          v0.each_key { |k|
-            return false unless values_eql?(v0[k], v1[k])
-            return false unless v1.has_key?(k)
-          }
-        elsif v0.is_a?(Array)
-          return false unless v0.length == v1.length
-          v0.each_index { |i|
-            return false unless values_eql?(v0[i], v1[i])
-          }
-        else
-          v0 == v1
         end
       end
 
