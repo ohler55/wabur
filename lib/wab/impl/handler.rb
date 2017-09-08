@@ -15,56 +15,45 @@ module WAB
       end
 
       def do_GET(req, res)
-        handle('GET', req, res)
+        controller, path, query = extract_req(req)
+        log_response('controller.read', path, query) if @shell.logger.info?
+        send_result(controller.read(path, query), res)
+      rescue StandardError => e
+        send_error(e, res)
       end
 
       def do_PUT(req, res)
-        handle('PUT', req, res)
+        controller, path, query, body = extract_req(req)
+        log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
+        send_result(controller.create(path, query, body), res)
+      rescue StandardError => e
+        send_error(e, res)
       end
 
       def do_POST(req, res)
-        handle('POST', req, res)
+        controller, path, query, body = extract_req(req)
+        log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
+        send_result(controller.update(path, query, body), res)
+      rescue StandardError => e
+        send_error(e, res)
       end
 
       def do_DELETE(req, res)
-        handle('DELETE', req, res)
+        controller, path, query = extract_req(req)
+        log_response('controller.delete', path, query) if @shell.logger.info?
+        send_result(controller.delete(path, query), res)
+      rescue StandardError => e
+        send_error(e, res)
       end
 
       private
 
-      # core function that handles the commonly-used HTTP methods:
-      # GET, PUT, POST, DELETE
-      def handle(method, request, response)
-        controller, path, query, body = extract_req(request)
-        log_response(caller(method), path, query, body) if @shell.logger.info?
-        send_result(
-          compute_result(method, controller, path, query, body), response
-        )
-      rescue StandardError => e
-        send_error(e, response)
+      def log_response(caller, path, query)
+        @shell.logger.info("#{caller}(#{path.join('/')}#{query})")
       end
 
-      # Return caller strings for logger message, based on the HTTP method
-      def caller(method)
-        if method == 'GET'
-          'controller.read'
-        elsif method == 'PUT'
-          'controller.create'
-        elsif method == 'POST'
-          'controller.update'
-        elsif method == 'DELETE'
-          'controller.delete'
-        end
-      end
-
-      def log_response(caller, path, query, body=nil)
-        msg = if body.nil?
-                "#{caller}(#{path.join('/')}#{query})"
-              else
-                "#{caller}(#{path.join('/')}#{query}, #{body.json})"
-              end
-
-        @shell.logger.info(msg)
+      def log_response_with_body(caller, path, query, body)
+        @shell.logger.info("#{caller}(#{path.join('/')}#{query}, #{body.json})")
       end
 
       # Pulls and converts the request path, query, and body. Also returns the
@@ -81,19 +70,6 @@ module WAB
           body.detect
         end
         [@shell.path_controller(path), path, query, body]
-      end
-
-      # Formulate results from the controller
-      def compute_result(method, controller, path, query, body=nil)
-        if method == 'GET'
-          controller.read(path, query)
-        elsif method == 'PUT'
-          controller.create(path, query, body)
-        elsif method == 'POST'
-          controller.update(path, query, body)
-        elsif method == 'DELETE'
-          controller.delete(path, query)
-        end
       end
 
       # Sends the results from a controller request.
