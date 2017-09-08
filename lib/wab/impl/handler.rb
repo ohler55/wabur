@@ -15,34 +15,34 @@ module WAB
       end
 
       def do_GET(req, res)
-        ctrl, path, query = extract_req(req)
+        controller, path, query = extract_req(req)
         log_response('controller.read', path, query) if @shell.logger.info?
-        send_result(ctrl.read(path, query), res)
-      rescue Exception => e
+        send_result(controller.read(path, query), res)
+      rescue StandardError => e
         send_error(e, res)
       end
 
       def do_PUT(req, res)
-        ctrl, path, query, body = extract_req(req)
+        controller, path, query, body = extract_req(req)
         log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
-        send_result(ctrl.create(path, query, body), res)
-      rescue Exception => e
+        send_result(controller.create(path, query, body), res)
+      rescue StandardError => e
         send_error(e, res)
       end
 
       def do_POST(req, res)
-        ctrl, path, query, body = extract_req(req)
+        controller, path, query, body = extract_req(req)
         log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
-        send_result(ctrl.update(path, query, body), res)
-      rescue Exception => e
+        send_result(controller.update(path, query, body), res)
+      rescue StandardError => e
         send_error(e, res)
       end
 
       def do_DELETE(req, res)
-        ctrl, path, query = extract_req(req)
+        controller, path, query = extract_req(req)
         log_response('controller.delete', path, query) if @shell.logger.info?
-        send_result(ctrl.delete(path, query), res)
-      rescue Exception => e
+        send_result(controller.delete(path, query), res)
+      rescue StandardError => e
         send_error(e, res)
       end
 
@@ -67,7 +67,7 @@ module WAB
         else
           body = Oj.strict_load(req.body, symbol_keys: true)
           body = Data.new(body, false)
-          body.detect()
+          body.detect
         end
         [@shell.path_controller(path), path, query, body]
       end
