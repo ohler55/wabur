@@ -101,12 +101,11 @@ module WAB
     def list_match(kind, query)
       tql = { }
       # If there is a query set up a where clause.
-      if WAB::Utils.populated_hash?(query)
-        where = and_where(kind, query)
-      else
-        where = form_where_eq(@shell.type_key, kind)
-      end
-      tql[:where] = where
+      tql[:where] = if WAB::Utils.populated_hash?(query)
+                      and_where(kind, query)
+                    else
+                      form_where_eq(@shell.type_key, kind)
+                    end
       tql[:select] = { id: '$ref', data: '$' }
       shell_query(tql, kind, 'read')
     end
@@ -153,7 +152,7 @@ module WAB
       kind = path[@shell.path_pos]
       tql[:where] = if @shell.path_pos + 2 == path.length # has an object reference in the path
                       path[@shell.path_pos + 1].to_i
-                    elsif query.is_a?(Hash) && 0 < query.size
+                    elsif WAB::Utils.populated_hash?(query)
                       and_where(kind, query)
                     else
                       form_where_eq(@shell.type_key, kind)
