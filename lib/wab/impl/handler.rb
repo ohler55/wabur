@@ -1,6 +1,5 @@
 
 require 'webrick'
-require 'wab'
 
 module WAB
   module Impl
