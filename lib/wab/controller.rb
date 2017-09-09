@@ -245,7 +245,7 @@ module WAB
         value = value.to_f
       elsif 36 == len && WAB::Utils.uuid_format?(value)
         value = ::WAB::UUID.new(value)
-      elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(value).nil?
+      elsif 30 == len && WAB::Utils.date_format?(value)
         begin
           value = DateTime.parse(value).to_time()
         rescue

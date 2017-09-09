@@ -20,6 +20,12 @@ module WAB
       def uuid_format?(str)
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(str).nil?
       end
+
+      # Detect if given string matches Date format:
+      # "2017-09-01T12:45:15.123456789Z"
+      def date_format?(str)
+        !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(str).nil?
+      end
     end
   end
 end
