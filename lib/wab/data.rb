@@ -9,6 +9,14 @@ module WAB
   # class (has the same methods and behavior).
   class Data
 
+    # Returns true if the Data element or value identified by the path
+    # exists where the path elements are separated by the '.' character. The
+    # path can also be a array of path node identifiers. For example,
+    # child.grandchild is the same as ['child', 'grandchild'].
+    def has?(path)
+      raise NotImplementedError.new
+    end
+
     # Gets the Data element or value identified by the path where the path
     # elements are separated by the '.' character. The path can also be a
     # array of path node identifiers. For example, child.grandchild is the
@@ -56,27 +64,6 @@ module WAB
     # Returns the instance converted to native Ruby values such as a Hash,
     # Array, etc.
     def native()
-      raise NotImplementedError.new
-    end
-
-    # Returns true if self and other are either the same or have the same
-    # contents. This is a deep comparison.
-    def eql?(other)
-      raise NotImplementedError.new
-    end
-
-    # Returns the length of the root element.
-    def length()
-      raise NotImplementedError.new
-    end
-
-    # Returns the number of leaves in the data tree.
-    def leaf_count()
-      raise NotImplementedError.new
-    end
-
-    # Returns the number of nodes in the data tree.
-    def size()
       raise NotImplementedError.new
     end
 
