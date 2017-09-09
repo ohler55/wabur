@@ -42,10 +42,7 @@ module WAB
       tql = { }
       kind = path[@shell.path_pos]
       if WAB::Utils.populated_hash?(query)
-        where = ['AND']
-        where << form_where_eq(@shell.type_key, kind)
-        query.each_pair { |k,v| where << form_where_eq(k, v) }
-        tql[:where] = where
+        tql[:where] = and_where(kind, query)
       end
       tql[:insert] = data.native
       shell_query(tql, kind, 'create')
@@ -105,9 +102,7 @@ module WAB
       tql = { }
       # If there is a query set up a where clause.
       if WAB::Utils.populated_hash?(query)
-        where = ['AND']
-        where << form_where_eq(@shell.type_key, kind)
-        query.each_pair { |k,v| where << form_where_eq(k, v) }
+        where = and_where(kind, query)
       else
         where = form_where_eq(@shell.type_key, kind)
       end
@@ -115,7 +110,6 @@ module WAB
       tql[:select] = { id: '$ref', data: '$' }
       shell_query(tql, kind, 'read')
     end
-
     
     # Replaces the object data for the identified object.
     #
@@ -132,10 +126,7 @@ module WAB
       if @shell.path_pos + 2 == path.length # has an object reference in the path
         tql[:where] = path[@shell.path_pos + 1].to_i
       elsif WAB::Utils.populated_hash?(query)
-        where = ['AND']
-        where << form_where_eq(@shell.type_key, kind)
-        query.each_pair { |k,v| where << form_where_eq(k, v) }
-        tql[:where] = where
+        tql[:where] = and_where(kind, query)
       else
         raise ::WAB::Error.new("update on all #{kind} not allowed.")
       end
@@ -163,10 +154,7 @@ module WAB
       tql[:where] = if @shell.path_pos + 2 == path.length # has an object reference in the path
                       path[@shell.path_pos + 1].to_i
                     elsif query.is_a?(Hash) && 0 < query.size
-                      where = ['AND']
-                      where << form_where_eq(@shell.type_key, kind)
-                      query.each_pair { |k,v| where << form_where_eq(k, v) }
-                      where
+                      and_where(kind, query)
                     else
                       form_where_eq(@shell.type_key, kind)
                     end
@@ -229,6 +217,14 @@ module WAB
              value.to_s
            end
       x
+    end
+
+    # Form an AND expression for a TQL where clause.
+    def and_where(kind, query)
+      where = ['AND']
+      where << form_where_eq(@shell.type_key, kind)
+      query.each_pair { |k,v| where << form_where_eq(k, v) }
+      where
     end
 
     # Detects strings that are representation of something else such as an
