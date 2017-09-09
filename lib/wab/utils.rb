@@ -14,6 +14,12 @@ module WAB
       def populated_hash?(obj)
         obj.is_a?(Hash) && !obj.empty?
       end
+
+      # Detect if given string matches ISO/IEC UUID format:
+      # "123e4567-e89b-12d3-a456-426655440000"
+      def uuid_format?(str)
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(str).nil?
+      end
     end
   end
 end

@@ -461,7 +461,7 @@ module WAB
 
       def self.detect_string(s)
         len = s.length
-        if 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(s).nil?
+        if 36 == len && WAB::Utils.uuid_format?(s)
           ::WAB::UUID.new(s)
         elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(s).nil?
           begin
