@@ -21,12 +21,14 @@ module WAB
       # Detect if given string matches ISO/IEC UUID format:
       # "123e4567-e89b-12d3-a456-426655440000"
       def uuid_format?(str)
+        return false unless 36 == str.length
         !UUID_REGEX.match(str).nil?
       end
 
       # Detect if given string matches a Time format as encoded by WAB components:
       # "2017-09-01T12:45:15.123456789Z"
       def wab_time_format?(str)
+        return false unless 30 == str.length
         !TIME_REGEX.match(str).nil?
       end
     end
