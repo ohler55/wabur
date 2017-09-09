@@ -395,7 +395,6 @@ module WAB
       end
 
       def self.detect_string(s)
-        len = s.length
         if WAB::Utils.uuid_format?(s)
           ::WAB::UUID.new(s)
         elsif WAB::Utils.wab_time_format?(s)

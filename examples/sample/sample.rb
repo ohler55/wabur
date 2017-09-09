@@ -2,6 +2,7 @@
 # encoding: UTF-8
 
 require 'wab'
+require 'wab/impl'
 
 class SampleController < ::WAB::Controller
 

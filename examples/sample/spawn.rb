@@ -32,7 +32,7 @@ $opts.on('-h', '--help', 'show this page')                         { $stderr.put
 $opts.parse(ARGV)
 
 shell = ::WAB::IO::Shell.new($thread_count, 'kind', 1)
-shell.verbose = $verbose
+shell.logger.level = Logger::INFO if $verbose
 shell.register_controller('Article', SampleController.new(shell))
 shell.register_controller('Other', SampleController.new(shell))
 #shell.register_controller(nil, SampleController.new(shell))
