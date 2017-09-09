@@ -138,61 +138,6 @@ class TestImplData < TestImpl
     assert_equal(%|{"a":1,"b":["a","b","c"]}|, d.json())
   end
 
-  def test_hash_length
-    d = @shell.data({a: 1, b: 2})
-    assert_equal(2, d.length())
-  end
-
-  def test_array_length
-    d = @shell.data(['a', 'b', 'c'])
-    assert_equal(3, d.length())
-  end
-
-  def test_mixed_length
-    d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
-    assert_equal(2, d.length())
-  end
-
-  def test_empty_leaf_count
-    d = @shell.data()
-    assert_equal(0, d.leaf_count())
-  end
-
-  def test_hash_leaf_count
-    d = @shell.data({a: 1, b: 2, c:{}})
-    assert_equal(2, d.leaf_count())
-  end
-
-  def test_array_leaf_count
-    d = @shell.data(['a', 'b', 'c', []])
-    assert_equal(3, d.leaf_count())
-  end
-
-  def test_mixed_leaf_count
-    d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
-    assert_equal(4, d.leaf_count())
-  end
-
-  def test_empty_size
-    d = @shell.data()
-    assert_equal(1, d.size())
-  end
-
-  def test_hash_size
-    d = @shell.data({a: 1, b: 2, c:{}})
-    assert_equal(4, d.size())
-  end
-
-  def test_array_size
-    d = @shell.data(['a', 'b', 'c', []])
-    assert_equal(5, d.size())
-  end
-
-  def test_mixed_size
-    d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
-    assert_equal(7, d.size())
-  end
-
   def test_each
     d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
     paths = []
@@ -223,15 +168,15 @@ class TestImplData < TestImpl
     d3 = @shell.data({a: 1, b: ['a', 'b', { d: 3}]})
     d4 = @shell.data({a: 1, b: ['a', 'b', { c: 4}]})
 
-    assert(d == d2, "same keys and values should be eql")
-    assert(!(d == d3), "same values different keys should not be eql")
-    assert(!(d == d4), "same keys different values should not be eql")
+    assert(d.native == d2.native, "same keys and values should be eql")
+    assert(!(d.native == d3.native), "same values different keys should not be eql")
+    assert(!(d.native == d4.native), "same keys different values should not be eql")
   end
 
   def test_deep_dup
     d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
     c = d.deep_dup
-    assert(d == c)
+    assert(d.native == c.native)
   end
 
   def test_detect
