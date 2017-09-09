@@ -24,9 +24,9 @@ module WAB
         !UUID_REGEX.match(str).nil?
       end
 
-      # Detect if given string matches Date format:
+      # Detect if given string matches a Time format as encoded by WAB components:
       # "2017-09-01T12:45:15.123456789Z"
-      def date_format?(str)
+      def wab_time_format?(str)
         !TIME_REGEX.match(str).nil?
       end
     end

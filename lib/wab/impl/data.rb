@@ -463,7 +463,7 @@ module WAB
         len = s.length
         if 36 == len && WAB::Utils.uuid_format?(s)
           ::WAB::UUID.new(s)
-        elsif 30 == len && WAB::Utils.date_format?(s)
+        elsif 30 == len && WAB::Utils.wab_time_format?(s)
           begin
             DateTime.parse(s).to_time()
           rescue
