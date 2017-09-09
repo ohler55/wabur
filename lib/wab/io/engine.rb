@@ -1,5 +1,4 @@
 
-require 'wab'
 require 'oj'
 
 module WAB

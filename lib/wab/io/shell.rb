@@ -1,6 +1,5 @@
 
 require 'time'
-require 'wab'
 require 'wab/impl'
 
 module WAB

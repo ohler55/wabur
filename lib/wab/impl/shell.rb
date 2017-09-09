@@ -1,7 +1,4 @@
 
-require 'webrick'
-
-require 'wab'
 require 'wab/impl/handler'
 require 'wab/impl/model'
 
