@@ -1,6 +1,9 @@
 module WAB
   module Utils
     class << self
+      UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+      TIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/
+
       def ruby_series
         RbConfig::CONFIG.values_at("MAJOR", "MINOR").join.to_i
       end
@@ -18,13 +21,13 @@ module WAB
       # Detect if given string matches ISO/IEC UUID format:
       # "123e4567-e89b-12d3-a456-426655440000"
       def uuid_format?(str)
-        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(str).nil?
+        !UUID_REGEX.match(str).nil?
       end
 
       # Detect if given string matches Date format:
       # "2017-09-01T12:45:15.123456789Z"
       def date_format?(str)
-        !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(str).nil?
+        !TIME_REGEX.match(str).nil?
       end
     end
   end
