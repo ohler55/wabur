@@ -238,9 +238,9 @@ module WAB
         value = value.to_i
       elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
         value = value.to_f
-      elsif 36 == len && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.match(value).nil?
+      elsif WAB::Utils.uuid_format?(value)
         value = ::WAB::UUID.new(value)
-      elsif 30 == len && !/^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.match(value).nil?
+      elsif WAB::Utils.wab_time_format?(value)
         begin
           value = DateTime.parse(value).to_time()
         rescue
