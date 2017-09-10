@@ -249,7 +249,7 @@ module WAB
       end
 
       # Fix values by returing either the value or the fixed alternative. In
-      # the cases of Hash and Array a copy is always made. (its just easier)
+      # the case of Hash, a copy is always made. (its just easier)
       def fix(value)
         if value.is_a?(Hash)
           old = value
@@ -259,11 +259,7 @@ module WAB
             value[k] = fix_value(v)
           }
         elsif value.is_a?(Array)
-          old = value
-          value = []
-          old.each { |v|
-            value << fix_value(v)
-          }
+          value = value.map { |v| fix_value(v) }
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
           raise WAB::TypeError unless value.is_a?(Hash)
@@ -295,11 +291,7 @@ module WAB
             value[k] = fix_value(v)
           }
         elsif Array == value_class
-          old = value
-          value = []
-          old.each { |v|
-            value << fix_value(v)
-          }
+          value = value.map { |v| fix_value(v) }
         elsif WAB::Utils.pre_24_fixnum?(value)
           # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
@@ -352,8 +344,7 @@ module WAB
           c = {}
           value.each_pair { |k, v| c[k] = deep_dup_value(v) }
         elsif value.is_a?(Array)
-          c = []
-          value.each { |v| c << deep_dup_value(v) }
+          c = value.map { |v| deep_dup_value(v) }
         else
           value_class = value.class
           if value.nil? ||
