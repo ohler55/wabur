@@ -228,7 +228,9 @@ module WAB
 
     # Detects strings that are representation of something else such as an
     # integer, UUID, Time, or URI. Used to convert URL query parameters to TQL
-    # types. That also means string are quoted for TQL unless already quoted.
+    # types. That also means string are quoted for TQL with a single leading
+    # single quote character unless one is already present. No trailing single
+    # quote is added.
     def detect_string(value)
       # if the string matches a detectable type then don't quote it
       # ok as is
