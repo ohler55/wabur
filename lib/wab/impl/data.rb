@@ -13,6 +13,26 @@ module WAB
     class Data < ::WAB::Data
       attr_reader :root
 
+      def self.detect_string(s)
+        if WAB::Utils.uuid_format?(s)
+          WAB::UUID.new(s)
+        elsif WAB::Utils.wab_time_format?(s)
+          begin
+            DateTime.parse(s).to_time
+          rescue
+            s
+          end
+        elsif s.downcase.start_with?('http://')
+          begin
+            URI(s)
+          rescue
+            s
+          end
+        else
+          s
+        end
+      end
+
       # This method should not be called directly. New instances should be
       # created by using a Shell#data method.
       #
@@ -382,26 +402,6 @@ module WAB
         when String
           element = ::WAB::Impl::Data.detect_string(item)
           collection[key] = element unless element == item
-        end
-      end
-
-      def self.detect_string(s)
-        if WAB::Utils.uuid_format?(s)
-          ::WAB::UUID.new(s)
-        elsif WAB::Utils.wab_time_format?(s)
-          begin
-            DateTime.parse(s).to_time()
-          rescue
-            s
-          end
-        elsif s.downcase().start_with?('http://')
-          begin
-            URI(s)
-          rescue
-            s
-          end
-        else
-          s
         end
       end
 
