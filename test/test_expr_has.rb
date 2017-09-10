@@ -15,5 +15,5 @@ class TestExprHas < TestImpl
   end
 
   # TBD test with path as an array, tests with symbol path
-  
+
 end # TestExprHas

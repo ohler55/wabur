@@ -8,7 +8,7 @@ module WAB
   # As the View conduit the Shell usually makes calls to the controller. The
   # exception to this control flow direction is when data changes and is
   # pushed out to the view.
-  # 
+  #
   # As the Model, the Shell must respond to request to update the store using
   # either the CRUD type operations that match the controller.
   #

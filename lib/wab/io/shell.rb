@@ -16,7 +16,7 @@ module WAB
       attr_reader :path_pos
       attr_reader :type_key
       attr_accessor :timeout
-      
+
       # Sets up the shell with the designated number of processing threads and
       # the type_key.
       #
@@ -36,7 +36,7 @@ module WAB
       def start()
         @engine.start()
       end
-      
+
       # Register a controller for a named type.
       #
       # If a request is received for an unregistered type the default controller
@@ -87,7 +87,7 @@ module WAB
       def data(value={}, repair=false)
         ::WAB::Impl::Data.new(value, repair)
       end
-      
+
       ### View related methods.
 
       # Push changed data to the view if it matches one of the subscription
@@ -138,7 +138,7 @@ module WAB
       end
 
       private
-      
+
       def form_where_eq(key, value)
         value_class = value.class
         x = ['EQ', key.to_s]

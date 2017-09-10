@@ -109,7 +109,7 @@ module WAB
       tql[:select] = { id: '$ref', data: '$' }
       shell_query(tql, kind, 'read')
     end
-    
+
     # Replaces the object data for the identified object.
     #
     # The return should be the identifiers for the object updated.
@@ -232,7 +232,7 @@ module WAB
     def detect_string(value)
       # if the string matches a detectable type then don't quote it
       len = value.length
-      if 0 < len && '\'' == value[0] 
+      if 0 < len && '\'' == value[0]
         # ok as is
       elsif !/^-?\d+$/.match(value).nil?
         value = value.to_i

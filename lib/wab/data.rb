@@ -24,7 +24,7 @@ module WAB
     def get(path)
       raise NotImplementedError.new
     end
-    
+
     # Sets the node value identified by the path where the path elements are
     # separated by the '.' character. The path can also be a array of path
     # node identifiers. For example, child.grandchild is the same as ['child',

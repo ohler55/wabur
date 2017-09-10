@@ -20,7 +20,7 @@ module WAB
       def initialize(path, min, max, min_incl=true, max_incl=true)
         super(path)
         @min = min
-        @max = max 
+        @max = max
         @min_incl = min_incl
         @max_incl = max_incl
       end
