@@ -68,7 +68,7 @@ unless cfg_file.nil?
   File.open(File.expand_path(cfg_file)) { |f|
     f.each_line() { |line|
       line.strip!
-      next if 0 == line.length || '#' == line[0]
+      next if line.empty? || line.start_with?('#')
       k, v = line.split('=')
       cfg[k.strip] = v.strip
     }

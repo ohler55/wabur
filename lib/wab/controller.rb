@@ -231,10 +231,10 @@ module WAB
     # types. That also means string are quoted for TQL unless already quoted.
     def detect_string(value)
       # if the string matches a detectable type then don't quote it
-      len = value.length
-      if 0 < len && '\'' == value[0]
-        # ok as is
-      elsif !/^-?\d+$/.match(value).nil?
+      # ok as is
+      return value if !value.empty? && value.start_with?("'")
+
+      if !/^-?\d+$/.match(value).nil?
         value = value.to_i
       elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
         value = value.to_f
