@@ -235,27 +235,26 @@ module WAB
       return value if !value.empty? && value.start_with?("'")
 
       if !/^-?\d+$/.match(value).nil?
-        value = value.to_i
+        value.to_i
       elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
-        value = value.to_f
+        value.to_f
       elsif WAB::Utils.uuid_format?(value)
-        value = ::WAB::UUID.new(value)
+        WAB::UUID.new(value)
       elsif WAB::Utils.wab_time_format?(value)
         begin
-          value = DateTime.parse(value).to_time()
+          DateTime.parse(value).to_time
         rescue
-          value = "'" + value
+          "'" + value
         end
-      elsif value.downcase().start_with?('http://')
+      elsif value.downcase.start_with?('http://')
         begin
-          value = URI(value)
+          URI(value)
         rescue
-          value = "'" + value
+          "'" + value
         end
       else
-        value = "'" + value
+        "'" + value
       end
-      value
     end
 
     # Helper to send TQL requests to the shell.
