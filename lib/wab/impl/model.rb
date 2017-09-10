@@ -48,7 +48,7 @@ module WAB
           where = (w.is_a?(Array) ? ExprParser.parse(w) : w)
         end
         filter = ExprParser.parse(tql[:filter]) if tql.has_key?(:filter)
-        
+
         if tql.has_key?(:insert)
           insert(tql[:insert], rid, where, filter)
         elsif tql.has_key?(:update)
@@ -61,7 +61,7 @@ module WAB
       end
 
       private
-      
+
       def insert(obj, rid, where, filter)
         ref = nil
         @lock.synchronize {
@@ -111,7 +111,7 @@ module WAB
         result[:rid] = rid unless rid.nil?
         result
       end
-      
+
       def update(obj, rid, where, filter)
         updated = []
         @lock.synchronize {
@@ -126,7 +126,7 @@ module WAB
         }
         { code: 0, updated: updated }
       end
-      
+
       def delete(del_opt, rid, where, filter)
         deleted = []
         @lock.synchronize {
@@ -182,7 +182,7 @@ module WAB
           }
         end
       end
-      
+
       def write_to_file(ref, obj)
         unless @dir.nil?
           obj.native if obj.is_a?(::WAB::Data)

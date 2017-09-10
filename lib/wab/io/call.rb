@@ -9,7 +9,7 @@ module WAB
       attr_accessor :thread
       attr_accessor :rid
       attr_accessor :giveup
-      
+
       def initialize(timeout=2.0)
         @rid = rid
         @giveup = Time.now + timeout

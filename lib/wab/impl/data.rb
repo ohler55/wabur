@@ -71,7 +71,7 @@ module WAB
       # same as ['child', 'grandchild'].
       def get(path)
         if path.is_a?(Symbol)
-          node = @root[path] 
+          node = @root[path]
         else
           path = path.to_s.split('.') unless path.is_a?(Array)
           node = @root
@@ -204,7 +204,7 @@ module WAB
       # value:: value to validate
       def validate(value)
         if value.is_a?(Hash)
-          value.each_pair { |k, v| 
+          value.each_pair { |k, v|
             raise WAB::KeyError unless k.is_a?(Symbol)
             validate_value(v)
           }
@@ -232,7 +232,7 @@ module WAB
             ::WAB::UUID == value_class
           # valid values
         elsif Hash == value_class
-          value.each_pair { |k, v| 
+          value.each_pair { |k, v|
             raise WAB::KeyError unless k.is_a?(Symbol)
             validate_value(v)
           }

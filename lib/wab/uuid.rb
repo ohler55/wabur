@@ -6,7 +6,7 @@ module WAB
   class UUID
 
     attr_reader :id
-    
+
     # Initializes a UUID from string representation of the UUID
     # following the pattern "123e4567-e89b-12d3-a456-426655440000".
     def initialize(id)
