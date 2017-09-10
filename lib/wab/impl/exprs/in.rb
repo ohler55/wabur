@@ -20,9 +20,7 @@ module WAB
       end
 
       def native()
-        n = ['IN', @path]
-        @values.each { |v| n << v }
-        n
+        ['IN', @path].concat(@values)
       end
 
     end # In
