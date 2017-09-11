@@ -15,8 +15,8 @@ module WAB
         @shell = shell
         @last_rid = 0
         @pending = {}
-        @lock = Thread::Mutex.new()
-        @queue = Queue.new()
+        @lock = Thread::Mutex.new
+        @queue = Queue.new
         tcnt = 1 if 0 >= tcnt
         @tcnt = tcnt
         @timeout_thread = nil
@@ -35,7 +35,7 @@ module WAB
             end
           }
         }
-        @timeout_thread = Thread.new { timeout_check() }
+        @timeout_thread = Thread.new { timeout_check }
 
         Oj.load($stdin, mode: :wab, symbol_keys: true) { |msg|
           api = msg[:api]
@@ -87,8 +87,8 @@ module WAB
         @shell.info("=> model: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
         data = @shell.data(msg, true)
         # Send the message. Make sure to flush to assure it gets sent.
-        $stdout.puts(data.json())
-        $stdout.flush()
+        $stdout.puts(data.json)
+        $stdout.flush
 
         # Wait for either the response to arrive or for a timeout. In both
         # cases #run should be called on the thread. Sleep is used instead of
@@ -113,11 +113,10 @@ module WAB
 
         rid = native[:rid]
         body = native[:body]
-
         return send_error(rid, 'No body in request.') if body.nil?
 
         data = @shell.data(body, false)
-        data.detect()
+        data.detect
         controller = @shell.controller(data)
         return send_error(rid, 'No handler found.') if controller.nil?
 
