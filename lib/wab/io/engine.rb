@@ -126,16 +126,16 @@ module WAB
         query = body[:query]
         begin
           if 'NEW' == op && controller.respond_to?(:create)
-            @shell.info("=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
+            log_operation_with_body('controller.create', path, query, body) if @shell.info?
             reply_body = controller.create(path, query, data.get(:content))
           elsif 'GET' == op && controller.respond_to?(:read)
-            @shell.info("=> controller.read(#{path.join('/')}#{query})") if @shell.info?
+            log_operation('controller.read', path, query) if @shell.info?
             reply_body = controller.read(path, query)
           elsif 'DEL' == op && controller.respond_to?(:delete)
-            @shell.info("=> controller.delete(#{path.join('/')}#{query})") if @shell.info?
+            log_operation('controller.delete', path, query) if @shell.info?
             reply_body = controller.delete(path, query)
           elsif 'MOD' == op && controller.respond_to?(:update)
-            @shell.info("=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
+            log_operation_with_body('controller.update', path, query, body) if @shell.info?
             reply_body = controller.update(path, query, data.get(:content))
           else
             reply_body = controller.handle(data)
@@ -177,6 +177,16 @@ module WAB
             end
           }
         end
+      end
+
+      private
+
+      def log_operation(caller, path, query)
+        @shell.info("=> #{caller}(#{path.join('/')}#{query})")
+      end
+
+      def log_operation_with_body(caller, path, query, body)
+        @shell.info("=> #{caller}(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})")
       end
 
     end # Engine
