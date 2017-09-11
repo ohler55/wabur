@@ -15,8 +15,8 @@ module WAB
         @shell = shell
         @last_rid = 0
         @pending = {}
-        @lock = Thread::Mutex.new()
-        @queue = Queue.new()
+        @lock = Thread::Mutex.new
+        @queue = Queue.new
         tcnt = 1 if 0 >= tcnt
         @tcnt = tcnt
         @timeout_thread = nil
@@ -35,7 +35,7 @@ module WAB
             end
           }
         }
-        @timeout_thread = Thread.new { timeout_check() }
+        @timeout_thread = Thread.new { timeout_check }
 
         Oj.load($stdin, mode: :wab, symbol_keys: true) { |msg|
           api = msg[:api]
@@ -87,8 +87,8 @@ module WAB
         @shell.info("=> model: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
         data = @shell.data(msg, true)
         # Send the message. Make sure to flush to assure it gets sent.
-        $stdout.puts(data.json())
-        $stdout.flush()
+        $stdout.puts(data.json)
+        $stdout.flush
 
         # Wait for either the response to arrive or for a timeout. In both
         # cases #run should be called on the thread. Sleep is used instead of
@@ -113,11 +113,10 @@ module WAB
 
         rid = native[:rid]
         body = native[:body]
-
         return send_error(rid, 'No body in request.') if body.nil?
 
         data = @shell.data(body, false)
-        data.detect()
+        data.detect
         controller = @shell.controller(data)
         return send_error(rid, 'No handler found.') if controller.nil?
 
@@ -127,16 +126,16 @@ module WAB
         query = body[:query]
         begin
           if 'NEW' == op && controller.respond_to?(:create)
-            @shell.info("=> controller.create(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
+            log_operation_with_body('controller.create', path, query, body) if @shell.info?
             reply_body = controller.create(path, query, data.get(:content))
           elsif 'GET' == op && controller.respond_to?(:read)
-            @shell.info("=> controller.read(#{path.join('/')}#{query})") if @shell.info?
+            log_operation('controller.read', path, query) if @shell.info?
             reply_body = controller.read(path, query)
           elsif 'DEL' == op && controller.respond_to?(:delete)
-            @shell.info("=> controller.delete(#{path.join('/')}#{query})") if @shell.info?
+            log_operation('controller.delete', path, query) if @shell.info?
             reply_body = controller.delete(path, query)
           elsif 'MOD' == op && controller.respond_to?(:update)
-            @shell.info("=> controller.update(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})") if @shell.info?
+            log_operation_with_body('controller.update', path, query, body) if @shell.info?
             reply_body = controller.update(path, query, data.get(:content))
           else
             reply_body = controller.handle(data)
@@ -178,6 +177,16 @@ module WAB
             end
           }
         end
+      end
+
+      private
+
+      def log_operation(caller, path, query)
+        @shell.info("=> #{caller}(#{path.join('/')}#{query})")
+      end
+
+      def log_operation_with_body(caller, path, query, body)
+        @shell.info("=> #{caller}(#{path.join('/')}#{query}, #{Oj.dump(body[:content], mode: :wab)})")
       end
 
     end # Engine
