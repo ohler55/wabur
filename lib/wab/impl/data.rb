@@ -367,18 +367,17 @@ module WAB
           c = value.map { |v| deep_dup_value(v) }
         else
           value_class = value.class
-          if value.nil? ||
-            TrueClass == value_class ||
-            FalseClass == value_class ||
-            Integer == value_class ||
-            Float == value_class ||
-            String == value_class
-            c = value
-          elsif WAB::Utils.pre_24_fixnum?(value)
-            c = value
-          else
-            c = value.dup
-          end
+          c = if value.nil? ||
+                  TrueClass  == value_class ||
+                  FalseClass == value_class ||
+                  Integer    == value_class ||
+                  Float      == value_class ||
+                  String     == value_class ||
+                  WAB::Utils.pre_24_fixnum?(value)
+                value
+              else
+                value.dup
+              end
         end
         c
       end

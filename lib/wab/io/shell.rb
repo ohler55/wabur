@@ -142,22 +142,21 @@ module WAB
       def form_where_eq(key, value)
         value_class = value.class
         x = ['EQ', key.to_s]
-        if value.is_a?(String)
-          x << "'" + value
-        elsif Time == value_class
-          x << value.utc.iso8601(9)
-        elsif value.nil? ||
-            TrueClass == value_class ||
-            FalseClass == value_class ||
-            Integer == value_class ||
-            Float == value_class ||
-            String == value_class
-          x << value
-        elsif WAB::Utils.pre_24_fixnum?(value)
-          x << value
-        else
-          x << value.to_s
-        end
+        x << if value.is_a?(String)
+               "'" + value
+             elsif Time == value_class
+               value.utc.iso8601(9)
+             elsif value.nil? ||
+                 TrueClass  == value_class ||
+                 FalseClass == value_class ||
+                 Integer    == value_class ||
+                 Float      == value_class ||
+                 String     == value_class ||
+                 WAB::Utils.pre_24_fixnum?(value)
+               value
+             else
+               value.to_s
+             end
         x
       end
 
