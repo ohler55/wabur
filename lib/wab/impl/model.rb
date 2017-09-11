@@ -20,9 +20,9 @@ module WAB
         @dir = dir.nil? ? nil : File.expand_path(dir)
         @cnt = 0
         @map = {}
-        @lock = Thread::Mutex.new()
+        @lock = Thread::Mutex.new
         Dir.mkdir(@dir) unless @dir.nil? || Dir.exist?(@dir)
-        load_files()
+        load_files unless @dir.nil?
       end
 
       # Get a single record in the database. A ::WAB::Impl::Data object is
@@ -174,20 +174,17 @@ module WAB
       end
 
       def load_files()
-        unless @dir.nil?
-          Dir.foreach(@dir) { |fn|
-            next if '.' == fn[0]
-            ref = fn[0..-6]
-            @map[ref.to_i(16)] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
-          }
-        end
+        Dir.foreach(@dir) { |fn|
+          next if '.' == fn[0]
+          ref = fn[0..-6]
+          @map[ref.to_i(16)] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
+        }
       end
 
       def write_to_file(ref, obj)
-        unless @dir.nil?
-          obj.native if obj.is_a?(::WAB::Data)
-          File.open(File.join(@dir, "%016x.json" % ref), "wb") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
-        end
+        return if @dir.nil?
+        obj.native if obj.is_a?(::WAB::Data)
+        File.open(File.join(@dir, "%016x.json" % ref), "wb") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
       end
 
       def remove_file(ref)

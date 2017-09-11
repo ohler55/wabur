@@ -57,12 +57,11 @@ module WAB
       def controller(data)
         path = data.get(:path)
         path = path.native if path.is_a?(::WAB::Data)
-        if path.nil? || path.length <= @path_pos
-          content = data.get(:content)
-          return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
-        else
-          return path_controller(path)
-        end
+        return path_controller(path) unless path.nil? || (path.length <= @path_pos)
+
+        content = data.get(:content)
+        return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
+
         @controllers[nil]
       end
 

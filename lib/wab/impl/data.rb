@@ -61,27 +61,25 @@ module WAB
       # path can also be a array of path node identifiers. For example,
       # child.grandchild is the same as ['child', 'grandchild'].
       def has?(path)
-        if path.is_a?(Symbol)
-          return @root.is_a?(Hash) && @root.has_key?(path)
-        else
-          path = path.to_s.split('.') unless path.is_a?(Array)
-          node = @root
-          path.each { |key|
-            if node.is_a?(Hash)
-              key = key.to_sym
-              return false unless node.has_key?(key)
-              node = node[key]
-            elsif node.is_a?(Array)
-              i = key.to_i
-              return false if 0 == i && '0' != key && 0 != key
-              len = node.length
-              return false unless -len <= i && i < len
-              node = node[i]
-            else
-              return false
-            end
-          }
-        end
+        return (@root.is_a?(Hash) && @root.has_key?(path)) if path.is_a?(Symbol)
+
+        path = path.to_s.split('.') unless path.is_a?(Array)
+        node = @root
+        path.each { |key|
+          if node.is_a?(Hash)
+            key = key.to_sym
+            return false unless node.has_key?(key)
+            node = node[key]
+          elsif node.is_a?(Array)
+            i = key.to_i
+            return false if 0 == i && '0' != key && 0 != key
+            len = node.length
+            return false unless -len <= i && i < len
+            node = node[i]
+          else
+            return false
+          end
+        }
         true
       end
 
@@ -241,16 +239,17 @@ module WAB
       def validate_value(value)
         value_class = value.class
         if value.nil? ||
-            TrueClass == value_class ||
+            TrueClass  == value_class ||
             FalseClass == value_class ||
-            Integer == value_class ||
-            Float == value_class ||
-            String == value_class ||
-            Time == value_class ||
+            Integer    == value_class ||
+            Float      == value_class ||
+            String     == value_class ||
+            Time       == value_class ||
             BigDecimal == value_class ||
-            URI::HTTP == value_class ||
-            ::WAB::UUID == value_class
-          # valid values
+            URI::HTTP  == value_class ||
+            WAB::UUID  == value_class ||
+            WAB::Utils.pre_24_fixnum?(value)
+          return value # already valid
         elsif Hash == value_class
           value.each_pair { |k, v|
             raise WAB::KeyError unless k.is_a?(Symbol)
@@ -260,8 +259,6 @@ module WAB
           value.each { |v|
             validate_value(v)
           }
-        elsif WAB::Utils.pre_24_fixnum?(value)
-          # valid value
         else
           raise WAB::TypeError, "#{value_class} is not a valid Data value."
         end
@@ -293,16 +290,17 @@ module WAB
       def fix_value(value)
         value_class = value.class
         if value.nil? ||
-            TrueClass == value_class ||
+            TrueClass  == value_class ||
             FalseClass == value_class ||
-            Integer == value_class ||
-            Float == value_class ||
-            String == value_class ||
-            Time == value_class ||
+            Integer    == value_class ||
+            Float      == value_class ||
+            String     == value_class ||
+            Time       == value_class ||
             BigDecimal == value_class ||
-            URI::HTTP == value_class ||
-            ::WAB::UUID == value_class
-          # valid values
+            URI::HTTP  == value_class ||
+            WAB::UUID  == value_class ||
+            WAB::Utils.pre_24_fixnum?(value)
+          return value # already valid
         elsif Hash == value_class
           old = value
           value = {}
@@ -312,8 +310,6 @@ module WAB
           }
         elsif Array == value_class
           value = value.map { |v| fix_value(v) }
-        elsif WAB::Utils.pre_24_fixnum?(value)
-          # valid value
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
           raise WAB::TypeError unless value.is_a?(Hash)
