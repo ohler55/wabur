@@ -10,11 +10,7 @@ module WAB
       # rx:: regexp to match against a string value from the path lookup
       def initialize(path, rx)
         super(path)
-        if rx.is_a?(Regexp)
-          @rx = rx
-        else
-          @rx = Regexp.new(rx.to_s)
-        end
+        @rx = rx.is_a?(Regexp) ? rx : Regexp.new(rx.to_s)
       end
 
       def eval(data)
