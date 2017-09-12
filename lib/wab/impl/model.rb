@@ -163,7 +163,7 @@ module WAB
             rid
           elsif '$' == format || '$root' == format
             obj.native
-          elsif 0 < format.length && '\'' == format[0]
+          elsif 0 < format.length && "'" == format[0]
             format[1..-1]
           else
             obj.get(format)
@@ -184,7 +184,7 @@ module WAB
       def write_to_file(ref, obj)
         return if @dir.nil?
         obj.native if obj.is_a?(::WAB::Data)
-        File.open(File.join(@dir, "%016x.json" % ref), "wb") { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
+        File.open(File.join(@dir, "%016x.json" % ref), 'wb') { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
       end
 
       def remove_file(ref)

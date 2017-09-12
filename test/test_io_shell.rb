@@ -38,8 +38,8 @@ class TestIoShell < Minitest::Test
     run_fork_test([
                    [{rid: 'rid-create-error', api: 1, body: {op: 'NEW', path: ['sample'], content: {kind: 'sample', num: 7}}},
                     {rid: '1', api: 3, body: { insert:{ kind: 'sample', num: 7}}}],
-                   [{rid: '1', api: 4, body: {ref: 123, code: -1, error: "something went wrong"}},
-                    {rid: 'rid-create-error', api: 2, body: { code: -1, error: "WAB::Error: error on sample create. something went wrong"}}]
+                   [{rid: '1', api: 4, body: {ref: 123, code: -1, error: 'something went wrong'}},
+                    {rid: 'rid-create-error', api: 2, body: { code: -1, error: 'WAB::Error: error on sample create. something went wrong'}}]
                   ])
   end
 
@@ -73,7 +73,7 @@ class TestIoShell < Minitest::Test
   def test_read_select
     run_fork_test([
                    [{rid: 'rid-read-select', api: 1, body: {op: 'GET', path: ['sample', 'list'], query: { Age: 'num' }}},
-                    {rid: '1', api: 3, body: {where: ['EQ', 'kind', "'sample"], select: { ref: '$ref', Age: "num"}}}],
+                    {rid: '1', api: 3, body: {where: ['EQ', 'kind', "'sample"], select: { ref: '$ref', Age: 'num'}}}],
                    [{rid: '1', api: 4, body: {code: 0, results: [{ref: 12345, Age: 7 }]}},
                     {rid: 'rid-read-select', api: 2, body: {code: 0, results:[{ref: 12345, Age: 7 }]}}]
                   ])

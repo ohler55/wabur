@@ -11,7 +11,7 @@ module WAB
     # following the pattern "123e4567-e89b-12d3-a456-426655440000".
     def initialize(id)
       @id = id.downcase
-      raise ::WAB::ParseError.new("Invalid UUID format.") unless WAB::Utils.uuid_format?(@id)
+      raise ::WAB::ParseError.new('Invalid UUID format.') unless WAB::Utils.uuid_format?(@id)
     end
 
     # Returns the string representation of the UUID.

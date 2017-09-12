@@ -5,7 +5,7 @@ module WAB
       TIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/
 
       def ruby_series
-        RbConfig::CONFIG.values_at("MAJOR", "MINOR").join.to_i
+        RbConfig::CONFIG.values_at('MAJOR', 'MINOR').join.to_i
       end
 
       # Detect if `obj` is an instance of `Fixnum` from Ruby older than 2.4.x
