@@ -63,12 +63,12 @@ verbosity.
 ### OpO-Rub
 
 OpO-Rub provides the HTTP server and the Model storage, and is able to run the
-an an embedded Ruby application.
+an embedded Ruby application.
 
 OpO-Rub can be downloaded from
 [OpO Downloads](http://www.opo.technology/download/index.html).
 
-The confguration file for OpO-Rub is in the `opo` sub-directory, and is named
+The configuration file for OpO-Rub is in the `opo` sub-directory, and is named
 [`embed.conf`](opo/embed.conf). The configuration specifies that the OpO-Rub
 disk storage be in the `opo/data` directory. It also turns on logging for HTTP
 requests and responses along with handler information from the Runner's
