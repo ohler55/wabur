@@ -44,7 +44,7 @@ class TestImplData < TestImpl
 
   def test_repair_keys
     d = @shell.data({ 'a' => 1}, true)
-    assert_equal({a:1}, d.native, "data not repaired")
+    assert_equal({a:1}, d.native, 'data not repaired')
   end
 
   def test_validate_non_hash_array
@@ -62,18 +62,18 @@ class TestImplData < TestImpl
 
   def test_repair_to_s_object
     d = @shell.data({a: 1..3}, true)
-    assert_equal({a:'1..3'}, d.native, "data not repaired")
+    assert_equal({a:'1..3'}, d.native, 'data not repaired')
   end
 
   def test_repair_to_h_object
     d = @shell.data(ToHash.new(1, 2), true)
-    assert_equal({x:1,y:2}, d.native, "data not repaired")
+    assert_equal({x:1,y:2}, d.native, 'data not repaired')
   end
 
   def test_hash_get
     d = @shell.data({a: 1, b: 2})
     assert_equal(2, d.get('b'), "failed to get 'b'")
-    assert_equal(2, d.get([:b]), "failed to get [:b]")
+    assert_equal(2, d.get([:b]), 'failed to get [:b]')
     assert_equal(1, d.get(['a']), "failed to get ['a']")
     assert_nil(d.get(['d']), "failed to get ['d']")
   end
@@ -82,16 +82,16 @@ class TestImplData < TestImpl
     d = @shell.data(['a', 'b', 'c'])
     assert_equal('b', d.get('1'), "failed to get '1'")
     assert_equal('c', d.get(['2']), "failed to get ['2']")
-    assert_equal('b', d.get([1]), "failed to get [1]")
-    assert_equal('a', d.get([0]), "failed to get [0]")
-    assert_equal('c', d.get([-1]), "failed to get [-1]")
-    assert_nil(d.get([4]), "failed to get [4]")
+    assert_equal('b', d.get([1]), 'failed to get [1]')
+    assert_equal('a', d.get([0]), 'failed to get [0]')
+    assert_equal('c', d.get([-1]), 'failed to get [-1]')
+    assert_nil(d.get([4]), 'failed to get [4]')
   end
 
   def test_get_mixed
     d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
     assert_equal(3, d.get('b.2.c'), "failed to get 'b.2.c'")
-    assert_equal(3, d.get([:b, 2, 'c']), "failed to get [b, 2, c]")
+    assert_equal(3, d.get([:b, 2, 'c']), 'failed to get [b, 2, c]')
   end
 
   def test_hash_set
@@ -121,15 +121,15 @@ class TestImplData < TestImpl
   def test_array_set
     d = @shell.data(['x'])
     d.set([2], 'd')
-    assert_equal(%|["x",null,"d"]|, d.json(), "after d")
+    assert_equal(%|["x",null,"d"]|, d.json(), 'after d')
     d.set([1], 'c')
-    assert_equal(%|["x","c","d"]|, d.json(), "after c")
+    assert_equal(%|["x","c","d"]|, d.json(), 'after c')
     d.set([0], 'y')
-    assert_equal(%|["y","c","d"]|, d.json(), "after y")
+    assert_equal(%|["y","c","d"]|, d.json(), 'after y')
     d.set([-3], 'b')
-    assert_equal(%|["b","c","d"]|, d.json(), "after b")
+    assert_equal(%|["b","c","d"]|, d.json(), 'after b')
     d.set([-4], 'a')
-    assert_equal(%|["a","b","c","d"]|, d.json(), "after a")
+    assert_equal(%|["a","b","c","d"]|, d.json(), 'after a')
   end
 
   def test_set_mixed
@@ -146,8 +146,8 @@ class TestImplData < TestImpl
       paths << p
       values << v
     }
-    assert_equal([[], [:a], [:b], [:b, 0], [:b, 1], [:b, 2], [:b, 2, :c]], paths, "paths mismatch")
-    assert_equal([{:a=>1, :b=>["a", "b", {:c=>3}]}, 1, ["a", "b", {:c=>3}], "a", "b", {:c=>3}, 3], values, "values mismatch")
+    assert_equal([[], [:a], [:b], [:b, 0], [:b, 1], [:b, 2], [:b, 2, :c]], paths, 'paths mismatch')
+    assert_equal([{:a=>1, :b=>['a', 'b', {:c=>3}]}, 1, ['a', 'b', {:c=>3}], 'a', 'b', {:c=>3}, 3], values, 'values mismatch')
   end
 
   def test_each_leaf
@@ -158,8 +158,8 @@ class TestImplData < TestImpl
       paths << p
       values << v
     }
-    assert_equal([[:a], [:b, 0], [:b, 1], [:b, 2, :c]], paths, "paths mismatch")
-    assert_equal([1, "a", "b", 3], values, "values mismatch")
+    assert_equal([[:a], [:b, 0], [:b, 1], [:b, 2, :c]], paths, 'paths mismatch')
+    assert_equal([1, 'a', 'b', 3], values, 'values mismatch')
   end
 
   def test_eql
@@ -168,9 +168,9 @@ class TestImplData < TestImpl
     d3 = @shell.data({a: 1, b: ['a', 'b', { d: 3}]})
     d4 = @shell.data({a: 1, b: ['a', 'b', { c: 4}]})
 
-    assert(d.native == d2.native, "same keys and values should be eql")
-    assert(!(d.native == d3.native), "same values different keys should not be eql")
-    assert(!(d.native == d4.native), "same keys different values should not be eql")
+    assert(d.native == d2.native, 'same keys and values should be eql')
+    assert(!(d.native == d3.native), 'same values different keys should not be eql')
+    assert(!(d.native == d4.native), 'same keys different values should not be eql')
   end
 
   def test_deep_dup

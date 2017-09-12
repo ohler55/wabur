@@ -22,7 +22,7 @@ require 'wab/io'
 #    runner_test.rb localhost:6363
 # -----------------------------------------------------------------------------
 
-raise ArgumentError, "Host and port not supplied." if ARGV.empty?
+raise ArgumentError, 'Host and port not supplied.' if ARGV.empty?
 
 $host, $port = ARGV[-1].split(':')
 $port = $port.to_i
