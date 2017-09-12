@@ -87,7 +87,7 @@ def compact_js_line(line)
 end
 
 def path_to(*subdirs)
-  File.expand_path(File.join("..", "view", *subdirs), __dir__)
+  File.expand_path(File.join('..', 'view', *subdirs), __dir__)
 end
 
 def dest_dir(*contents)

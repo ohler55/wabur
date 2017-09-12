@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby -wW1
 
-home = File.expand_path(".")
+home = File.expand_path('.')
 name = ARGV.empty? ? File.basename(home) : ARGV[0]
 
-require File.join(home, "lib/wab/version")
+require File.join(home, 'lib/wab/version')
 
 version = WAB::VERSION
 
@@ -24,9 +24,9 @@ unless tags.include?(tag)
   `git push --tags`
 end
 
-log "Building gem.."
+log 'Building gem..'
 out = `gem build #{name}.gemspec`
-out.include?("Success") ? puts(out) : exit(0)
+out.include?('Success') ? puts(out) : exit(0)
 
 log "pushing #{name}-#{version}.gem.."
 out = `gem push #{name}-#{version}.gem`
