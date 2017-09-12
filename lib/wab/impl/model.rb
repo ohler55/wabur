@@ -67,11 +67,10 @@ module WAB
         @lock.synchronize {
           unless where.nil?
             @map.each_value { |v|
-              if where.eval(v) && (filter.nil? || filter.eval(v))
-                result = { code: -1, error: 'Already exists.' }
-                result[:rid] = rid unless rid.nil?
-                return result
-              end
+              next unless where.eval(v) && (filter.nil? || filter.eval(v))
+              result = { code: -1, error: 'Already exists.' }
+              result[:rid] = rid unless rid.nil?
+              return result
             }
           end
           @cnt += 1
@@ -101,9 +100,8 @@ module WAB
             }
           else
             @map.each { |ref,obj|
-              if where.eval(obj) && (filter.nil? || filter.eval(obj))
-                matches << extract_matches(format, ref, rid, obj)
-              end
+              next unless where.eval(obj) && (filter.nil? || filter.eval(obj))
+              matches << extract_matches(format, ref, rid, obj)
             }
           end
         }
@@ -132,10 +130,9 @@ module WAB
         @lock.synchronize {
           if where.is_a?(Expr)
             @map.each { |ref,obj|
-              if where.eval(obj) && (filter.nil? || filter.eval(obj))
-                deleted << ref
-                @map.delete(ref)
-              end
+              next unless where.eval(obj) && (filter.nil? || filter.eval(obj))
+              deleted << ref
+              @map.delete(ref)
             }
           else
             # A reference.
