@@ -1,7 +1,7 @@
 
 wab.Obj.prototype.fetch = function() {
     if (0 != this.ref) {
-        wab.httpCall('GET', '/v1/' + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
+        wab.httpCall('GET', wab.pathPrefix + this.spec.obj.kind + '/' + this.ref, this, function(o, resp) {
             if (0 != resp.code) {
                 alert(results.error);
                 return;
@@ -94,10 +94,10 @@ wab.Obj.prototype.save = function() {
     
     if (0 == this.ref) {
         method = 'PUT';
-        url = '/v1/' + this.spec.obj.kind;
+        url = wab.pathPrefix + this.spec.obj.kind;
     } else {
         method = 'POST';
-        url = '/v1/' + this.spec.obj.kind + '/' + this.ref;
+        url = wab.pathPrefix + this.spec.obj.kind + '/' + this.ref;
     }
     var h = new XMLHttpRequest();
     h.open(method, url, true);

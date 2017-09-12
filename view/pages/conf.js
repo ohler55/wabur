@@ -2,6 +2,8 @@
 // configured first then a call to wab.view.set() is made to draws the initial
 // display.
 
+wab.pathPrefix = '/v1/'
+
 // Example of registering a class by name and template/specificaiton.
 wab.view.register_type('Article',
                        {
