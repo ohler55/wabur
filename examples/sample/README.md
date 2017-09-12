@@ -201,7 +201,7 @@ with an average latency of 0.134 msecs
 
 ```
 
-Keep the connection alive it were the same browsers performing multiple fetchs.
+Keep the connection alive as if it were the same browsers performing multiple fetchs.
 ```
 > hose -t 2 -c 20 -p json/000000000000000b 127.0.0.1:6363 -k
 127.0.0.1:6363 processed 347951 requests in 1.000 seconds for a rate of 347951 GETS/sec.
@@ -219,7 +219,7 @@ Closing the connection after each fetch as if it were separate browsers.
 with an average latency of 2.997 msecs
 ```
 
-Keep the connection alive it were the same browsers performing multiple fetchs.
+Keep the connection alive as if it were the same browsers performing multiple fetchs.
 ```
 > hose -t 2 -c 20 -p v1/Article/11 127.0.0.1:6363 -k
 127.0.0.1:6363 did not respond to 2 requests.
@@ -239,7 +239,7 @@ with an average latency of 0.247 msecs
 
 ```
 
-Keep the connection alive it were the same browsers performing multiple fetchs.
+Keep the connection alive as if it were the same browsers performing multiple fetchs.
 
 ```
 > hose -t 2 -c 20 -p e1/Article/11 127.0.0.1:6363 -k
