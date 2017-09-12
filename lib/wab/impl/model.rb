@@ -45,7 +45,7 @@ module WAB
         filter = nil
         if tql.has_key?(:where)
           w = tql[:where]
-          where = (w.is_a?(Array) ? ExprParser.parse(w) : w)
+          where = w.is_a?(Array) ? ExprParser.parse(w) : w
         end
         filter = ExprParser.parse(tql[:filter]) if tql.has_key?(:filter)
 
@@ -161,7 +161,7 @@ module WAB
             rid
           elsif '$' == format || '$root' == format
             obj.native
-          elsif 0 < format.length && "'" == format[0]
+          elsif !format.empty? && format.start_with?("'")
             format[1..-1]
           else
             obj.get(format)
