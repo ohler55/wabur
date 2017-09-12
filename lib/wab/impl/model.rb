@@ -112,7 +112,7 @@ module WAB
         result
       end
 
-      def update(obj, rid, where, filter)
+      def update(obj, _rid, where, _filter)
         updated = []
         @lock.synchronize {
           if where.is_a?(Expr)
@@ -127,7 +127,7 @@ module WAB
         { code: 0, updated: updated }
       end
 
-      def delete(del_opt, rid, where, filter)
+      def delete(_del_opt, _rid, where, filter)
         deleted = []
         @lock.synchronize {
           if where.is_a?(Expr)
