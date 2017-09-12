@@ -12,7 +12,6 @@ require 'mirror_controller'
 # Windows does not support fork
 Process.exit(-1) if RbConfig::CONFIG['host_os'] =~ /(mingw|mswin)/
 
-async = false
 to_r, to_w = IO.pipe
 from_r, from_w = IO.pipe
 
@@ -24,8 +23,8 @@ if fork.nil? # child
 
   shell = ::WAB::IO::Shell.new(1, 'kind', 0)
   shell.timeout = 0.5
-  shell.verbose = false # change to true to debug
-  shell.register_controller(nil, MirrorController.new(shell, async))
+  shell.logger.level = Logger::WARN # change to Logger::INFO for debugging
+  shell.register_controller(nil, MirrorController.new(shell))
   shell.start
 
   Process.exit(0)
