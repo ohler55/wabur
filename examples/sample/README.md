@@ -192,26 +192,69 @@ hyperthreads.
 
 #### Direct DB access
 
-```
-> hose -t 2 -c 20 -p json/000000000000000b localhost:6363
-localhost:6363 processed 157075 requests in 1.000 seconds for a rate of 157075 GETS/sec.
-with an average latency of 0.162 msecs
+Closing the connection after each fetch as if it were separate browsers.
 
+```
+> hose -t 2 -c 20 -p json/000000000000000b 127.0.0.1:6363
+127.0.0.1:6363 processed 159321 requests in 1.000 seconds for a rate of 159321 GETS/sec.
+with an average latency of 0.134 msecs
+
+```
+
+Keep the connection alive it were the same browsers performing multiple fetchs.
+```
+> hose -t 2 -c 20 -p json/000000000000000b 127.0.0.1:6363 -k
+127.0.0.1:6363 processed 347951 requests in 1.000 seconds for a rate of 347951 GETS/sec.
+with an average latency of 0.111 msecs
 ```
 
 #### IO Controller with 4 Ruby Thread
 
-```
-> hose -t 2 -c 20 -p v1/Article/11 localhost:6363
-localhost:6363 did not respond to 1 requests.
-localhost:6363 processed 17569 requests in 1.000 seconds for a rate of 17569 GETS/sec.
-with an average latency of 2.963 msecs
+Closing the connection after each fetch as if it were separate browsers.
 
+```
+> hose -t 2 -c 20 -p v1/Article/11 127.0.0.1:6363
+127.0.0.1:6363 did not respond to 3 requests.
+127.0.0.1:6363 processed 14433 requests in 1.000 seconds for a rate of 14433 GETS/sec.
+with an average latency of 2.997 msecs
+```
+
+Keep the connection alive it were the same browsers performing multiple fetchs.
+```
+> hose -t 2 -c 20 -p v1/Article/11 127.0.0.1:6363 -k
+127.0.0.1:6363 did not respond to 2 requests.
+127.0.0.1:6363 processed 13837 requests in 1.000 seconds for a rate of 13837 GETS/sec.
+with an average latency of 3.346 msecs
 ```
 
 #### Embedded Controller
 
-```
-TBD
+Closing the connection after each fetch as if it were separate browsers.
 
 ```
+> hose -t 2 -c 20 -p e1/Article/11 127.0.0.1:6363   
+127.0.0.1:6363 processed 137603 requests in 1.000 seconds for a rate of 137603 GETS/sec.
+with an average latency of 0.247 msecs
+
+
+```
+
+Keep the connection alive it were the same browsers performing multiple fetchs.
+
+```
+> hose -t 2 -c 20 -p e1/Article/11 127.0.0.1:6363 -k
+127.0.0.1:6363 processed 227789 requests in 1.000 seconds for a rate of 227789 GETS/sec.
+with an average latency of 0.171 msecs
+```
+
+#### Summary
+
+At more than 300K fetches per second the direct access with keep-alive
+connections is clearly the fastest of the bunch but it bypasses the Ruby
+controller. Of the two remaining, the use of embedded Ruby gives excellent
+results that surpass the 100K fetch per second goal by a sizeable amount at
+more than double the goal with keep-alive and nearly 40% over target with
+connection closes.
+
+Some issues still remain with the stdio approach dropping 2 messages out of
+14K.
