@@ -18,7 +18,8 @@
 #
 # Alternatively, a high-performance runner (OpO), available for Linux, OSX
 # platforms can also be run using this script, provided OpO is already
-# installed in the system.
+# installed in the system. There are two varieties, opod which spawns a Ruby
+# app or opo-rub which runs the Ruby code embedded in the runner.
 #
 # The following command compiles source-files and serves with the OpO runner:
 #
@@ -28,6 +29,11 @@
 # compiled source-files:
 #
 #   $ script/run-sample -o
+#
+# To run opo-rub, the following serves the App with the OpO-Rub runner using
+# previously compiled source-files:
+#
+#   $ script/run-sample -e
 # -----------------------------------------------------------------------------
 
 set -e
