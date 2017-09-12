@@ -2,6 +2,7 @@
 // to minimize page fetchs from the server.
 
 var wab = {
+    pathPrefix: '/v1/',
     View: function() {
         this.view = document.getElementById("view");
         this.page = null;

@@ -34,7 +34,7 @@ set -e
 
 sampledir=examples/sample
 
-while getopts :bo opt
+while getopts :boe opt
 do
   case $opt in
     b)
@@ -45,13 +45,17 @@ do
       echo -e "\n  Starting OpO Daemon.."
       opod -c $sampledir/opo/opo.conf
       ;;
+    e)
+      echo -e "\n  Starting OpO-Rub Daemon.."
+      opo-rub -c $sampledir/opo/embed.conf
+      ;;
   esac
 done
 
 # Start ruby-runner if no args had been passed or if the args did
 # not contain the option to start OpO runner
 
-if [ -z $# ] || [[ $1 != *'o'* ]]
+if [ -z $# ] || [[ $1 != *'o'* && $1 != *'e'* ]]
 then
   echo -e "\n  Starting Ruby Runner.."
   bundle exec wabur -c $sampledir/wabur/wabur.conf

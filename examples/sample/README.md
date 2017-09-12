@@ -24,7 +24,8 @@ The Sample App can be tested on a local browser with Javascript enabled, and
 can be served with choice between the following runners:
 
   * a pure [Ruby Runner](#ruby-runner), built using `WEBrick`
-  * a high-performance runner written in C, [OpO](#opo) (*Not supported on Windows*).
+  * a high-performance spawning/forking runner written in C, [OpO](#opo) (*Not supported on Windows*).
+  * a high-performance embedded Ruby runner written in C, [OpO-Rub](#opo-rub) (*Not supported on Windows*).
 
 Additionally, the files necessary to render the App view needs to be compiled
 from their source. The source files are located in the [`view`](../../view)
@@ -59,6 +60,20 @@ Near the bottom of the conf file, the Controller `spawn.rb` is mentioned
 along with command line options. The `-v` option turns on Controller
 verbosity.
 
+### OpO-Rub
+
+OpO-Rub provides the HTTP server and the Model storage, and is able to run the
+an an embedded Ruby application.
+
+OpO-Rub can be downloaded from
+[OpO Downloads](http://www.opo.technology/download/index.html).
+
+The confguration file for OpO-Rub is in the `opo` sub-directory, and is named
+[`embed.conf`](opo/embed.conf). The configuration specifies that the OpO-Rub
+disk storage be in the `opo/data` directory. It also turns on logging for HTTP
+requests and responses along with handler information from the Runner's
+perspective.
+
 ### Running the App
 
 Compiling and running the App with a runner of your choice can be easily
@@ -77,7 +92,6 @@ It accepts two options:
 The Sample App has been configured on both runners to serve at
 `http://localhost:6363` by default and can changed in the concerned config
 files.
-
 
 ## Running without a browser
 
@@ -161,7 +175,7 @@ There are two ways to get the JSON of the created record:
 Now that a record has been created, the benchmarks can be run.
 
 ```
-> hose -p "tree/000000000000000b" -d 1.0 -t 2 127.0.0.1:6363
+> hose -p "json/000000000000000b" -d 1.0 -t 2 127.0.0.1:6363
 ```
 
 ```
@@ -173,35 +187,31 @@ connections at a time to the Runner.
 
 ### Results
 
-Benchmarks were run on a Razer Blade Stealth laptop with Ubuntu 17.04. A nice
-machine but still a laptop and not a server class machine by any stretch. A
-second set is on a desktop with an i7-6700@4.00GHz with 4 cores (8
+Benchmarks were run on a desktop with an i7-6700@4.00GHz with 4 cores (8
 hyperthreads.
 
 #### Direct DB access
 
 ```
-razer bin> ./hose -p tree/000000000000000b -t 2 -c 20 127.0.0.1:6363
-127.0.0.1:6363 processed 100292 requests in 1.000 seconds for a rate of 100292 GETS/sec.
-with an average latency of 0.254 msecs
-
-big bin> hose -t 2 -c 20 -p tree/000000000000000b localhost:6363
+> hose -t 2 -c 20 -p json/000000000000000b localhost:6363
 localhost:6363 processed 157075 requests in 1.000 seconds for a rate of 157075 GETS/sec.
 with an average latency of 0.162 msecs
 
 ```
 
-#### Controller with 4 Ruby Thread
+#### IO Controller with 4 Ruby Thread
 
 ```
-razer bin> ./hose -p v1/Article/11 -t 2 -c 20 127.0.0.1:6363
-127.0.0.1:6363 did not respond to 3 requests.
-127.0.0.1:6363 processed 10200 requests in 1.000 seconds for a rate of 10200 GETS/sec.
-with an average latency of 4.249 msecs
-
-big bin> hose -t 2 -c 20 -p v1/Article/11 localhost:6363
+> hose -t 2 -c 20 -p v1/Article/11 localhost:6363
 localhost:6363 did not respond to 1 requests.
 localhost:6363 processed 17569 requests in 1.000 seconds for a rate of 17569 GETS/sec.
 with an average latency of 2.963 msecs
+
+```
+
+#### Embedded Controller
+
+```
+TBD
 
 ```
