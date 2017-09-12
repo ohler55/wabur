@@ -134,12 +134,10 @@ module WAB
               deleted << ref
               @map.delete(ref)
             }
-          else
             # A reference.
-            unless @map.delete(where).nil?
-              deleted << where
-              remove_file(where)
-            end
+          elsif !@map.delete(where).nil?
+            deleted << where
+            remove_file(where)
           end
         }
         { code: 0, deleted: deleted }
