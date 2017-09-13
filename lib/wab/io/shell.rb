@@ -104,8 +104,7 @@ module WAB
       #
       # ref:: object reference
       def get(ref)
-        tql = { where: ref.to_i, select: '$' }
-        result = @engine.request(tql, @timeout)
+        result = query(where: ref.to_i, select: '$')
         raise WAB::Error.new("nil result get of #{ref}.") if result.nil?
         raise WAB::Error.new("error on get of #{ref}. #{result[:error]}") if 0 != result[:code]
 
