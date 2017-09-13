@@ -135,29 +135,6 @@ module WAB
         raise NotImplementedError.new
       end
 
-      private
-
-      def form_where_eq(key, value)
-        value_class = value.class
-        x = ['EQ', key.to_s]
-        x << if value.is_a?(String)
-               "'" + value
-             elsif Time == value_class
-               value.utc.iso8601(9)
-             elsif value.nil? ||
-                 TrueClass  == value_class ||
-                 FalseClass == value_class ||
-                 Integer    == value_class ||
-                 Float      == value_class ||
-                 String     == value_class ||
-                 WAB::Utils.pre_24_fixnum?(value)
-               value
-             else
-               value.to_s
-             end
-        x
-      end
-
     end # Shell
   end # IO
 end # WAB
