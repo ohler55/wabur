@@ -2,8 +2,13 @@ module WAB
 
   # A Controller class or a duck-typed alternative should be created and
   # registered with a Shell for any type that implements behavior other than
-  # the default REST API processing. If a public method is not found on the
-  # class instance then the default REST API processing will be used.
+  # the default REST API processing.
+  #
+  # When a request arrives at the Shell, the expected Controller method is
+  # identifed and a check is made to verify if the Controller responds to the
+  # method. If it does not, then the +handle+ method is called.
+  # Since +respond_to+ includes only public methods, only those methods made
+  # public in a Controller subclass are considered.
   #
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
@@ -81,33 +86,6 @@ module WAB
       else
         list_match(kind, query)
       end
-    end
-
-    # A private method to gather sets of Hashes that include the fields
-    # specified in the fields Hash.
-    def list_select(kind, fields)
-      tql = { }
-      select = { ref: '$ref' }
-      if WAB::Utils.populated_hash?(fields)
-        fields.each_pair { |k,v| select[k] = v }
-      end
-      tql[:where] = form_where_eq(@shell.type_key, kind)
-      tql[:select] = select
-      shell_query(tql, kind, 'read')
-    end
-
-    # A private method to gather a list of objects that match the query
-    # parameters.
-    def list_match(kind, query)
-      tql = { }
-      # If there is a query set up a where clause.
-      tql[:where] = if WAB::Utils.populated_hash?(query)
-                      and_where(kind, query)
-                    else
-                      form_where_eq(@shell.type_key, kind)
-                    end
-      tql[:select] = { id: '$ref', data: '$' }
-      shell_query(tql, kind, 'read')
     end
 
     # Replaces the object data for the identified object.
@@ -189,6 +167,33 @@ module WAB
     def changed(data) # :doc:
       # TBD filter accoding to subscriptions
       @shell.changed(data)
+    end
+
+    # A private method to gather sets of Hashes that include the fields
+    # specified in the fields Hash.
+    def list_select(kind, fields)
+      tql = {}
+      select = { ref: '$ref' }
+      if WAB::Utils.populated_hash?(fields)
+        fields.each_pair { |k,v| select[k] = v }
+      end
+      tql[:where] = form_where_eq(@shell.type_key, kind)
+      tql[:select] = select
+      shell_query(tql, kind, 'read')
+    end
+
+    # A private method to gather a list of objects that match the query
+    # parameters.
+    def list_match(kind, query)
+      tql = {}
+      # If there is a query set up a where clause.
+      tql[:where] = if WAB::Utils.populated_hash?(query)
+                      and_where(kind, query)
+                    else
+                      form_where_eq(@shell.type_key, kind)
+                    end
+      tql[:select] = { id: '$ref', data: '$' }
+      shell_query(tql, kind, 'read')
     end
 
     # Form a EQ expression for a TQL where clause. Used as a helper to the
