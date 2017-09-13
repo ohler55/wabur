@@ -2,8 +2,11 @@ module WAB
 
   # A Controller class or a duck-typed alternative should be created and
   # registered with a Shell for any type that implements behavior other than
-  # the default REST API processing. If a public method is not found on the
-  # class instance then the default REST API processing will be used.
+  # the default REST API processing. When a request arrives at the Shell the
+  # expected Controller method is identifed and a check is made to verify the
+  # Controller responses_to the method. If it does not then the +handle+
+  # method is called. Since +respond_to+ only includes public method, only the
+  # methods made public in a Controller subclass are considered.
   #
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
