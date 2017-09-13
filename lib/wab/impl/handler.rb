@@ -5,7 +5,7 @@ module WAB
   module Impl
 
     # Handler for requests that fall under the path assigned to the
-    # Controller. This is used only with the ::WAB::Impl::Shell.
+    # Controller. This is used only with the WAB::Impl::Shell.
     class Handler < WEBrick::HTTPServlet::AbstractServlet
 
       def initialize(server, shell)
@@ -73,7 +73,7 @@ module WAB
 
       # Sends the results from a controller request.
       def send_result(result, res)
-        result = @shell.data(result) unless result.is_a?(::WAB::Data)
+        result = @shell.data(result) unless result.is_a?(WAB::Data)
         res.status = 200
         res['Content-Type'] = 'application/json'
         @shell.logger.debug("Reply: #{result.json}") if @shell.logger.debug?

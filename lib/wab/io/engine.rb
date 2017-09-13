@@ -145,7 +145,7 @@ module WAB
         end
         # If reply_body is nil then it is async.
         unless reply_body.nil?
-          reply_body = reply_body.native if reply_body.is_a?(::WAB::Data)
+          reply_body = reply_body.native if reply_body.is_a?(WAB::Data)
           msg = {rid: rid, api: 2, body: reply_body}
           @shell.info("=> view: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
           $stdout.puts(@shell.data(msg).json)

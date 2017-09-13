@@ -32,7 +32,7 @@ opts.on('-c', '--conf String', String, 'configuration file') { |c| cfg_file = c 
 opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
 
-class BasicController < ::WAB::Controller
+class BasicController < WAB::Controller
 
   def initialize(shell)
     super(shell)
@@ -81,7 +81,7 @@ if 0 < verbose_cnt
   cfg['verbose'] = v
 end
 
-shell = ::WAB::Impl::Shell.new(cfg)
+shell = WAB::Impl::Shell.new(cfg)
 
 # TBD configure logger better
 shell.logger = Logger.new(STDOUT)

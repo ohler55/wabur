@@ -47,7 +47,7 @@ module WAB
       # with the Shell.
       def start()
         server = WEBrick::HTTPServer.new(Port: @http_port, DocumentRoot: @http_dir)
-        server.mount('/v1', ::WAB::Impl::Handler, self)
+        server.mount('/v1', WAB::Impl::Handler, self)
 
         trap 'INT' do server.shutdown end
         server.start
@@ -72,7 +72,7 @@ module WAB
       # data:: data to extract the type from for lookup in the controllers
       def controller(data)
         path = data.get(:path)
-        path = path.native if path.is_a?(::WAB::Data)
+        path = path.native if path.is_a?(WAB::Data)
         return path_controller(path) unless path.nil? || (path.length <= @path_pos)
 
         content = data.get(:content)
