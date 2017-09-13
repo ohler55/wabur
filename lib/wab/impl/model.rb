@@ -5,7 +5,7 @@ module WAB
   module Impl
 
     # The Model class is used to store data when using the
-    # ::WAB::Impl::Shell. It is no intended for any other use. The *get* and
+    # WAB::Impl::Shell. It is no intended for any other use. The *get* and
     # *query* methods are the primary means of interacting with the model.
     #
     # The Model is simple in that it stores data in a Hash references by *ref*
@@ -25,7 +25,7 @@ module WAB
         load_files unless @dir.nil?
       end
 
-      # Get a single record in the database. A ::WAB::Impl::Data object is
+      # Get a single record in the database. A WAB::Impl::Data object is
       # returned if not nil.
       #
       # ref:: references number of the object to retrieve.
@@ -181,7 +181,7 @@ module WAB
 
       def write_to_file(ref, obj)
         return if @dir.nil?
-        obj.native if obj.is_a?(::WAB::Data)
+        obj.native if obj.is_a?(WAB::Data)
         File.open(File.join(@dir, "%016x.json" % ref), 'wb') { |f| f.write(Oj.dump(obj, mode: :wab, indent: 0)) }
       end
 

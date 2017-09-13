@@ -27,7 +27,7 @@ class TestExpr < TestImpl
                ['AND', ['HAS', 'str'], ['EQ', 'num', 7]],
               ]
     natives.each { |n|
-      x = ::WAB::Impl::ExprParser.parse(n)
+      x = WAB::Impl::ExprParser.parse(n)
       assert_equal(n, x.native, "parsed failed for #{n}")
     }
   end

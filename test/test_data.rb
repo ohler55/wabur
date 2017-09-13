@@ -201,7 +201,7 @@ class TestImplData < TestImpl
 
     assert_equal(Time, d.get('t').class)
     assert_equal(::URI::HTTP, d.get('uris.0').class)
-    assert_equal(::WAB::UUID, d.get('sub.uuid').class)
+    assert_equal(WAB::UUID, d.get('sub.uuid').class)
   end
 
 end # TestImplData

@@ -56,7 +56,7 @@ module WAB
       # data:: data to extract the type from for lookup in the controllers
       def controller(data)
         path = data.get(:path)
-        path = path.native if path.is_a?(::WAB::Data)
+        path = path.native if path.is_a?(WAB::Data)
         return path_controller(path) unless path.nil? || (path.length <= @path_pos)
 
         content = data.get(:content)
@@ -84,7 +84,7 @@ module WAB
       # value:: initial value
       # repair:: flag indicating invalid value should be repaired if possible
       def data(value={}, repair=false)
-        ::WAB::Impl::Data.new(value, repair)
+        WAB::Impl::Data.new(value, repair)
       end
 
       ### View related methods.
@@ -104,8 +104,7 @@ module WAB
       #
       # ref:: object reference
       def get(ref)
-        tql = { where: ref.to_i, select: '$' }
-        result = @engine.request(tql, @timeout)
+        result = query(where: ref.to_i, select: '$')
         raise WAB::Error.new("nil result get of #{ref}.") if result.nil?
         raise WAB::Error.new("error on get of #{ref}. #{result[:error]}") if 0 != result[:code]
 
@@ -134,29 +133,6 @@ module WAB
       # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
       def subscribe(controller, filter)
         raise NotImplementedError.new
-      end
-
-      private
-
-      def form_where_eq(key, value)
-        value_class = value.class
-        x = ['EQ', key.to_s]
-        x << if value.is_a?(String)
-               "'" + value
-             elsif Time == value_class
-               value.utc.iso8601(9)
-             elsif value.nil? ||
-                 TrueClass  == value_class ||
-                 FalseClass == value_class ||
-                 Integer    == value_class ||
-                 Float      == value_class ||
-                 String     == value_class ||
-                 WAB::Utils.pre_24_fixnum?(value)
-               value
-             else
-               value.to_s
-             end
-        x
       end
 
     end # Shell

@@ -10,7 +10,7 @@ module WAB
     # the Data instances are factory created by the Shell and will most likely
     # not be instance of this class but rather a class that is a duck-type of
     # this class (has the same methods and behavior).
-    class Data < ::WAB::Data
+    class Data < WAB::Data
       attr_reader :root
 
       def self.detect_string(s)
@@ -128,7 +128,7 @@ module WAB
       # repair:: flag indicating invalid value should be repaired if possible
       def set(path, value, repair=false)
         raise WAB::Error, 'path can not be empty.' if path.empty?
-        if value.is_a?(::WAB::Data)
+        if value.is_a?(WAB::Data)
           value = value.native
         elsif repair
           value = fix_value(value)
@@ -395,7 +395,7 @@ module WAB
         when Array
           detect_array(item)
         when String
-          element = ::WAB::Impl::Data.detect_string(item)
+          element = WAB::Impl::Data.detect_string(item)
           collection[key] = element unless element == item
         end
       end
