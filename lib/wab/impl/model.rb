@@ -45,7 +45,7 @@ module WAB
         filter = nil
         if tql.has_key?(:where)
           w = tql[:where]
-          where = (w.is_a?(Array) ? ExprParser.parse(w) : w)
+          where = w.is_a?(Array) ? ExprParser.parse(w) : w
         end
         filter = ExprParser.parse(tql[:filter]) if tql.has_key?(:filter)
 
@@ -112,7 +112,7 @@ module WAB
         result
       end
 
-      def update(obj, rid, where, filter)
+      def update(obj, _rid, where, _filter)
         updated = []
         @lock.synchronize {
           if where.is_a?(Expr)
@@ -127,7 +127,7 @@ module WAB
         { code: 0, updated: updated }
       end
 
-      def delete(del_opt, rid, where, filter)
+      def delete(_del_opt, _rid, where, filter)
         deleted = []
         @lock.synchronize {
           if where.is_a?(Expr)
@@ -137,12 +137,10 @@ module WAB
                 @map.delete(ref)
               end
             }
-          else
-            # A reference.
-            unless @map.delete(where).nil?
-              deleted << where
-              remove_file(where)
-            end
+          # A reference.
+          elsif !@map.delete(where).nil?
+            deleted << where
+            remove_file(where)
           end
         }
         { code: 0, deleted: deleted }
@@ -163,7 +161,7 @@ module WAB
             rid
           elsif '$' == format || '$root' == format
             obj.native
-          elsif 0 < format.length && "'" == format[0]
+          elsif !format.empty? && format.start_with?("'")
             format[1..-1]
           else
             obj.get(format)
