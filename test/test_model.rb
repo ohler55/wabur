@@ -9,7 +9,7 @@ class TestModel < TestImpl
 
   def test_model_create
     # nil arg indicates don't save to disk
-    model = ::WAB::Impl::Model.new(nil)
+    model = WAB::Impl::Model.new(nil)
     tql = {
       rid: 12345,
       insert: {

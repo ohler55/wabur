@@ -8,7 +8,7 @@ require 'wab/impl'
 class TestImpl < Minitest::Test
 
   def setup
-    @shell = ::WAB::Impl::Shell.new({})
+    @shell = WAB::Impl::Shell.new({})
   end
 
   def make_sample_data()
@@ -21,7 +21,7 @@ class TestImpl < Minitest::Test
                   t: Time.gm(2017, 1, 5, 15, 4, 33.123456789),
                   big: BigDecimal('63.21'),
                   uri: URI('http://opo.technology/sample'),
-                  uuid: ::WAB::UUID.new('b0ca922d-372e-41f4-8fea-47d880188ba3'),
+                  uuid: WAB::UUID.new('b0ca922d-372e-41f4-8fea-47d880188ba3'),
                   a: [],
                   h: {},
                 })

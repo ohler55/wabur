@@ -8,7 +8,7 @@ module WAB
       def initialize()
       end
 
-      # Evaluate the expression using the supplied ::WAB::Data object. Each
+      # Evaluate the expression using the supplied WAB::Data object. Each
       # expression subclass evaluates differently.
       #
       # data:: data object to evaluate against.

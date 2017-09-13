@@ -3,7 +3,7 @@
 
 require 'wab'
 
-class MirrorController < ::WAB::Controller
+class MirrorController < WAB::Controller
   def initialize(shell)
     super(shell)
   end

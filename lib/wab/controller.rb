@@ -74,7 +74,7 @@ module WAB
         # Read a single object/record.
         ref = ref.to_i
         obj = @shell.get(ref)
-        obj = obj.native if obj.is_a?(::WAB::Data)
+        obj = obj.native if obj.is_a?(WAB::Data)
         results = []
         results << {id: ref, data: obj} unless obj.nil?
         @shell.data({ code: 0, results: results})
@@ -127,7 +127,7 @@ module WAB
       elsif WAB::Utils.populated_hash?(query)
         tql[:where] = and_where(kind, query)
       else
-        raise ::WAB::Error.new("update on all #{kind} not allowed.")
+        raise WAB::Error.new("update on all #{kind} not allowed.")
       end
       tql[:update] = data.native
       shell_query(tql, kind, 'update')
@@ -166,7 +166,7 @@ module WAB
     #
     # data:: results of the query
     def on_result(data)
-      data = data.native if data.is_a?(::WAB::Data)
+      data = data.native if data.is_a?(WAB::Data)
       $stdout.puts(@shell.data({rid: data[:rid], api: 2, body: data}).json)
       $stdout.flush
     end

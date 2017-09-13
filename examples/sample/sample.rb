@@ -4,7 +4,7 @@
 require 'wab'
 require 'wab/impl'
 
-class SampleController < ::WAB::Controller
+class SampleController < WAB::Controller
 
   def initialize(shell)
     super(shell)

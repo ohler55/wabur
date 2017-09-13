@@ -56,7 +56,7 @@ module WAB
       # data:: data to extract the type from for lookup in the controllers
       def controller(data)
         path = data.get(:path)
-        path = path.native if path.is_a?(::WAB::Data)
+        path = path.native if path.is_a?(WAB::Data)
         return path_controller(path) unless path.nil? || (path.length <= @path_pos)
 
         content = data.get(:content)
@@ -84,7 +84,7 @@ module WAB
       # value:: initial value
       # repair:: flag indicating invalid value should be repaired if possible
       def data(value={}, repair=false)
-        ::WAB::Impl::Data.new(value, repair)
+        WAB::Impl::Data.new(value, repair)
       end
 
       ### View related methods.

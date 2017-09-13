@@ -21,7 +21,7 @@ if fork.nil? # child
   $stdout = from_w
   from_r.close
 
-  shell = ::WAB::IO::Shell.new(1, 'kind', 0)
+  shell = WAB::IO::Shell.new(1, 'kind', 0)
   shell.timeout = 0.5
   shell.logger.level = Logger::WARN # change to Logger::INFO for debugging
   shell.register_controller(nil, MirrorController.new(shell))
@@ -37,10 +37,10 @@ else
   reply = nil
   start = Time.now
   n.times { |i|
-    to_w.puts(::WAB::Impl::Data.new({rid: 'rid-read-id', api: 1, body: {op: 'GET', path: ['sample', '12345']}}, false).json)
+    to_w.puts(WAB::Impl::Data.new({rid: 'rid-read-id', api: 1, body: {op: 'GET', path: ['sample', '12345']}}, false).json)
     to_w.flush
     Oj.strict_load(from_r, symbol_keys: true) { |msg| reply = msg; break }
-    to_w.puts(::WAB::Impl::Data.new({rid: "#{i+1}", api: 4, body: {code: 0, results:[{kind: 'sample', id: 12345, num: 7}]}}, false).json)
+    to_w.puts(WAB::Impl::Data.new({rid: "#{i+1}", api: 4, body: {code: 0, results:[{kind: 'sample', id: 12345, num: 7}]}}, false).json)
     to_w.flush
     Oj.strict_load(from_r, symbol_keys: true) { |msg| reply = msg; break }
   }
