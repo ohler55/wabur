@@ -11,7 +11,7 @@ class TestExprAnd < TestImpl
   end
 
   def test_and
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::And.new(WAB::Impl::Has.new('num'), WAB::Impl::Eq.new('num', 7))
     assert(x.eval(d), 'checking AND match')
 

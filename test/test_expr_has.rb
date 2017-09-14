@@ -6,7 +6,7 @@ require_relative 'helper'
 class TestExprHas < TestImpl
 
   def test_has_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Has.new('num')
     assert(x.eval(d), 'checking HAS match')
 

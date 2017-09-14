@@ -33,7 +33,7 @@ module WAB
 
       # Starts listening and processing.
       def start()
-        @engine.start()
+        @engine.start
       end
 
       # Register a controller for a named type.

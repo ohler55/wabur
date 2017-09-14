@@ -11,7 +11,7 @@ class TestExprIn < TestImpl
   end
 
   def test_in_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::In.new('num', 1, 3, 5, 7, 11)
     assert(x.eval(d), 'checking IN match with an integer arg')
 

@@ -11,7 +11,7 @@ class TestExprOr < TestImpl
   end
 
   def test_or
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Or.new(WAB::Impl::Has.new('str'), WAB::Impl::Eq.new('num', 8))
     assert(x.eval(d), 'checking OR match')
 

@@ -14,7 +14,7 @@ class TestExprRegex < TestImpl
   end
 
   def test_regex_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Regex.new('str', '^a .*')
     assert(x.eval(d), 'checking REGEX match with string arg')
 

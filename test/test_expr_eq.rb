@@ -11,7 +11,7 @@ class TestExprEq < TestImpl
   end
 
   def test_eq_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Eq.new('num', 7)
     assert(x.eval(d), 'checking EQ match with an integer arg')
 

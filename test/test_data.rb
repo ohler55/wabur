@@ -19,7 +19,7 @@ class TestImplData < TestImpl
   end
 
   def test_json
-    d = make_sample_data()
+    d = make_sample_data
     # downcase to match Ruby 2.3 and 2.4 which encode BigDecimal differently.
     assert_equal(%|{
   "boo":true,
@@ -48,16 +48,16 @@ class TestImplData < TestImpl
   end
 
   def test_validate_non_hash_array
-    assert_raises() { d = @shell.data(123) }
+    assert_raises { d = @shell.data(123) }
   end
 
   def test_fix_non_hash_array
     # can not fix this one
-    assert_raises() { d = @shell.data(123, true) }
+    assert_raises { d = @shell.data(123, true) }
   end
 
   def test_validate_object
-    assert_raises() { d = @shell.data({a: 1..3}) }
+    assert_raises { d = @shell.data({a: 1..3}) }
   end
 
   def test_repair_to_s_object
@@ -99,7 +99,7 @@ class TestImplData < TestImpl
     d.set('b', 2)
     d.set([:c], 3)
     d.set([:d], 1..4, true)
-    assert_raises() { d.set([:e], 1..5) }
+    assert_raises { d.set([:e], 1..5) }
     assert_equal(%|{
   "a":1,
   "b":2,
@@ -121,21 +121,21 @@ class TestImplData < TestImpl
   def test_array_set
     d = @shell.data(['x'])
     d.set([2], 'd')
-    assert_equal(%|["x",null,"d"]|, d.json(), 'after d')
+    assert_equal(%|["x",null,"d"]|, d.json, 'after d')
     d.set([1], 'c')
-    assert_equal(%|["x","c","d"]|, d.json(), 'after c')
+    assert_equal(%|["x","c","d"]|, d.json, 'after c')
     d.set([0], 'y')
-    assert_equal(%|["y","c","d"]|, d.json(), 'after y')
+    assert_equal(%|["y","c","d"]|, d.json, 'after y')
     d.set([-3], 'b')
-    assert_equal(%|["b","c","d"]|, d.json(), 'after b')
+    assert_equal(%|["b","c","d"]|, d.json, 'after b')
     d.set([-4], 'a')
-    assert_equal(%|["a","b","c","d"]|, d.json(), 'after a')
+    assert_equal(%|["a","b","c","d"]|, d.json, 'after a')
   end
 
   def test_set_mixed
     d = @shell.data({a: 1, b: ['a', 'b', { c: 3}]})
     d.set('b.2', 'c')
-    assert_equal(%|{"a":1,"b":["a","b","c"]}|, d.json())
+    assert_equal(%|{"a":1,"b":["a","b","c"]}|, d.json)
   end
 
   def test_each
@@ -187,7 +187,7 @@ class TestImplData < TestImpl
                         uuid: 'b0ca922d-372e-41f4-8fea-47d880188ba3'
                       }
                     })
-    d.detect()
+    d.detect
     assert_equal(%|{
   "t":"2017-01-05t15:04:33.123456789z",
   "uris":[

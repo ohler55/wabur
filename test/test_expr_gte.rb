@@ -11,7 +11,7 @@ class TestExprGte < TestImpl
   end
 
   def test_gte_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Gte.new('num', 7)
     assert(x.eval(d), 'checking GTE match with an integer arg')
 
