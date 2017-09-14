@@ -6,9 +6,10 @@ module WAB
   #
   # When a request arrives at the Shell, the expected Controller method is
   # identifed and a check is made to verify if the Controller responds to the
-  # method. If it does not, then the +handle+ method is called.
-  # Since +respond_to+ includes only public methods, only those methods made
-  # public in a Controller subclass are considered.
+  # method. If it does not, then the +handle+ method is called.  Since
+  # +respond_to+ includes only public methods, only those methods made public
+  # in a Controller subclass are considered. The candidates for making public
+  # are +create+, +read+, +update+, and +delete+.
   #
   # A description of the available methods is included as private methods.
   class Controller # :doc: all
@@ -137,16 +138,6 @@ module WAB
                     end
       tql[:delete] = nil
       shell_query(tql, kind, 'delete')
-    end
-
-    # Called when an asynchronous query is made and the results become
-    # available.
-    #
-    # data:: results of the query
-    def on_result(data)
-      data = data.native if data.is_a?(WAB::Data)
-      $stdout.puts(@shell.data({rid: data[:rid], api: 2, body: data}).json)
-      $stdout.flush
     end
 
     # Subscribe to changes in data pushed from the model that will be passed

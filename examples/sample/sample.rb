@@ -42,8 +42,4 @@ class SampleController < WAB::Controller
     super
   end
 
-  def on_result(data)
-    super
-  end
-
 end # SampleController
