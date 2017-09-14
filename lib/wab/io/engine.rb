@@ -13,6 +13,7 @@ module WAB
       # tcnt:: processing thread count
       def initialize(shell, tcnt)
         @shell = shell
+        @last_rid = 0
         @pending = {}
         @lock = Thread::Mutex.new
         @queue = Queue.new
@@ -77,11 +78,10 @@ module WAB
       # tql:: the body of the message which should be JSON-TQL as a native Hash
       def request(tql, timeout)
         call = Call.new(timeout)
-        last_rid = 0
 
         @lock.synchronize {
-          last_rid += 1
-          call.rid = last_rid.to_s
+          @last_rid += 1
+          call.rid = @last_rid.to_s
           @pending[call.rid] = call
         }
 
