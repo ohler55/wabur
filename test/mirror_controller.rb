@@ -29,4 +29,3 @@ class MirrorController < WAB::Controller
   end
 
 end # MirrorController
-

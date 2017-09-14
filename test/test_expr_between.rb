@@ -36,7 +36,6 @@ class TestExprBetween < TestImpl
 
     x = WAB::Impl::Between.new('num', 5, 7, false, false)
     refute(x.eval(d), 'checking BETWEEN mismatch with an integer arg')
-
   end
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil
