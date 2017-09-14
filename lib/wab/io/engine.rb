@@ -19,12 +19,12 @@ module WAB
         tcnt = 1 if 0 >= tcnt
         @tcnt = tcnt
         @timeout_thread = nil
-        @proc_threads = []
       end
 
       def start()
+        proc_threads = []
         @tcnt.times {
-          @proc_threads << Thread.new {
+          proc_threads << Thread.new {
             while true
               begin
                 break unless process_msg(@queue.pop)
@@ -57,7 +57,7 @@ module WAB
             break
           when -9
             Thread.kill(@timeout_thread)
-            @proc_threads.each { |t| Thread.kill(t) }
+            proc_threads.each { |t| Thread.kill(t) }
             Process.exit(0)
           else
             $stderr.puts "*-*-* Invalid api value (#{api}) in message."
@@ -77,11 +77,13 @@ module WAB
       # tql:: the body of the message which should be JSON-TQL as a native Hash
       def request(tql, timeout)
         call = Call.new(timeout)
+
         @lock.synchronize {
           @last_rid += 1
           call.rid = @last_rid.to_s
           @pending[call.rid] = call
         }
+
         msg = {rid: call.rid, api: 3, body: tql}
         @shell.info("=> model: #{Oj.dump(msg, mode: :wab)}") if @shell.info?
         data = @shell.data(msg, true)
