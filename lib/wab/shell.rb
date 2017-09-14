@@ -38,7 +38,7 @@ module WAB
     #
     # value:: initial value
     # repair:: flag indicating invalid value should be repaired if possible
-    def data(value=nil, repair=false)
+    def data(_value=nil, _repair=false)
       raise NotImplementedError.new
     end
 
@@ -48,7 +48,7 @@ module WAB
     # filters.
     #
     # data: Wab::Data to push to the view if subscribed
-    def changed(data)
+    def changed(_data)
       raise NotImplementedError.new
     end
 
@@ -58,7 +58,7 @@ module WAB
     # is no match.
     #
     # ref:: object reference
-    def get(ref)
+    def get(_ref)
       raise NotImplementedError.new
     end
 
@@ -67,7 +67,7 @@ module WAB
     # of strings.
     #
     # tql:: query to evaluate
-    def query(tql)
+    def query(_tql)
       raise NotImplementedError.new
     end
 
@@ -79,7 +79,7 @@ module WAB
     #
     # controller:: the controller to notify of changed
     # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
-    def subscribe(controller, filter)
+    def subscribe(_controller, _filter)
       raise NotImplementedError.new
     end
 
@@ -101,21 +101,21 @@ module WAB
     # Logs an error with the shell logger.
     #
     # message:: message to log
-    def error(message)
+    def error(_message)
       raise NotImplementedError.new
     end
 
     # Logs a warning with the shell logger.
     #
     # message:: message to log
-    def warn(message)
+    def warn(_message)
       raise NotImplementedError.new
     end
 
     # Logs an info with the shell logger.
     #
     # message:: message to log
-    def info(message)
+    def info(_message)
       raise NotImplementedError.new
     end
 

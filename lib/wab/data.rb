@@ -13,7 +13,7 @@ module WAB
     # exists where the path elements are separated by the '.' character. The
     # path can also be a array of path node identifiers. For example,
     # child.grandchild is the same as ['child', 'grandchild'].
-    def has?(path)
+    def has?(_path)
       raise NotImplementedError.new
     end
 
@@ -21,7 +21,7 @@ module WAB
     # elements are separated by the '.' character. The path can also be a
     # array of path node identifiers. For example, child.grandchild is the
     # same as ['child', 'grandchild'].
-    def get(path)
+    def get(_path)
       raise NotImplementedError.new
     end
 
@@ -38,7 +38,7 @@ module WAB
     # path:: path to location to be set
     # value:: value to set
     # repair:: flag indicating invalid value should be repaired if possible
-    def set(path, value)
+    def set(_path, _value)
       raise NotImplementedError.new
     end
 
@@ -68,7 +68,7 @@ module WAB
     end
 
     # Encode the data as a JSON string.
-    def json(indent=0)
+    def json(_indent=0)
       raise NotImplementedError.new
     end
 
@@ -89,7 +89,7 @@ module WAB
     # of the Hash or Array must be nil, boolean, String, Integer, Float,
     # BigDecimal, Array, Hash, Time, URI::HTTP, or WAB::UUID. Keys to Hashes
     # must be Symbols.
-    def initialize(value=nil, repair=false)
+    def initialize(_value=nil, _repair=false)
       raise NotImplementedError.new
     end
 

@@ -22,7 +22,7 @@ class SampleController < WAB::Controller
   # The +handle+ method is used to catch requests that are not one of the below
   # methods. Since no behavior other than REST calls are needed for this sample,
   # the +handle+ method raises an exception.
-  def handle(data)
+  def handle(_data)
     raise NotImplementedError.new
   end
 

@@ -159,7 +159,7 @@ module WAB
           timed_out = []
           now = Time.now
           @lock.synchronize {
-            @pending.delete_if { |rid,call|
+            @pending.delete_if { |_rid,call|
               if call.giveup <= now
                 timed_out << call
                 true

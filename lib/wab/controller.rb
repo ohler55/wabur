@@ -27,7 +27,7 @@ module WAB
     # on to the requester. The result, if not nil, should be a Data instance.
     #
     # data:: data to be processed
-    def handle(data)
+    def handle(_data)
       nil
     end
 
