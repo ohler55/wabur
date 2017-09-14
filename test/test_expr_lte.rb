@@ -11,7 +11,7 @@ class TestExprLte < TestImpl
   end
 
   def test_lte_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Lte.new('num', 7)
     assert(x.eval(d), 'checking LTE match with an integer arg')
 

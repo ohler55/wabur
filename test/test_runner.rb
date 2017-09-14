@@ -169,7 +169,6 @@ class TestRunner < Minitest::Test
     assert_equal(0, results.length, 'read after delete reply.results should contain no members')
   end
 
-
   # TBD test failure modes as well
   # TBD test multiple matches on update and delete
   # TBD test no matches on update and delete

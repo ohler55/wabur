@@ -11,7 +11,7 @@ class TestExprNot < TestImpl
   end
 
   def test_not
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Not.new(WAB::Impl::Eq.new('num', 8))
     assert(x.eval(d), 'checking NOT match')
 

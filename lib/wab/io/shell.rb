@@ -3,7 +3,6 @@ require 'time'
 require 'wab/impl'
 
 module WAB
-
   module IO
 
     # A Shell that uses STDIN and STDOUT for all interactions with the View
@@ -34,7 +33,7 @@ module WAB
 
       # Starts listening and processing.
       def start()
-        @engine.start()
+        @engine.start
       end
 
       # Register a controller for a named type.
@@ -93,7 +92,7 @@ module WAB
       # filters.
       #
       # data: Wab::Data to push to the view if subscribed
-      def changed(data)
+      def changed(_data)
         raise NotImplementedError.new
       end
 
@@ -130,7 +129,7 @@ module WAB
       #
       # controller:: the controller to notify of changed
       # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
-      def subscribe(controller, filter)
+      def subscribe(_controller, _filter)
         raise NotImplementedError.new
       end
 

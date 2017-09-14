@@ -16,7 +16,7 @@ module WAB
         @args << arg
       end
 
-      def eval(data)
+      def eval(_data)
         false
       end
 

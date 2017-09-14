@@ -21,7 +21,7 @@ module WAB
       end
 
       def native()
-        @args.map { |a| a.native }.unshift('OR')
+        @args.map(&:native).unshift('OR')
       end
 
     end # Or

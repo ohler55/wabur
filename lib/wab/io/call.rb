@@ -1,6 +1,5 @@
 
 module WAB
-
   module IO
 
     class Call

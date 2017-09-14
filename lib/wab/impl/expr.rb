@@ -12,7 +12,7 @@ module WAB
       # expression subclass evaluates differently.
       #
       # data:: data object to evaluate against.
-      def eval(data)
+      def eval(_data)
         false
       end
 

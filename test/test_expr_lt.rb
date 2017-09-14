@@ -11,7 +11,7 @@ class TestExprLt < TestImpl
   end
 
   def test_lt_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Lt.new('num', 8)
     assert(x.eval(d), 'checking LT match with an integer arg')
 

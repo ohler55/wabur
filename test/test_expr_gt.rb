@@ -11,7 +11,7 @@ class TestExprGt < TestImpl
   end
 
   def test_gt_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Gt.new('num', 6)
     assert(x.eval(d), 'checking GT match with an integer arg')
 

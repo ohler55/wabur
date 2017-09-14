@@ -11,7 +11,7 @@ class TestExprBetween < TestImpl
   end
 
   def test_between_int
-    d = make_sample_data()
+    d = make_sample_data
     x = WAB::Impl::Between.new('num', 7, 10)
     assert(x.eval(d), 'checking BETWEEN match with an integer arg')
 
@@ -36,7 +36,6 @@ class TestExprBetween < TestImpl
 
     x = WAB::Impl::Between.new('num', 5, 7, false, false)
     refute(x.eval(d), 'checking BETWEEN mismatch with an integer arg')
-
   end
 
   # TBD more tests for each type, Float, boolean, String, URI, UUID, Time, BigDecimal, nil

@@ -21,7 +21,7 @@ module WAB
       end
 
       def native()
-        @args.map { |a| a.native }.unshift('AND')
+        @args.map(&:native).unshift('AND')
       end
 
     end # And

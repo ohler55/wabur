@@ -62,7 +62,7 @@ end # BasicController
 
 unless cfg_file.nil?
   File.open(File.expand_path(cfg_file)) { |f|
-    f.each_line() { |line|
+    f.each_line { |line|
       line.strip!
       next if line.empty? || line.start_with?('#')
       k, v = line.split('=')
@@ -86,4 +86,4 @@ shell.logger.level = cfg['verbose'].to_i
 controller = Object.const_get(cfg['controller']).new(shell)
 shell.register_controller(nil, controller)
 
-shell.start()
+shell.start
