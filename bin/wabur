@@ -58,10 +58,6 @@ class BasicController < WAB::Controller
     super
   end
 
-  def on_result(data)
-    super
-  end
-
 end # BasicController
 
 unless cfg_file.nil?

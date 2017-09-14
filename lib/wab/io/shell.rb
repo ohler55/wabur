@@ -118,7 +118,6 @@ module WAB
       # of strings.
       #
       # tql:: query to evaluate
-      # handler:: callback handler that implements the #on_result() method
       def query(tql)
         @engine.request(tql, @timeout)
       end
