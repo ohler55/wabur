@@ -104,8 +104,7 @@ module WAB
       #
       # ref:: object reference
       def get(ref)
-        tql = { where: ref.to_i, select: '$' }
-        result = @engine.request(tql, @timeout)
+        result = query(where: ref.to_i, select: '$')
         raise WAB::Error.new("nil result get of #{ref}.") if result.nil?
         raise WAB::Error.new("error on get of #{ref}. #{result[:error]}") if 0 != result[:code]
 
@@ -119,7 +118,6 @@ module WAB
       # of strings.
       #
       # tql:: query to evaluate
-      # handler:: callback handler that implements the #on_result() method
       def query(tql)
         @engine.request(tql, @timeout)
       end
@@ -134,29 +132,6 @@ module WAB
       # filter:: the filter to apply to the data. Syntax is that TQL uses for the FILTER clause.
       def subscribe(controller, filter)
         raise NotImplementedError.new
-      end
-
-      private
-
-      def form_where_eq(key, value)
-        value_class = value.class
-        x = ['EQ', key.to_s]
-        x << if value.is_a?(String)
-               "'" + value
-             elsif Time == value_class
-               value.utc.iso8601(9)
-             elsif value.nil? ||
-                 TrueClass  == value_class ||
-                 FalseClass == value_class ||
-                 Integer    == value_class ||
-                 Float      == value_class ||
-                 String     == value_class ||
-                 WAB::Utils.pre_24_fixnum?(value)
-               value
-             else
-               value.to_s
-             end
-        x
       end
 
     end # Shell
