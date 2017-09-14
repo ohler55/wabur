@@ -3,7 +3,6 @@ require 'time'
 require 'wab/impl'
 
 module WAB
-
   module IO
 
     # A Shell that uses STDIN and STDOUT for all interactions with the View

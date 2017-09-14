@@ -2,7 +2,6 @@
 require 'oj'
 
 module WAB
-
   module IO
 
     class Engine
