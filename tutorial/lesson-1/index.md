@@ -3,7 +3,7 @@
 
 This first lesson of the WABuR Tutorial covers.
 
- - [Application Design](#Application Design)
+ - [Application Design](#"Application Design")
  - [WABuR Components and Terminology](#WABuR Components and Terminology)
  - [Development Environment](#Development Environment)
  - [File and Directory Organization](#File and Directory Organization)
