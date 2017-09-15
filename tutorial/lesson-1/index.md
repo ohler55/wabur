@@ -3,13 +3,13 @@
 
 This first lesson of the WABuR Tutorial covers.
 
- - [Application Design](#"Application Design")
- - [WABuR Components and Terminology](#WABuR Components and Terminology)
- - [Development Environment](#Development Environment)
- - [File and Directory Organization](#File and Directory Organization)
- - [Implementation](#Implementation)
- - [Running](#Running)
- - [Testing](#Testing)
+ - [Application Design](#application-design)
+ - [WABuR Components and Terminology](#wabur-components-and-terminology)
+ - [Development Environment](#development-environment)
+ - [File and Directory Organization](#file-and-directory-organization)
+ - [Implementation](#implementation)
+ - [Running](#running)
+ - [Testing](#testing)
 
 ## Application Design
 
