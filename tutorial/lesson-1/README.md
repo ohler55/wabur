@@ -9,7 +9,6 @@ This first lesson of the WABuR Tutorial covers.
  - [File and Directory Organization](#file-and-directory-organization)
  - [Implementation](#implementation)
  - [Running](#running)
- - [Testing](#testing)
 
 ## Application Design
 
@@ -203,33 +202,14 @@ The `index.html` provides is a simple one.
   <head>
     <meta charset="UTF-8" />
     <title>Welcome to WABuR Tutorial Lesson One</title>
-    <link rel="stylesheet" type="text/css" media="screen, print" href="http://www.wab.systems/ref/v0.7.0/assets/css/wab.css" />
-    <link rel="stylesheet" type="text/css" media="screen, print" href="http://www.wab.systems/ref/v0.7.0/assets/wabfont/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen, print" href="http://www.wab.systems/ref/latest/assets/css/wab.css" />
+    <link rel="stylesheet" type="text/css" media="screen, print" href="http://www.wab.systems/ref/latest/assets/wabfont/style.css" />
   </head>
   <body>
-    <header class="header">
-      <div class="logo">
-        <span class="brand">WABuR</span>
-        <span class="subtitle">Web Application Builder using Ruby</span>
-      </div>
-      <nav class="navbar">
-        <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="https://github.com/ohler55/wabur">Contribute</a></li>
-        </ul>
-      </nav>
-    </header>
-
     <main class="content">
       <div id="view" class="view-content">
       </div>
     </main>
-
-    <footer class="footer">
-      <div class="attribution">
-        Powered by <a class="brand" href="https://github.com/ohler55/wabur">WABuR</a>
-      </div>
-    </footer>
 
     <script src="http://www.wab.systems/ref/v0.7.0/assets/js/wab.js"></script>
     <script src="conf.js"></script>
@@ -237,174 +217,56 @@ The `index.html` provides is a simple one.
 </html>
 ```
 
-The `index.html` files is a basic HTML file. The key points are the links in
-the head that pull in the stylesheets from the WAB release. Note that version
-in the URL should be to the latest release instead of the shown URL.
+The `index.html` files is a basic HTML file. The links in the head pull
+in the stylesheets from the WAB release.
 
 The second important part of the HTML is the inclusion of a `div` that has an
 id of `view`. This is used by the JavaScript to determine where it should
 manage elements.
 
-To initialize the WAB reference inplementation JavaScript the URL to the
+To initialize the WAB reference implementation JavaScript the URL to the
 `wab.js` file must be included. Following the loading of the `wab.js` the
 `conf.js` file should be loaded.
 
 ### conf.js
 
-**TBD is it worth making a default REST flow or sub-flow for a kind?**
-
-```
-entrySample = {
-    kind: 'Entry',
-    title: 'Sample',
-    content: 'multi-line denoted by counting \n in the string.'
-}
-entryFlow = wab.makeRestFlow(entrySample)
-```
-
-![](entry_flow.svg)
-
-
-*********************************************
-
-The `conf.js` file is a JavaScript file but it is only used for declarations
-and setting up a configuration that is passed to the wab module using the
+The `conf.js` file is a JavaScript file but it is used for declarations and
+setting up a configuration that is passed to the wab module using the
 `wab.setFlow` function. The file show is a minimal version. More options are
 available and will be described in a future lesson.
 
 The view configuration describes individual displays as well as what actions
 cause a change in the display. After that it is left up to the wab module to
-run the show.
+run the show. The most basic way to create a configuration for a class that follows a REST API is to use the `wab.makeRestFlow()`. This function expects a sample of the class to be managed. The sample should have the default values for each attribute.
 
 ```
-entryList = {
-    elements: {
-        null: {
-            display_class: wab.List,
-            config: {
-                kind: 'Entry',
-                fields: [ 'title' ]
-            },
-            actions: {
-                createButton: 'entryCreate',
-                viewButton: 'entryView',
-                editButton: 'entryView',
-                deleteButton: 'entryList'
-            }
-        }
-    }
+entrySample = {
+    kind: 'Entry',
+    title: '',
+    content: '\n\n\n\n'
 }
-
-entryCreate = {
-    elements: {
-        one: {
-            display_class: wab.Create,
-            config: {
-                fields: [ 'title', 'content' ]
-            },
-            actions: {
-                saveButton: 'entryView',
-                cancelButton: 'entryList'
-            }
-        }
-    }
-}
-
-entryView = {
-    elements: {
-        one: {
-            display_class: wab.View,
-            config: {
-                fields: [ 'title', 'content' ]
-            },
-            actions: {
-                lockButton: 'entryEdit'
-            }
-        }
-    }
-}
-
-entryEdit = {
-    elements: {
-        one: {
-            display_class: wab.Edit,
-            config: {
-                fields: [ 'title', 'content' ]
-            },
-            actions: {
-                lockButton: 'entryView',
-                saveButton: 'entryView',
-                deleteButton: 'entryList'
-            }
-        }
-    }
-}
-
-flow = {
-    initial: 'entryList',
-    displays: {
-        entryList: {
-            display: entryList,
-        },
-        entryCreate: {
-            display: entryCreate
-        },
-        entryView: {
-            display: entryView
-        },
-        entryEdit: {
-            display: entryEdit
-        }
-    }    
-}
-
-wab.setFlow(flow);
+entryFlow = wab.makeRestFlow(entrySample)
+wab.setFlow(entryFlow);
 ```
 
-The view specification is composed of individual display specification as well
-as a flow that ties all the separate displays together. The tying together of
-the separate displays is similar to a process flow diagram. Individual
-displays are analogous tasks in a process flow and the process flow
-transitions are the same as actions taken on events that cause the displays to
-transition from one to another.
+Note the use of multiple newline characters in the `content` attribute default
+value. Each newline represents a new line in a textarea otherwise a string is
+assumed to be a text field.
 
-The UI flow is specified by a single JSON Object where each key of the object
-identifies display and the displays are described by another JSON Object. To
-better organize this structure the display specification are described first
-and then a flow ties the displays together.
+The `wab.makeRestFlow()` returns a default REST flow that can be used to
+`wab.setFlow()`. It can also be combined in a larger flow if there are
+additional displays in the application. The `wab.makeRestFlow()` function is
+not required but is a helper function. We will see in a future lesson how to
+grab the contents that are returned and make a custom flow and set of display
+descriptions.
 
-First the individual displays are defined. Each of the
-displays will become an element in the HTML element with an id of `view`.
+The flow of the application is depicted in the Entry Flow diagram. The boxes
+in the diagram represent the displays and the named transitions between
+displays correspnd to the actions that can be taken in each display by pushing
+a button. Each display shown is one of the built in WAB reference
+implementation displays.
 
-Looking at a display description such as the `entryCreate` there is an
-attribute name `elements` that has one or more attributes that describe the
-elements in the display. There is only one in this case with an index of
-`one`. When there is only one element and no layout manager defined any name
-will do.
-
-Within the `elements` single attribute there are three attributes,
-`display_class`, `config`, and `actions`. The `display_class` identifies the
-JavaScript object to use for the display. The wab module has several built in
-classes for list, create, edit, and view. These objects have defaults for the
-expected REST behavior. Each has it's own set of actions that can trigger
-transitions. The transitions occur after the object takes the default action.
-
-The actions element describes which transition to take for supported events on
-the `display_class`. In the case of the wab.List, three buttons events are
-supported. The actions are hardcoded and the action will take place after the
-hardcoded action. If the button has no action then it is not displayed. If not
-null then a description of the display to transition to should be provided or
-a key in the flow description can be used instead.
-
-The `config` element includes configuration information specific to the
-display type. For the `wab.Create` display class a list of fields that the
-user can enter data into is listed. In the simple cas just the field names are
-given and a text field is assumed.
-
-The flow variable defines what displays are available and associates them with
-name so that the actions defined early can lookup the correct display if a
-string identifier was used. It also specifies the initial display to show the
-user.
+![](entry_flow.svg)
 
 ### wabur.conf
 
@@ -440,13 +302,16 @@ lesson to be loaded.
 
 ## Running
 
-- run
- - config runner
- - try it
+The `wabur` Runner is used for this lesson. To start the Runner, the wabur gem
+must be installed or the wabur source must be available. Assuming the gem is
+installed and the run location is in the `lesson-1` directory the command to
+run the application is:
 
-## Testing
+```
+> wabur -c app/conf/wabur.conf
+```
 
-- unit tests (should be done earlier but it is a quick start)
- - controller
- - with runner
-
+That will start the Runner listening on port 6363 and storing data in the
+`app/data/wabur` directory. Open a browser and type in `localhost:6363` and
+observe an empty blog entry list. Use the Create button to create a new Entry
+and the other displays and buttons to experience the new application.

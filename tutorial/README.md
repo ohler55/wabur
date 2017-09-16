@@ -28,23 +28,27 @@ covered a blog is implemented.
 The view and displays are refined with dimensions and field types other than
 strictly text. Controller logging is also added.
 
-## [Lesson 3 - Aggregate Objects](lesson-3/README.md)
+## [Lesson 3 - Unit Testing](lesson-3/README.md)
+
+Create unit tests for the Controller and the Controller as part of a Runner.
+
+## [Lesson 4 - Aggregate Objects](lesson-4/README.md)
 
 A new object type, a Comment, is added along with updated displays for the
 inclusion of Comments in a blog Entry.
 
-## [Lesson 4 - CSS Customization](lesson-4/README.md)
+## [Lesson 5 - CSS Customization](lesson-5/README.md)
 
 TBD
 
-## [Lesson 5 - Custom JavaScript](lesson-5/README.md)
+## [Lesson 6 - Custom JavaScript](lesson-6/README.md)
 
 TBD
 
-## [Lesson 6 - Advanced Runners](lesson-6/README.md)
+## [Lesson 7 - Advanced Runners](lesson-7/README.md)
 
 TBD
 
-## [Lesson 7 - Writing a Runner and Shell](lesson-7/README.md)
+## [Lesson 8 - Writing a Runner and Shell](lesson-8/README.md)
 
 TBD
