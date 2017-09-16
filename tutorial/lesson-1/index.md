@@ -251,9 +251,17 @@ To initialize the WAB reference inplementation JavaScript the URL to the
 
 ### conf.js
 
+** TBD is it worth making a default REST flow or sub-flow for a kind? **
+
+```
+entryFlow = wab.makeRestFlow('Entry')
+```
+
+*********************************************
+
 The `conf.js` file is a JavaScript file but it is only used for declarations
 and setting up a configuration that is passed to the wab module using the
-`wab.set_flow` function. The file show is a minimal version. More options are
+`wab.setFlow` function. The file show is a minimal version. More options are
 available and will be described in a future lesson.
 
 The view configuration describes individual displays as well as what actions
@@ -261,7 +269,7 @@ cause a change in the display. After that it is left up to the wab module to
 run the show.
 
 ```
-entry_list = {
+entryList = {
     elements: {
         null: {
             display_class: wab.List,
@@ -270,16 +278,16 @@ entry_list = {
                 fields: [ 'title' ]
             },
             actions: {
-                create_button: 'entry_create',
-                view_button: 'entry_view',
-                edit_button: 'entry_view',
-                delete_button: 'entry_list'
+                createButton: 'entryCreate',
+                viewButton: 'entryView',
+                editButton: 'entryView',
+                deleteButton: 'entryList'
             }
         }
     }
 }
 
-entry_create = {
+entryCreate = {
     elements: {
         one: {
             display_class: wab.Create,
@@ -287,14 +295,14 @@ entry_create = {
                 fields: [ 'title', 'content' ]
             },
             actions: {
-                save_button: 'entry_view',
-                cancel_button: 'entry_list'
+                saveButton: 'entryView',
+                cancelButton: 'entryList'
             }
         }
     }
 }
 
-entry_view = {
+entryView = {
     elements: {
         one: {
             display_class: wab.View,
@@ -302,13 +310,13 @@ entry_view = {
                 fields: [ 'title', 'content' ]
             },
             actions: {
-                lock_button: 'entry_edit'
+                lockButton: 'entryEdit'
             }
         }
     }
 }
 
-entry_edit = {
+entryEdit = {
     elements: {
         one: {
             display_class: wab.Edit,
@@ -316,33 +324,33 @@ entry_edit = {
                 fields: [ 'title', 'content' ]
             },
             actions: {
-                lock_button: 'entry_view',
-                save_button: 'entry_view',
-                delete_button: 'entry_list'
+                lockButton: 'entryView',
+                saveButton: 'entryView',
+                deleteButton: 'entryList'
             }
         }
     }
 }
 
 flow = {
-    initial: 'entry_list',
+    initial: 'entryList',
     displays: {
-        entry_list: {
-            display: entry_list,
+        entryList: {
+            display: entryList,
         },
-        entry_create: {
-            display: entry_create
+        entryCreate: {
+            display: entryCreate
         },
-        entry_view: {
-            display: entry_view
+        entryView: {
+            display: entryView
         },
-        entry_edit: {
-            display: entry_edit
+        entryEdit: {
+            display: entryEdit
         }
     }    
 }
 
-wab.set_flow(flow);
+wab.setFlow(flow);
 ```
 
 The view specification is composed of individual display specification as well
@@ -360,7 +368,7 @@ and then a flow ties the displays together.
 First the individual displays are defined. Each of the
 displays will become an element in the HTML element with an id of `view`.
 
-Looking at a display description such as the `entry_create` there is an
+Looking at a display description such as the `entryCreate` there is an
 attribute name `elements` that has one or more attributes that describe the
 elements in the display. There is only one in this case with an index of
 `one`. When there is only one element and no layout manager defined any name
