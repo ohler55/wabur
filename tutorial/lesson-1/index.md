@@ -251,10 +251,15 @@ To initialize the WAB reference inplementation JavaScript the URL to the
 
 ### conf.js
 
-** TBD is it worth making a default REST flow or sub-flow for a kind? **
+**TBD is it worth making a default REST flow or sub-flow for a kind?**
 
 ```
-entryFlow = wab.makeRestFlow('Entry')
+entrySample = {
+    kind: 'Entry',
+    title: 'Sample',
+    content: 'multi-line denoted by counting \n in the string.'
+}
+entryFlow = wab.makeRestFlow(entrySample)
 ```
 
 *********************************************
