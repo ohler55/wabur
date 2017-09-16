@@ -40,9 +40,9 @@ conforming to a defined API.
 
 The WAB architecture allows for replacement of multiple parts of the system
 without changing the code of other parts. For example, the View code could be
-replaced by a completely differen custom JavaScript implmentation. A CLI could
+replaced by a completely different custom JavaScript implementation. A CLI could
 even be implement to interact with the Controller through a Runner with not
-changes to the server side. Multiple View implemenation could even be run at
+changes to the server side. Multiple View implementation could even be run at
 the same time. Additionally, as will be seen in later lessons, the Runner and
 Shell can be swapped out for alternatives that are have higher performance
 characteristics and use a different storage mechanism.
@@ -53,7 +53,7 @@ The design pattern used for the WABuR reference implementation utilizes a REST
 based API. This matches well with the object based approach to the design and
 to storage of data, not as tables, rows, and columns but as JSON records which
 encapsulate the data of the objects being stored. A REST API encourages the
-use of an object based set od displays so in the reference WABuR View
+use of an object based set of displays so in the reference WABuR View
 implemenation each display is backed by either a single object or in the case
 of lists a set of objects.
 
@@ -95,17 +95,17 @@ continuous integration suite.
 ## File and Directory Organization
 
 The files for this lesson are in the `lesson-1/app` directory. The directory
-is laid out as indicated in three subdirectories.
+is laid out as indicated in three sub-directories.
 
-The `conf` subdirectory is where Runner configuration files are placed. For
+The `conf` sub-directory is where Runner configuration files are placed. For
 lesson one the `wabur` Runner is used so that is the only conf file in the
 directory.
 
-The `lib` subdirectory is for Ruby code. It contains a basic Controller that
+The `lib` sub-directory is for Ruby code. It contains a basic Controller that
 handles all REST calls using the default behavior.
 
 Content that is served to the clients in response to HTTP page requests are in
-the `pages` subdirectory. The only two files needed are a simple index file
+the `pages` sub-directory. The only two files needed are a simple index file
 that identifies the element to use for display and a configuration
 file. Details of each are explained in more details later.
 
@@ -172,10 +172,10 @@ the class implements all the methods shown the class it can be used.
 
 This controller exposes all possible methods expected in a WAB::Controller
 subclass, as public methods. Since those methods are private in the
-superclass, they need to be redefined as public methods to enable the
+super-class, they need to be redefined as public methods to enable the
 concerned functionality.
 
-For example, if a controller is intented to provide only read-access, then
+For example, if a controller is intended to provide only read-access, then
 just the `read` method would need to be exposed as a public method. The
 remaining methods may remain private.
 
@@ -183,18 +183,18 @@ The `handle` method is used to catch requests that are not one of the below
 methods. Since no behavior other than REST calls are needed for this sample,
 the `handle` method raises an exception.
 
-Thats it for the Controller as the default behavior is the desired
+That's it for the Controller as the default behavior is the desired
 behavior. The objects stored in the database are the same as those provided to
 the View. Note the objects are strictly data or more accurately
 WAB::Data. They should never be monkey-patched. If additional behavior is
 desired then helpers or delgates should be used instead.
 
 More details on the expected behavior of the methods can be found in the
-documenation for WAB::Controller class.
+documentation for WAB::Controller class.
 
 ### index.html
 
-The `index.html` provides is a simple one.
+The `index.html` provided is a simple one.
 
 ```html
 <!DOCTYPE html>
@@ -262,7 +262,7 @@ descriptions.
 
 The flow of the application is depicted in the Entry Flow diagram. The boxes
 in the diagram represent the displays and the named transitions between
-displays correspnd to the actions that can be taken in each display by pushing
+displays correspond to the actions that can be taken in each display by pushing
 a button. Each display shown is one of the built in WAB reference
 implementation displays.
 
@@ -286,7 +286,7 @@ http.dir = app/pages
 The file format follows the Unix configuration file common to most Unix
 applications. The first option is the `dir` which identifies where the wabur
 Runner should store data. In the case of wabur the data will be JSON
-files. One fiel for each record with the filename being the object reference
+files. One file for each record with the filename being the object reference
 identifier.
 
 The `handler.path` is the path prefix for the HTTP server. This is similar to
