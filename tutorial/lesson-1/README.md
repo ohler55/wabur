@@ -262,6 +262,9 @@ entrySample = {
 entryFlow = wab.makeRestFlow(entrySample)
 ```
 
+![](entry_flow.svg)
+
+
 *********************************************
 
 The `conf.js` file is a JavaScript file but it is only used for declarations
