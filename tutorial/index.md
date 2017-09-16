@@ -1,7 +1,9 @@
 
 # WABuR Tutorial
 
-WABuR is a Web Application Builder using Ruby. The WAB approach to building
+[WABuR](https://github.com/ohler55/wabur) is a Web Application Builder using
+Ruby. Releases and additional information can be found at
+[http://www.wab.systems](http://www.wab.systems). The WAB approach to building
 web application is to follow a Model View Controller (MVC) design pattern that
 separates each element of the MVC cleanly enough to allow a well defined
 API. This approach allows flexibility in how each component is
