@@ -12,17 +12,17 @@ This first lesson of the WABuR Tutorial covers.
 
 ## Application Design
 
-The first step in building any application it deciding what to build. WAB is
-object based to the design and planning will follow an object based
-design. With that in mind, building a blog will require blog entries so an
-Entry will be the primary object type in the application.
+The first step in building any application is deciding what to build. WABuR or
+simply WAB will follow an object based design. With that in mind, building
+a blog will require blog entries so an Entry will be the primary object-type
+in the application.
 
-An Entry will initially have two attributes, a title and content. Later more
-attributes will be added but to start with those two attributes will be
+An Entry will initially have two attributes, a **title** and **content**. Later
+more attributes will be added but initially, those two attributes will be
 sufficient. The canonical data representation is JSON so in this tutorial JSON
 will be used to describe objects and data.
 
-For the blog a list of Entries is desired. In addition the standard CRUD
+For the blog a list of Entries is desired. Additionally, the standard CRUD
 operations of Create, Read, Update, and Delete will be desired in the displays
 as well as the rest of the application implementation.
 
@@ -30,19 +30,19 @@ as well as the rest of the application implementation.
 
 WABuR is designed as a Model View Controller (MVC) system. At the core is a
 Ruby Controller that executes the business logic of the app. The Controller
-resides on the server side. To support the Controller an HTTP web server and a
-DataBase are needed. This is provided by a Runner and Shell combination as
-denoted in the WAB Components diagram. The view aspect of the MVC is provides
-on the client side in a browser. The View is implemented with JavaScript. The
-JavaScript esentially implements a separate display application that interacts
-with the Controller with messages exchanged through the HTTP server and
+resides at the server-side. To support the Controller, an HTTP web server and a
+Database are needed. This is provided by the Runner-Shell combination as
+denoted in the WAB Components diagram. The view aspect of the MVC pattern here
+is a JavaScript implementation at the client-side in a browser.
+JavaScript essentially implements a separate display application that interacts
+with the Controller with messages that are exchanged via the HTTP server
 conforming to a defined API.
 
 The WAB architecture allows for replacement of multiple parts of the system
-without changing the code of other parts. For example, the View code could be
+without changing the code of other parts. For example, the View component could be
 replaced by a completely different custom JavaScript implementation. A CLI could
-even be implement to interact with the Controller through a Runner with not
-changes to the server side. Multiple View implementation could even be run at
+even be implemented to interact with the Controller through a Runner with no
+changes to the server-side. Multiple View implementation could even be run at
 the same time. Additionally, as will be seen in later lessons, the Runner and
 Shell can be swapped out for alternatives that are have higher performance
 characteristics and use a different storage mechanism.
@@ -50,7 +50,7 @@ characteristics and use a different storage mechanism.
 ![](wab_parts.svg)
 
 The design pattern used for the WABuR reference implementation utilizes a REST
-based API. This matches well with the object based approach to the design and
+based API. This matches well with the object-based approach to the design and
 to storage of data, not as tables, rows, and columns but as JSON records which
 encapsulate the data of the objects being stored. A REST API encourages the
 use of an object based set of displays so in the reference WABuR View
@@ -84,7 +84,7 @@ it is a convenient way to describe the structure of the object.
 ## Development Environment
 
 For development the pure Ruby Runner and Shell are used. The pure Ruby Runner
-is in the bin directory and is named `wabur`. A browser will also be needed to
+is in the `bin` directory and is named `wabur`. A browser will also be needed to
 test the View or UI. Rounding out the environment would be a test directory
 for writing unit tests. The WABuR design makes it easy to write unit tests on
 the Controller. The Controller interface is limited and well defined. Moving
@@ -111,26 +111,26 @@ file. Details of each are explained in more details later.
 
 ```
 app
-  conf
-    wabur.conf
-  lib
-    entry_controller.rb
-  pages
-    conf.js
-    index.html
+├── conf
+|   └── wabur.conf
+├── lib
+|   └── entry_controller.rb
+└── pages
+    ├── conf.js
+    └── index.html
 ```
 
 ## Implementation
 
 The order of the steps in this portion of the lesson follow the files used to
-implement the web application. Each file contents are explained after showing
+implement the web application. Each file-contents are explained after showing
 the file.
 
 ### entry_controller.rb
 
 A good place to start the implementation is with the business logic in the
 Controller Ruby file, `entry_controller.rb`. Since there is only one object
-type the controller is set up just for that object type but the exact same
+type, the controller is set up just for that object type but the exact same
 file could be used for other object types as well.
 
 ```ruby
@@ -165,12 +165,12 @@ class EntryController < WAB::Controller
 end
 ```
 
-The `entry_controller.rb` start by requiring the WAB module. Below that is a
+The `entry_controller.rb` start by requiring the `WAB` module. Below that is a
 class definition for a subclass of the `WAB::Controller` class. All
 Controllers should inherit from the WAB::Controller class although as long as
 the class implements all the methods shown the class it can be used.
 
-This controller exposes all possible methods expected in a WAB::Controller
+This controller exposes all possible methods expected in a `WAB::Controller`
 subclass, as public methods. Since those methods are private in the
 super-class, they need to be redefined as public methods to enable the
 concerned functionality.
@@ -236,10 +236,13 @@ setting up a configuration that is passed to the wab module using the
 available and will be described in a future lesson.
 
 The view configuration describes individual displays as well as what actions
-cause a change in the display. After that it is left up to the wab module to
-run the show. The most basic way to create a configuration for a class that follows a REST API is to use the `wab.makeRestFlow()`. This function expects a sample of the class to be managed. The sample should have the default values for each attribute.
+cause a change in the display. After that it is left to the `wab` JS module to
+run the show. The most basic way to create a configuration for a class that
+follows a REST API is to use the `wab.makeRestFlow()`. This function expects a
+sample of the class to be managed. The sample should have the default values
+for each attribute.
 
-```
+```javascript
 entrySample = {
     kind: 'Entry',
     title: '',
@@ -291,10 +294,10 @@ identifier.
 
 The `handler.path` is the path prefix for the HTTP server. This is similar to
 a route so `/v1/Entry/123` in a GET request would return the JSON record for
-Entry 123.
+entity `123` in the directory `Entry`.
 
-The `controller` is the controller class to create an instance of. wabur must
-be started with the correct load paths and requires to allow the Controller
+The `controller` is the controller class to create an instance of. WABuR must
+be started with the correct load paths and `require`s to allow the Controller
 class to be created.
 
 An HTTP port and page directory are needed to allow the pages created for this
@@ -312,6 +315,6 @@ run the application is:
 ```
 
 That will start the Runner listening on port 6363 and storing data in the
-`app/data/wabur` directory. Open a browser and type in `localhost:6363` and
-observe an empty blog entry list. Use the Create button to create a new Entry
+`app/data/wabur` directory. Open a browser and type in `http://localhost:6363` and
+observe an empty blog entry list. Use the `Create` button to create a new Entry
 and the other displays and buttons to experience the new application.
