@@ -23,11 +23,11 @@ module WAB
       #
       # config:: configuration Hash
       def initialize(config)
-        pre_path  = config['handler.path'] || '/v1'
+        pre_path  = config['handler']['path']
         @path_pos = pre_path.split('/').length - 1
 
         @model    = Model.new(config['dir'])
-        @type_key = config['type_key'] || 'kind'
+        @type_key = config['type_key']
 
         @verbose  = if config.has_key?('verbose')
                       verbosity = config['verbose'].to_s.downcase
@@ -38,8 +38,8 @@ module WAB
                       end
                     end
 
-        @http_dir    = File.expand_path(config['http.dir'] || '.')
-        @http_port   = config.has_key?('http.port') ? config['http.port'].to_i : 6363
+        @http_dir    = File.expand_path(config['http']['dir'])
+        @http_port   = config['http']['port'].to_i
         @controllers = {}
       end
 
