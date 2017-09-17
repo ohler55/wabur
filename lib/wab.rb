@@ -4,6 +4,7 @@ module WAB
 end
 
 require 'wab/controller'
+require 'wab/configuration'
 require 'wab/data'
 require 'wab/errors'
 require 'wab/shell_logger'
