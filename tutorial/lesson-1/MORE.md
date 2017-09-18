@@ -17,7 +17,14 @@ simply WAB will follow an object based design. With that in mind, building a
 blog will require blog entries so an Entry will be the primary object-type in
 the application.
 
-[tell me more...](MORE.md#application-design)
+An Entry will initially have two attributes, a **title** and
+**content**. Later more attributes will be added but initially, those two
+attributes will be sufficient. The canonical data representation is JSON so in
+this tutorial JSON will be used to describe objects and data.
+
+For the blog a list of Entries is desired. Additionally, the standard CRUD
+operations of Create, Read, Update, and Delete will be desired in the displays
+as well as the rest of the application implementation.
 
 ## WABuR Components and Terminology
 
@@ -31,20 +38,77 @@ essentially implements a separate display application that interacts with the
 Controller with messages that are exchanged via the HTTP server conforming to
 a defined API.
 
-[tell me more...](MORE.md#wabur-components-and-terminology)
+The WAB architecture allows for replacement of multiple parts of the system
+without changing the code of other parts. For example, the View component
+could be replaced by a completely different custom JavaScript
+implementation. A CLI could even be implemented to interact with the
+Controller through a Runner with no changes to the server-side. Multiple View
+implementation could even be run at the same time. Additionally, as will be
+seen in later lessons, the Runner and Shell can be swapped out for
+alternatives that are have higher performance characteristics and use a
+different storage mechanism. The Runner and Shell form the server side of the
+application while HTML, CSS, and JavaScript form the client side. Since the
+server does provide the files to the client there is some breakdown in the
+separation but Ruby files devoted to the View or UI are strictly for
+generating the HTML and Javascript for the UI.
+
+![](wab_parts.svg)
+
+The design pattern used for the WABuR reference implementation utilizes a REST
+based API. This matches well with the object-based approach to the design and
+to storage of data, not as tables, rows, and columns but as JSON records which
+encapsulate the data of the objects being stored. A REST API encourages the
+use of an object based set of displays so in the reference WABuR View
+implemenation each display is backed by either a single object or in the case
+of lists a set of objects.
+
+The use of the term 'display' is similar to what many might think of as a page
+on a web site. Page is not exactly correct for the View though as the View is
+implemented as a single page that frames a display area. That display area is
+where the JavaScript code displays the content of each psuedo page which is
+referred to a a display in this tutorial.
+
+On the modeling side, storing any JSON record is possible but not very helpful
+when using a class based API. To resolve this issue the reference
+implemenation enforces the addition of an object class stored in the JSON
+records in the 'kind' field. That can be changed but the default is 'kind'. As
+an example, for an Entry with a title and content attribute the JSON stored
+would look like:
+
+```javascript
+{
+  "kind": "Entry",
+  "title": "First Entry",
+  "content": "Just saying hello!"
+}
+```
+
+Other than in the View there is no need to know what the JSON looks like but
+it is a convenient way to describe the structure of the object.
 
 ## Development Environment
 
 For development the pure Ruby Runner and Shell are used. The pure Ruby Runner
 is in the `bin` directory and is named `wabur`. A browser will also be needed
-to test the View or UI.
-
-[tell me more...](MORE.md#development-environment)
+to test the View or UI. Rounding out the environment would be a test directory
+for writing unit tests. The WABuR design makes it easy to write unit tests on
+the Controller. The Controller interface is limited and well defined. Moving
+up from testing the Controller by itself the Controller inside a Runner can be
+tested using 'curl' which makes testing the server side possible in a
+continuous integration suite. For this lesson only a UI Ruby file will be
+needed along with a simple HTML index file.
 
 ## File and Directory Organization
 
 The files for this lesson are in the `lesson-1/app` directory. The directory
 is laid out as indicated in sub-directories.
+
+The `lib` sub-directory is for Ruby code. It contains a basic Controller that
+handles all REST calls using the default behavior.
+
+Content that is served to the clients in response to HTTP page requests are in
+the `pages` sub-directory. The only file needed is a simple index file that
+identifies the element to use for display. Details are explained later.
 
 ```
 app
@@ -54,8 +118,6 @@ app
 └── pages
     └── index.html
 ```
-
-[tell me more...](MORE.md#file-and-directory-organization)
 
 ## Implementation
 
