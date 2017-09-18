@@ -29,7 +29,7 @@ opts.on('-v', '--verbose', 'Verbose output')                 { verbose_cnt += 1 
 opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
 
-config = WAB::Configuration.from(options)
+config = WAB::Impl::Configuration.from(options)
 
 class BasicController < WAB::Controller
 

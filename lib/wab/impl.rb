@@ -7,6 +7,7 @@ module WAB
   end
 end
 
+require 'wab/impl/configuration'
 require 'wab/impl/data'
 require 'wab/impl/expr'
 require 'wab/impl/path_expr'
