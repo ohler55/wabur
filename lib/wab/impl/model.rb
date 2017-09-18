@@ -1,4 +1,5 @@
 
+require 'fileutils'
 require 'oj'
 
 module WAB
@@ -21,7 +22,7 @@ module WAB
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new
-        Dir.mkdir(@dir) unless @dir.nil? || Dir.exist?(@dir)
+        FileUtils.mkdir_p(@dir) unless @dir.nil? || Dir.exist?(@dir)
         load_files unless @dir.nil?
       end
 
