@@ -25,7 +25,7 @@ A WAB Runner that is configured with a UNIX style config file.
 })
 opts.on('-s', '--source PATH', String, 'Source directory')   { |d| options['source'] = d }
 opts.on('-c', '--config PATH', String, 'Configuration file') { |c| options['config_file'] = c }
-opts.on('-v', 'Verbose output')                              { verbose_cnt += 1 }
+opts.on('-v', '--verbose', 'Verbose output')                 { verbose_cnt += 1 }
 opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
 
