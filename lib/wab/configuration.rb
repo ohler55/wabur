@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require 'logger'
 
@@ -25,15 +26,47 @@ module WAB
         overrides['config_file'] ||= File.join('wabur', 'wabur.conf')
         overrides['source'] ||= DEFAULTS['source']
 
-        DEFAULTS.merge(self.new.extract(
+        DEFAULTS.merge(self.new.extract_config(
           File.expand_path(overrides.values_at('config_file', 'source').join)
         )).merge(overrides)
       end
     end
 
-    def extract(file)
-      return DEFAULTS unless File.exist?(file)
+    # Returns a Hash of configuration data.
+    #
+    # TBD: Add validation to ensure only a Hash object is returned
+    def extract_config(file)
+      return {} unless File.exist?(file)
 
+      case File.extname(file)
+      when /\.conf/i
+        parse_conf_file(file)
+      when /\.json/i
+        # TBD: Employ Oj or builtin JSON to load file.
+      when /\.ya?ml/i
+        begin
+          require 'safe_yaml/load'
+          SafeYAML.load_file(file) || {}
+        rescue LoadError
+          puts "Could not load the requested resource.\n" \
+            "Please install the 'safe_yaml' gem via Bundler or directly, " \
+            "and try loading again.."
+          {}
+        end
+      end
+    end
+
+    # Returns a Hash containing data obtained by parsing a UNIX style conf
+    # file. Currently, only a three-tier nesting is supported, while higher
+    # tiers are silently ignored.
+    #
+    # For example, +handler.sample.count = 63+ and +handler.sample.path = /v1+
+    # will be parsed into the following:
+    #
+    #    {"handler"=>{"sample"=>{"count"=>63, "path"=>"/v1"}}}
+    #
+    # but +handler.sample.path.node = Article+ will be ignored.
+    def parse_conf_file(file)
       # support nesting hashes upto three-levels deep only
       config = Hash.new do |hsh, key|
         hsh[key] = Hash.new do |h, k|
