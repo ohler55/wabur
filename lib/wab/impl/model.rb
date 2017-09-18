@@ -176,7 +176,9 @@ module WAB
         Dir.foreach(@dir) { |fn|
           next if '.' == fn[0]
           ref = fn[0..-6]
-          @map[ref.to_i(16)] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
+          iref = ref.to_i(16)
+          @cnt = iref if @cnt < iref
+          @map[iref] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
         }
       end
 
