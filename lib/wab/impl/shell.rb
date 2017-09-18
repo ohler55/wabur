@@ -26,7 +26,7 @@ module WAB
         pre_path  = config['handler']['path']
         @path_pos = pre_path.split('/').length - 1
 
-        @model    = Model.new(config['dir'])
+        @model    = Model.new(File.join(config['source'], config['data_dir']))
         @type_key = config['type_key']
 
         @verbose  = if config.has_key?('verbose')

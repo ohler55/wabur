@@ -7,6 +7,7 @@ module WAB
   class Configuration
     DEFAULTS = {
       'source'     => '.',
+      'data_dir'   => File.join('wabur', 'data'),
       'handler'    => {
         'path' => '/v1'
       },
