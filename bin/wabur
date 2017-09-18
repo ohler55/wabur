@@ -14,7 +14,7 @@ require 'wab/impl'
 
 # Initial options
 options = {
-  'source'      => '.',
+  'base'        => '.',
   'config_file' => nil
 }
 verbose_cnt = 0
@@ -23,10 +23,10 @@ opts = OptionParser.new(%{Usage: wabur [options]
 
 A WAB Runner that is configured with a UNIX style config file.
 })
-opts.on('-s', '--source PATH', String, 'Source directory')   { |d| options['source'] = d }
-opts.on('-c', '--config PATH', String, 'Configuration file') { |c| options['config_file'] = c }
-opts.on('-v', '--verbose', 'Verbose output')                 { verbose_cnt += 1 }
-opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
+opts.on('-b', '--base PATH', String, 'App root directory. Defaults to "."') { |d| options['base'] = d }
+opts.on('-c', '--config PATH', String, 'Custom configuration file')         { |c| options['config_file'] = c }
+opts.on('-v', '--verbose', 'Verbose output')                                { verbose_cnt += 1 }
+opts.on('-h', '--help', 'Show this display')                                { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
 
 config = WAB::Impl::Configuration.from(options)

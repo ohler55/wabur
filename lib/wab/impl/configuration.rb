@@ -8,7 +8,7 @@ module WAB
     # Handles the configuration for a Shell Implementation and the Ruby Runner
     class Configuration
       DEFAULTS = {
-        'source'     => '.',
+        'base'       => '.',
         'data_dir'   => File.join('wabur', 'data'),
         'handler'    => {
           'path' => '/v1'
@@ -25,10 +25,10 @@ module WAB
       class << self
         def from(overrides = {})
           overrides['config_file'] ||= File.join('wabur', 'wabur.conf')
-          overrides['source'] ||= DEFAULTS['source']
+          overrides['base'] ||= DEFAULTS['base']
 
           DEFAULTS.merge(self.new.extract_config(
-            File.expand_path(overrides.values_at('config_file', 'source').join)
+            File.expand_path(overrides.values_at('config_file', 'base').join)
           )).merge(overrides)
         end
       end

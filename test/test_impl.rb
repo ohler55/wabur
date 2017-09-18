@@ -10,7 +10,7 @@ class TestImpl < Minitest::Test
   def setup
     @shell = WAB::Impl::Shell.new(
       WAB::Impl::Configuration.from(
-        'source' => File.join(__dir__, 'tmp')
+        'base' => File.join(__dir__, 'tmp')
       )
     )
   end
