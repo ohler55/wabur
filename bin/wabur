@@ -12,19 +12,24 @@ require 'logger'
 require 'wab'
 require 'wab/impl'
 
-config_file = nil
+# Initial options
+options = {
+  'source'      => '.',
+  'config_file' => nil
+}
 verbose_cnt = 0
 
 opts = OptionParser.new(%{Usage: wabur [options]
 
 A WAB Runner that is configured with a UNIX style config file.
 })
+opts.on('-s', '--source PATH', String, 'Source directory')   { |d| options['source'] = d }
+opts.on('-c', '--config PATH', String, 'Configuration file') { |c| options['config_file'] = c }
 opts.on('-v', 'Verbose output')                              { verbose_cnt += 1 }
-opts.on('-c', '--config PATH', String, 'Configuration file') { |c| config_file = c }
 opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
 
-config = WAB::Configuration.from(config_file)
+config = WAB::Configuration.from(options)
 
 class BasicController < WAB::Controller
 

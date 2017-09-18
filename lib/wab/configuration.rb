@@ -6,6 +6,7 @@ module WAB
   # Handles the configuration for a Shell Implementation and the Ruby Runner
   class Configuration
     DEFAULTS = {
+      'source'     => '.',
       'handler'    => {
         'path' => '/v1'
       },
@@ -19,17 +20,18 @@ module WAB
     }.freeze
 
     class << self
-      def from(file)
-        DEFAULTS.merge(self.new(file).extract)
+      def from(overrides = {})
+        overrides['config_file'] ||= File.join('wabur', 'wabur.conf')
+        overrides['source'] ||= DEFAULTS['source']
+
+        DEFAULTS.merge(self.new.extract(
+          File.expand_path(overrides.values_at('config_file', 'source').join)
+        )).merge(overrides)
       end
     end
 
-    def initialize(file)
-      @file = file
-    end
-
-    def extract
-      return DEFAULTS if @file.nil?
+    def extract(file)
+      return DEFAULTS unless File.exist?(file)
 
       # support nesting hashes upto three-levels deep only
       config = Hash.new do |hsh, key|
@@ -38,7 +40,7 @@ module WAB
         end
       end
 
-      File.open(File.expand_path(@file)) do |f|
+      File.open(File.expand_path(file)) do |f|
         f.each_line do |line|
           line.strip!
           next if line.empty? || line.start_with?('#')
