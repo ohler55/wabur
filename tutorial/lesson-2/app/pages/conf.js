@@ -21,8 +21,8 @@ wab.pathPrefix = '/v1/'
 
 // All displays are enclosed in a frame which is described by an HTML page.
 
-// First the the frame and individual displays are defined. Each of the
-// displays will become an element in the HTML element with an id of 'view'.
+// First the frame and individual displays are defined. Each of the displays
+// will become an element in the HTML element with an id of 'view'.
 
 // Although not used in the first lesson, additional frame elements such as a
 // class list can be specified as elements of the frame. Each element in the
@@ -63,9 +63,9 @@ entry_list = {
             actions: {
                 view_button: {
                     display: entry_view,
-                    // Arguments are a single quoted string with the the kind
-                    // of record followed by the attribute path or key. $ref
-                    // is the build in record reference identifier.
+                    // Arguments are a single quoted string with the kind of
+                    // record followed by the attribute path or key. $ref is
+                    // the build in record reference identifier.
                     args: [ "'Article", '$ref' ]
                 },
                 edit_button: {
