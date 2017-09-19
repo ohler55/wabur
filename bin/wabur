@@ -12,25 +12,24 @@ require 'logger'
 require 'wab'
 require 'wab/impl'
 
-cfg = {
-  'handler.path' => '/v1',
-  'type_key' => 'kind',
-  'http.dir' => '.',
-  'controller' => 'BasicController',
-  'http.port' => 6363,
-  'verbose' => Logger::WARN
+# Initial options
+options = {
+  'base'        => '.',
+  'config_file' => nil
 }
-cfg_file = nil
 verbose_cnt = 0
 
 opts = OptionParser.new(%{Usage: wabur [options]
 
-A WAB Runner that is configured with a unix style conf file.
+A WAB Runner that is configured with a UNIX style config file.
 })
-opts.on('-v', 'verbose')                                     { verbose_cnt += 1 }
-opts.on('-c', '--conf String', String, 'configuration file') { |c| cfg_file = c }
-opts.on('-h', '--help', 'Show this display')                 { puts opts.help; Process.exit!(0) }
+opts.on('-b', '--base PATH', String, 'App root directory. Defaults to "."') { |d| options['base'] = d }
+opts.on('-c', '--config PATH', String, 'Custom configuration file')         { |c| options['config_file'] = c }
+opts.on('-v', '--verbose', 'Verbose output')                                { verbose_cnt += 1 }
+opts.on('-h', '--help', 'Show this display')                                { puts opts.help; Process.exit!(0) }
 opts.parse(ARGV)
+
+config = WAB::Impl::Configuration.from(options)
 
 class BasicController < WAB::Controller
 
@@ -60,30 +59,19 @@ class BasicController < WAB::Controller
 
 end # BasicController
 
-unless cfg_file.nil?
-  File.open(File.expand_path(cfg_file)) { |f|
-    f.each_line { |line|
-      line.strip!
-      next if line.empty? || line.start_with?('#')
-      k, v = line.split('=')
-      cfg[k.strip] = v.strip
-    }
-  }
-end
-
 if 0 < verbose_cnt
-  v = cfg['verbose'].to_i - verbose_cnt
+  v = config['verbose'].to_i - verbose_cnt
   v = 0 if v < 0
-  cfg['verbose'] = v
+  config['verbose'] = v
 end
 
-shell = WAB::Impl::Shell.new(cfg)
+shell = WAB::Impl::Shell.new(config)
 
 # TBD configure logger better
 shell.logger = Logger.new(STDOUT)
-shell.logger.level = cfg['verbose'].to_i
+shell.logger.level = config['verbose'].to_i
 
-controller = Object.const_get(cfg['controller']).new(shell)
+controller = Object.const_get(config['controller']).new(shell)
 shell.register_controller(nil, controller)
 
 shell.start

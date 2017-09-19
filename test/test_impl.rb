@@ -8,7 +8,11 @@ require 'wab/impl'
 class TestImpl < Minitest::Test
 
   def setup
-    @shell = WAB::Impl::Shell.new({})
+    @shell = WAB::Impl::Shell.new(
+      WAB::Impl::Configuration.from(
+        'base' => File.join(__dir__, 'tmp')
+      )
+    )
   end
 
   def make_sample_data()

@@ -1,4 +1,5 @@
 
+require 'fileutils'
 require 'oj'
 
 module WAB
@@ -21,7 +22,7 @@ module WAB
         @cnt = 0
         @map = {}
         @lock = Thread::Mutex.new
-        Dir.mkdir(@dir) unless @dir.nil? || Dir.exist?(@dir)
+        FileUtils.mkdir_p(@dir) unless @dir.nil? || Dir.exist?(@dir)
         load_files unless @dir.nil?
       end
 
@@ -175,7 +176,9 @@ module WAB
         Dir.foreach(@dir) { |fn|
           next if '.' == fn[0]
           ref = fn[0..-6]
-          @map[ref.to_i(16)] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
+          iref = ref.to_i(16)
+          @cnt = iref if @cnt < iref
+          @map[iref] = Data.new(Oj.load_file(File.join(@dir, fn), mode: :wab), true)
         }
       end
 
