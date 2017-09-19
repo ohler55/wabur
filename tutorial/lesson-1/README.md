@@ -59,56 +59,59 @@ app
 
 ## Implementation
 
-- MVC
-- just two files needed, one for describing the UI in Ruby and one for th epage layout
-- M - built into the runner WAB::Impl::Shell & Model
-- C - OpenController
-- V - index.html and entry_ui.rb
+At the core of the system is the Controller. The Controller is a bridge
+between the View and Model. It presents a business object perspective to the
+View component and maps business object to the Model storage objects.
 
---- TBD ----------------------------------------------------------------------
+The Model provides access to stored data. In WABuR the Model is accessible to
+the Controller through the Shell. The stored data is JSON and can be data
+stored from other applications or data managed only by the Model.
 
-The order of the steps in this portion of the lesson follow the files used to
-implement the web application. Each file-contents are explained after showing
-the file.
+The View runs in the client or in the normal case, a browser. The WABuR
+reference implemenation provides HTML and JavaScript using Ruby code as well
+as JavaScript libraries.
 
-### entry_controller.rb
+Two files are needed for this lesson. A Ruby file for the UI and an HTML index
+file.
 
-A good place to start the implementation is with the business logic in the
-Controller Ruby file, `entry_controller.rb`. Since there is only one object
-type, the controller is set up just for that object type but the exact same
-file could be used for other object types as well.
+[tell me more...](MORE.md#implementation)
 
+### lib/ui/entry.rb
 
-The `entry_controller.rb` start by requiring the `WAB` module. Below that is a
-class definition for a subclass of the `WAB::Controller` class. All
-Controllers should inherit from the WAB::Controller class although as long as
-the class implements all the methods shown the class it can be used.
+The `entry.rb` file generates configuration for the `wab` JavaScript
+library. It also provides the HTML templates to be used for the display.
 
-This controller exposes all possible methods expected in a `WAB::Controller`
-subclass, as public methods. Since those methods are private in the
-super-class, they need to be redefined as public methods to enable the
-concerned functionality.
+```ruby
+require 'wab/ui'
 
-For example, if a controller is intended to provide only read-access, then
-just the `read` method would need to be exposed as a public method. The
-remaining methods may remain private.
+class Entry < WAB::UI::RestFlow
 
-The `handle` method is used to catch requests that are not one of the below
-methods. Since no behavior other than REST calls are needed for this sample,
-the `handle` method raises an exception.
+  def initialize()
+    template = {
+      kind: 'Entry',
+      title: '',
+      content: '\n\n\n\n',
+    }
+    super(template)
+  end
 
-That's it for the Controller as the default behavior is the desired
-behavior. The objects stored in the database are the same as those provided to
-the View. Note the objects are strictly data or more accurately
-WAB::Data. They should never be monkey-patched. If additional behavior is
-desired then helpers or delgates should be used instead.
+end # Entry
 
-More details on the expected behavior of the methods can be found in the
-documentation for WAB::Controller class.
+```
 
-### index.html
+The generated configuration implements a UI flow as illustrated. Note the
+boxes in the diagram represents displays and the links between then represent
+transitions from one display to another triggered by an action such as
+pressing a button.
 
-The `index.html` provided is a simple one.
+![](entry_flow.svg)
+
+[tell me more...](MORE.md#lib/ui/entry.rb)
+
+### pages/index.html
+
+The `index.html` file provides the frame around the display area that will be
+used for the dynamic portion of the application.
 
 ```html
 <!DOCTYPE html>
@@ -126,68 +129,13 @@ The `index.html` provided is a simple one.
     </main>
 
     <script src="http://www.wab.systems/ref/v0.7.0/assets/js/wab.js"></script>
-    <script src="conf.js"></script>
   </body>
 </html>
 ```
 
-The `index.html` files is a basic HTML file. The links in the head pull
-in the stylesheets from the WAB release.
-
-The second important part of the HTML is the inclusion of a `div` that has an
-id of `view`. This is used by the JavaScript to determine where it should
-manage elements.
-
-To initialize the WAB reference implementation JavaScript the URL to the
-`wab.js` file must be included. Following the loading of the `wab.js` the
-`conf.js` file should be loaded.
-
-### conf.js
-
-The `conf.js` file is a JavaScript file but it is used for declarations and
-setting up a configuration that is passed to the wab module using the
-`wab.setFlow` function. The file show is a minimal version. More options are
-available and will be described in a future lesson.
-
-The view configuration describes individual displays as well as what actions
-cause a change in the display. After that it is left to the `wab` JS module to
-run the show. The most basic way to create a configuration for a class that
-follows a REST API is to use the `wab.makeRestFlow()`. This function expects a
-sample of the class to be managed. The sample should have the default values
-for each attribute.
-
-```javascript
-entrySample = {
-    kind: 'Entry',
-    title: '',
-    content: '\n\n\n\n'
-}
-entryFlow = wab.makeRestFlow(entrySample)
-wab.setFlow(entryFlow);
-```
-
-Note the use of multiple newline characters in the `content` attribute default
-value. Each newline represents a new line in a textarea otherwise a string is
-assumed to be a text field.
-
-The `wab.makeRestFlow()` returns a default REST flow that can be used to
-`wab.setFlow()`. It can also be combined in a larger flow if there are
-additional displays in the application. The `wab.makeRestFlow()` function is
-not required but is a helper function. We will see in a future lesson how to
-grab the contents that are returned and make a custom flow and set of display
-descriptions.
-
-The flow of the application is depicted in the Entry Flow diagram. The boxes
-in the diagram represent the displays and the named transitions between
-displays correspond to the actions that can be taken in each display by pushing
-a button. Each display shown is one of the built in WAB reference
-implementation displays.
-
-![](entry_flow.svg)
+[tell me more...](MORE.md#pages/index.html)
 
 ## Running
-
-- TBD use command line options to specify the UI and Controller classes along with the data directory
 
 The `wabur` Runner is used for this lesson. To start the Runner, the wabur gem
 must be installed or the wabur source must be available. Assuming the gem is
@@ -195,10 +143,12 @@ installed and the run location is in the `lesson-1` directory the command to
 run the application is:
 
 ```
-> wabur -I app/lib --controller WAB::OpenController --ui UI::Entry --http.dir app/pages --data.dir app/data/wabur
+> wabur -I app/lib --base app --controller WAB::OpenController --ui UI::Entry 
 ```
 
 That will start the Runner listening on port 6363 and storing data in the
 `app/data/wabur` directory. Open a browser and type in `http://localhost:6363` and
 observe an empty blog entry list. Use the `Create` button to create a new Entry
 and the other displays and buttons to experience the new application.
+
+[tell me more...](MORE.md#running)
