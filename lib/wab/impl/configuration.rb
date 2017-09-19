@@ -13,7 +13,7 @@ module WAB
         'handler'    => {
           'path' => '/v1'
         },
-        'controller' => 'BasicController',
+        'controller' => 'WAB::OpenController',
         'type_key'   => 'kind',
         'http'       => {
           'dir'  => 'view/pages',

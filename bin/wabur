@@ -31,34 +31,6 @@ opts.parse(ARGV)
 
 config = WAB::Impl::Configuration.from(options)
 
-class BasicController < WAB::Controller
-
-  def initialize(shell)
-    super(shell)
-  end
-
-  def handle(data)
-    super
-  end
-
-  def create(path, query, data)
-    super
-  end
-
-  def read(path, query)
-    super
-  end
-
-  def update(path, query, data)
-    super
-  end
-
-  def delete(path, query)
-    super
-  end
-
-end # BasicController
-
 if 0 < verbose_cnt
   v = config['verbose'].to_i - verbose_cnt
   v = 0 if v < 0
