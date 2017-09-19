@@ -196,7 +196,7 @@ indicates a textarea should be used with the number of line identified by the
 number of newlines. The values also act as the default values for the
 attribute.
 
-### index.html
+### Index
 
 The `index.html` file provides the frame around the display area that will be
 used for the dynamic portion of the application.

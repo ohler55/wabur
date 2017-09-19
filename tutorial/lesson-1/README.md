@@ -108,7 +108,7 @@ pressing a button.
 
 [tell me more...](MORE.md#entry)
 
-### index.html
+### Index
 
 The `index.html` file provides the frame around the display area that will be
 used for the dynamic portion of the application.
@@ -133,7 +133,7 @@ used for the dynamic portion of the application.
 </html>
 ```
 
-[tell me more...](MORE.md#index-html)
+[tell me more...](MORE.md#index)
 
 ## Running
 
