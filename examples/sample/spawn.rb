@@ -12,7 +12,7 @@ end
 require 'optparse'
 require 'wab'
 require 'wab/io'
-require 'sample'
+require 'sample_controller'
 
 # This app is expected to be spawned from a WAB runner. This demonstrates one
 # possible mode for running WAB applications. It is the least performant of
