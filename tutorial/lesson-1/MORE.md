@@ -157,7 +157,7 @@ like either wait for later lessons or set up a test and print out the output.
 Two files are needed for this lesson. A Ruby file for the UI and an HTML index
 file.
 
-### entry.rb
+### Entry
 
 The `entry.rb` file generates configuration for the `wab` JavaScript
 library. It also provides the HTML templates to be used for the display.

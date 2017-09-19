@@ -76,7 +76,7 @@ file.
 
 [tell me more...](MORE.md#implementation)
 
-### entry.rb
+### Entry
 
 The `entry.rb` file generates configuration for the `wab` JavaScript
 library. It also provides the HTML templates to be used for the display.
@@ -106,7 +106,7 @@ pressing a button.
 
 ![](entry_flow.svg)
 
-[tell me more...](MORE.md#entry-rb)
+[tell me more...](MORE.md#entry)
 
 ### index.html
 
