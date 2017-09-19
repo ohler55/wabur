@@ -10,8 +10,6 @@ module WAB
       include WAB::ShellLogger
       extend Forwardable
 
-      attr_accessor :verbose
-
       # Returns the path where a data type is located. The default is 'kind'.
       attr_reader :type_key
       attr_reader :path_pos
@@ -21,26 +19,25 @@ module WAB
 
       # Sets up the shell with the supplied configuration data.
       #
-      # config:: configuration Hash
+      # config:: Configuration object
       def initialize(config)
-        pre_path  = config['handler']['path']
-        @path_pos = pre_path.split('/').length - 1
+        pre_path      = config[:path_prefix] || '/v1'
+        @path_pos     = pre_path.split('/').length - 1
+        base          = config[:base] || '.'
+        @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base))
+        @type_key     = config[:type_key] || 'kind'
+        @logger       = config[:logger]
+        @logger.level = config[:verbosity] unless @logger.nil?
+        @http_dir     = (config['http.dir'] || File.join(base, 'pages')).gsub('$BASE', base)
+        @http_port    = (config['http.port'] || 6363).to_i
+        @controllers  = {}
 
-        @model    = Model.new(File.join(config['base'], config['data_dir']))
-        @type_key = config['type_key']
+        requires      = config[:require]
+        requires.split(',').each { |r| require r.strip } unless requires.nil?
 
-        @verbose  = if config.has_key?('verbose')
-                      verbosity = config['verbose'].to_s.downcase
-                      if verbosity == 'true'
-                        true
-                      elsif verbosity == 'false'
-                        false
-                      end
-                    end
-
-        @http_dir    = File.expand_path(config['http']['dir'])
-        @http_port   = config['http']['port'].to_i
-        @controllers = {}
+        if config[:handler].is_a?(Array)
+          config[:handler].each { |hh| register_controller(hh[:type], hh[:handler]) }
+        end
       end
 
       # Start listening. This should be called after registering Controllers
@@ -59,8 +56,16 @@ module WAB
       # will be used. The default controller is registered with a +nil+ key.
       #
       # type:: type name
-      # controller:: Controller instance for handling requests for the identified +type+
+      # controller:: Controller instance for handling requests for the
+      #              identified +type+. This can be a Controller, a Controller
+      #              class, or a Controller class name.
       def register_controller(type, controller)
+        case controller
+        when String
+          controller = Object.const_get(controller).new(self)
+        when Class
+          controller = controller.new(self)
+        end
         controller.shell = self
         @controllers[type] = controller
       end

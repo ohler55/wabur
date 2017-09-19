@@ -137,17 +137,22 @@ module WAB
         end
         node = @root
         path = path.to_s.split('.') unless path.is_a?(Array)
-        path[0..-2].each { |key|
+        path[0..-2].each_index { |i|
+          key = path[i]
           if node.is_a?(Hash)
             key = key.to_sym
-            node[key] = {} unless node.has_key?(key)
+            unless node.has_key?(key)
+              ai = key_to_int_ok(path[i + 1])
+              node[key] = ai.nil? ? {} : []
+            end
             node = node[key]
           elsif node.is_a?(Array)
             key = key_to_int(key)
             if key < node.length && -node.length < key
               node = node[key]
             else
-              nn = {}
+              ai = key_to_int_ok(path[i + 1])
+              nn = ai.nil? ? {} : []
               if key < -node.length
                 node.unshift(nn)
               else
@@ -353,6 +358,19 @@ module WAB
         return key if WAB::Utils.pre_24_fixnum?(key)
 
         raise WAB::Error, 'path key must be an integer for an Array.'
+      end
+
+      # returns either an int or nil.
+      def key_to_int_ok(key)
+        return key if key.is_a?(Integer)
+
+        key = key.to_s if key.is_a?(Symbol)
+        if key.is_a?(String)
+          i = key.to_i
+          return i if i.to_s == key
+        end
+        return key if WAB::Utils.pre_24_fixnum?(key)
+        nil
       end
 
       def deep_dup_value(value)

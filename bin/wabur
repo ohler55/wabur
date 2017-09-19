@@ -12,38 +12,45 @@ require 'logger'
 require 'wab'
 require 'wab/impl'
 
-# Initial options
-options = {
-  'base'        => '.',
-  'config_file' => nil
+# The options for this application are determined by the Configuration class
+# which takes a usage string and an options map. The returned object is a
+# WAB::Impl::Configuration object that is used by the shell to configure
+# itself before being started.
+
+usage = %{
+Usage: wabur [options]
+
+A pure Ruby WAB Runner. Configuration is either by command line or a
+configuration file which can be a UNIX style conf file, a JSON file, or a YAML
+file. The configuration typically includes designating Controller classes for
+each URL path to be handled.
+
 }
-verbose_cnt = 0
 
-opts = OptionParser.new(%{Usage: wabur [options]
+options = {
+  base: { val: '.', doc: 'App root directory which is $BASE.', short: '-b' },
+  store: {
+    dir: { val: File.join('$BASE', 'data'), doc: "Directory to use for data storage." }
+  },
+  path_prefix: { val: '/v1', doc: 'URL path prefix for relative handler routing.' },
+  handler: { val: [], doc: 'Type and handler/controller class in the form <type>=<controller class>.', short: '-t', parse: [ :type, :handler ] },
+  type_key: { val: 'kind', doc: 'Shell type_key.' },
+  http: {
+    dir: { val: File.join('$BASE', 'pages'), doc: 'Directory where HTTP content resides.' },
+    port: { val: 6363, doc: 'HTTP Port to listen on.' },
+  },
+  verbosity: { val: 'WARN', doc: 'Log level. (ERROR, WARN, INFO, DEBUG)' },
+}
 
-A WAB Runner that is configured with a UNIX style config file.
-})
-opts.on('-b', '--base PATH', String, 'App root directory. Defaults to "."') { |d| options['base'] = d }
-opts.on('-c', '--config PATH', String, 'Custom configuration file')         { |c| options['config_file'] = c }
-opts.on('-v', '--verbose', 'Verbose output')                                { verbose_cnt += 1 }
-opts.on('-h', '--help', 'Show this display')                                { puts opts.help; Process.exit!(0) }
-opts.parse(ARGV)
+config = WAB::Impl::Configuration.new(usage, options)
 
-config = WAB::Impl::Configuration.from(options)
-
-if 0 < verbose_cnt
-  v = config['verbose'].to_i - verbose_cnt
-  v = 0 if v < 0
-  config['verbose'] = v
-end
+# The returned config can be modified before passing to the Shell creation. By
+# setting the config[:logger] the Shell will use that as the logger. The
+# config[:handler] array can also be modified by setting path values along
+# with a Controller instance, a Controller class, or the name of a Controller
+# class.
+config[:logger] = Logger.new(STDOUT)
 
 shell = WAB::Impl::Shell.new(config)
-
-# TBD configure logger better
-shell.logger = Logger.new(STDOUT)
-shell.logger.level = config['verbose'].to_i
-
-controller = Object.const_get(config['controller']).new(shell)
-shell.register_controller(nil, controller)
 
 shell.start
