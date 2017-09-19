@@ -124,7 +124,7 @@ app
 ```
 
 The `lib` sub-directory is for Ruby code that implements the UI configuration
-as well as the Controller. In lesson-1 the WAB::OpenController is used so
+as well as the Controller. In lesson-1 the `WAB::OpenController` is used so
 there is no need for any Controller customization. In later lessons a
 Controller will be added.
 
@@ -150,7 +150,7 @@ reference implemenation provides HTML and JavaScript using Ruby code as well
 as JavaScript libraries.
 
 Generally a Controller Ruby file as well as a view or UI files are present but
-for the objects that follow a simple REST pattern the WAB::UI::RestFlow
+for the objects that follow a simple REST pattern the `WAB::UI::RestFlow`
 provides the default REST flow patterns. To see what that configuration looks
 like either wait for later lessons or set up a test and print out the output.
 
@@ -171,7 +171,7 @@ class Entry < WAB::UI::RestFlow
     template = {
       kind: 'Entry',
       title: '',
-      content: '\n\n\n\n',
+      content: "\n\n\n\n",
     }
     super(template)
   end

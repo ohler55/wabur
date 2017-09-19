@@ -8,7 +8,7 @@ class Entry < WAB::UI::RestFlow
     template = {
       kind: 'Entry',
       title: '',
-      content: '\n\n\n\n',
+      content: "\n\n\n\n",
     }
     super(template)
   end
