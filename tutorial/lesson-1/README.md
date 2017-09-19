@@ -76,7 +76,7 @@ file.
 
 [tell me more...](MORE.md#implementation)
 
-### lib/ui/entry.rb
+### entry.rb
 
 The `entry.rb` file generates configuration for the `wab` JavaScript
 library. It also provides the HTML templates to be used for the display.
@@ -108,7 +108,7 @@ pressing a button.
 
 [tell me more...](MORE.md#lib/ui/entry.rb)
 
-### pages/index.html
+### index.html
 
 The `index.html` file provides the frame around the display area that will be
 used for the dynamic portion of the application.

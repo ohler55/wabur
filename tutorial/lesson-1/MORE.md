@@ -28,8 +28,6 @@ as well as the rest of the application implementation.
 
 ## WABuR Components and Terminology
 
-- TBD diagram of flow explaining each step
-
 WABuR is designed as a Model View Controller (MVC) system. At the core is a
 Ruby Controller that executes the business logic of the app. The Controller
 resides at the server-side. To support the Controller, an HTTP web server and
@@ -159,7 +157,7 @@ like either wait for later lessons or set up a test and print out the output.
 Two files are needed for this lesson. A Ruby file for the UI and an HTML index
 file.
 
-### lib/ui/entry.rb
+### entry.rb
 
 The `entry.rb` file generates configuration for the `wab` JavaScript
 library. It also provides the HTML templates to be used for the display.
@@ -198,7 +196,7 @@ indicates a textarea should be used with the number of line identified by the
 number of newlines. The values also act as the default values for the
 attribute.
 
-### pages/index.html
+### index.html
 
 The `index.html` file provides the frame around the display area that will be
 used for the dynamic portion of the application.
