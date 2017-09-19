@@ -106,7 +106,7 @@ pressing a button.
 
 ![](entry_flow.svg)
 
-[tell me more...](MORE.md#lib/ui/entry.rb)
+[tell me more...](MORE.md#entry.rb)
 
 ### index.html
 
@@ -133,7 +133,7 @@ used for the dynamic portion of the application.
 </html>
 ```
 
-[tell me more...](MORE.md#pages/index.html)
+[tell me more...](MORE.md#index.html)
 
 ## Running
 
