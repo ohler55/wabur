@@ -19,7 +19,7 @@ module WAB
         
         opts.on('-c', '--config PATH', String, 'Configuration file.') { |c| config_file = c }
         opts.on('-r', '--require LIBRARY', String, 'Require.')        { |r| require r }
-        opts.on('-v', '--verbose', 'Increate verbosity.')             { log_level += 1 }
+        opts.on('-v', '--verbose', 'Increase verbosity.')             { log_level += 1 }
         opts.on('-h', '--help', 'Show this display.')                 {
           puts opts.help
           Process.exit!(0)
@@ -63,7 +63,7 @@ module WAB
         }
       end
 
-      # Appends an arg to an array in the confogiration.
+      # Appends an arg to an array in the configuration.
       def arg_append(path, val, parse)
         parts = val.split('=')
         if 1 < parts.length

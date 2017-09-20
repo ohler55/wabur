@@ -5,7 +5,7 @@ module WAB
     module Utils
       class << self
 
-        # Convert a key to an integer ot raise.
+        # Convert a key to an integer or raise.
         def key_to_int(key)
           return key if key.is_a?(Integer)
 
