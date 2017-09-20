@@ -24,8 +24,8 @@ module WAB
           puts opts.help
           Process.exit!(0)
         }
-        # Start out with an empty @map and add to it with the command line
-        # args processing. The map will be moved sideways are parsing.
+
+        # Process command-line arguments and append them, in order, to an empty hash @map
         add_options(opts, options, '')
 
         opts.parse(ARGV)
@@ -42,8 +42,8 @@ module WAB
         @map = merge_map(@map, command_line_map) unless command_line_map.empty?
       end
 
-      # Walks the options map and calls opts.on for each option so that all
-      # are provided when help is called.
+      # Walks the options map and calls +opts.on+ for each option so that all
+      # are provided when +--help+ is called.
       def add_options(opts, options, path)
         options.each_pair { |k,v|
           next unless v.is_a?(Hash)

@@ -12,11 +12,13 @@ require 'logger'
 require 'wab'
 require 'wab/impl'
 
-# The options for this application are determined by the Configuration class
-# which takes a usage string and an options map. The returned object is a
-# WAB::Impl::Configuration object that is used by the shell to configure
-# itself before being started.
+# The options for this application are determined by the
+# +WAB::Impl::Configuration+ class which takes an +usage+ string and an
+# +options+ hash. The returned object is a +WAB::Impl::Configuration+
+# object that is used by the Shell to configure itself before being started.
 
+# Prepare the +usage+ string.
+# Basically a banner text and description passed on +OptionParser+.
 usage = %{
 Usage: wabur [options]
 
@@ -27,6 +29,9 @@ each URL path to be handled.
 
 }
 
+# Prepare the +options+ hash.
+# Basically a mapping of supported switches and their description that gets
+# parsed by +OptionParser+.
 options = {
   base: {
     val: '.',
@@ -78,9 +83,9 @@ options = {
 
 config = WAB::Impl::Configuration.new(usage, options)
 
-# The returned config can be modified before passing to the Shell creation. By
-# setting the config[:logger] the Shell will use that as the logger. The
-# config[:handler] array can also be modified by setting path values along
+# The Configuration object can be modified before initializing the Shell. By
+# setting the +config[:logger]+ the Shell will use that as the logger. The
+# +config[:handler]+ array can also be modified by setting path values along
 # with a Controller instance, a Controller class, or the name of a Controller
 # class.
 config[:logger] = Logger.new(STDOUT)

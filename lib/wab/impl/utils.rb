@@ -5,7 +5,7 @@ module WAB
     module Utils
       class << self
 
-        # Convert a key to an integer or raise.
+        # Convert a key to an +Integer+ or raise.
         def key_to_int(key)
           return key if key.is_a?(Integer)
 
@@ -19,7 +19,7 @@ module WAB
           raise WAB::Error, 'path key must be an integer for an Array.'
         end
 
-        # returns either an int or nil.
+        # Returns either an +Integer+ or +nil+.
         def key_to_int_ok(key)
           return key if key.is_a?(Integer)
 
