@@ -42,7 +42,7 @@ options = {
   },
   store: {
     dir: {
-      val: File.join('$BASE', 'data'),
+      val: '$BASE/data',
       type: String,
       doc: "Directory to use for data storage."
     }
@@ -65,7 +65,7 @@ options = {
   },
   http: {
     dir: {
-      val: File.join('$BASE', 'pages'),
+      val: '$BASE/pages',
       type: String,
       doc: 'Directory where HTTP content resides.'
     },
