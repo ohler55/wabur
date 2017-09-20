@@ -163,8 +163,7 @@ Bundler or directly, and try loading again.
             if key < node.length && -node.length < key
               node = node[key]
             else
-              ai = Utils.attempt_key_to_int(path[i + 1])
-              nn = ai.nil? ? {} : []
+              nn = Utils.attempt_key_to_int(path[i + 1]).nil? ? {} : []
               if key < -node.length
                 node.unshift(nn)
               else
