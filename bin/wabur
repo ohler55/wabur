@@ -91,6 +91,5 @@ config = WAB::Impl::Configuration.new(usage, options)
 # class.
 config[:logger] = Logger.new(STDOUT)
 
-shell = WAB::Impl::Shell.new(config)
-
-shell.start
+# Start a shell initialized with the final configuration.
+WAB::Impl::Shell.new(config).start
