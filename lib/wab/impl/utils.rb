@@ -20,7 +20,7 @@ module WAB
         end
 
         # Returns either an +Integer+ or +nil+.
-        def key_to_int_ok(key)
+        def attempt_key_to_int(key)
           return key if key.is_a?(Integer)
 
           key = key.to_s if key.is_a?(Symbol)

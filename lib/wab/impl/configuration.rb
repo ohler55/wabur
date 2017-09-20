@@ -88,14 +88,14 @@ module WAB
 
       # Recursive merge of other into prime.
       def merge_map(prime, other)
-        prime.merge(other) { |key,val,oval|
-          case val
+        prime.merge(other) { |key,prime_value,other_value|
+          case prime_value
           when Hash
-            merge_map(val, oval)
+            merge_map(prime_value, other_value)
           when Array
-            val + oval
+            prime_value + other_value
           else
-            oval
+            other_value
           end
         }
       end
@@ -154,7 +154,7 @@ Bundler or directly, and try loading again.
           if node.is_a?(Hash)
             key = key.to_sym
             unless node.has_key?(key)
-              ai = Utils.key_to_int_ok(path[i + 1])
+              ai = Utils.attempt_key_to_int(path[i + 1])
               node[key] = ai.nil? ? {} : []
             end
             node = node[key]
@@ -163,7 +163,7 @@ Bundler or directly, and try loading again.
             if key < node.length && -node.length < key
               node = node[key]
             else
-              ai = Utils.key_to_int_ok(path[i + 1])
+              ai = Utils.attempt_key_to_int(path[i + 1])
               nn = ai.nil? ? {} : []
               if key < -node.length
                 node.unshift(nn)

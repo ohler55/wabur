@@ -142,7 +142,7 @@ module WAB
           if node.is_a?(Hash)
             key = key.to_sym
             unless node.has_key?(key)
-              ai = Utils.key_to_int_ok(path[i + 1])
+              ai = Utils.attempt_key_to_int(path[i + 1])
               node[key] = ai.nil? ? {} : []
             end
             node = node[key]
@@ -151,7 +151,7 @@ module WAB
             if key < node.length && -node.length < key
               node = node[key]
             else
-              ai = Utils.key_to_int_ok(path[i + 1])
+              ai = Utils.attempt_key_to_int(path[i + 1])
               nn = ai.nil? ? {} : []
               if key < -node.length
                 node.unshift(nn)
