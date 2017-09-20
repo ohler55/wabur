@@ -30,55 +30,63 @@ URL path to be handled.
 
 }
 
-# Prepare the +options+ hash.
-# Basically a mapping of supported switches and their description that gets
-# parsed by +OptionParser+.
+# Prepare the +options+ hash. Basically a mapping of supported switches and
+# their description that gets parsed by +OptionParser+. It is also used to
+# generate default values.
 options = {
   base: {
     val: '.',
     type: String,
     doc: 'App root directory which is $BASE.',
+    arg: 'PATH',
     short: '-b'
   },
   store: {
     dir: {
       val: '$BASE/data',
       type: String,
-      doc: "Directory to use for data storage."
+      doc: "Directory to use for data storage.",
+      arg: 'PATH',
     }
   },
   path_prefix: {
     val: '/v1',
     type: String,
-    doc: 'URL path prefix for relative handler routing.'
+    doc: 'URL path prefix for relative handler routing.',
+    arg: 'PREFIX',
   },
   handler: {
     val: [],
     doc: 'Type and handler/controller class in the form <type>=<controller class>.',
     short: '-t',
-    parse: [ :type, :handler ]
+    parse: [:type, :handler],
+    arg: 'PAIR',
   },
   type_key: {
     val: 'kind',
     type: String,
-    doc: 'Shell type_key.'
+    doc: 'Shell type_key.',
+    arg: 'KEY',
   },
   http: {
     dir: {
       val: '$BASE/pages',
       type: String,
-      doc: 'Directory where HTTP content resides.'
+      doc: 'Directory where HTTP content resides.',
+      arg: 'PATH',
     },
     port: {
       val: 6363,
       type: Integer,
-      doc: 'HTTP Port to listen on.'
+      doc: 'HTTP Port to listen on.',
+      arg: 'PORT',
     },
   },
   verbosity: {
     val: 'WARN',
     type: String,
-    doc: 'Log level. (ERROR, WARN, INFO, DEBUG)'
+    doc: 'Log level. (ERROR, WARN, INFO, DEBUG)',
+    arg: 'LEVEL',
   },
 }
 
