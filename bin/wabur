@@ -28,18 +28,23 @@ each URL path to be handled.
 }
 
 options = {
-  base: { val: '.', doc: 'App root directory which is $BASE.', short: '-b' },
+  base: {
+    val: '.',
+    type: String,
+    doc: 'App root directory which is $BASE.',
+    short: '-b'
+  },
   store: {
-    dir: { val: File.join('$BASE', 'data'), doc: "Directory to use for data storage." }
+    dir: { val: File.join('$BASE', 'data'), type: String, doc: "Directory to use for data storage." }
   },
-  path_prefix: { val: '/v1', doc: 'URL path prefix for relative handler routing.' },
+  path_prefix: { val: '/v1', type: String, doc: 'URL path prefix for relative handler routing.' },
   handler: { val: [], doc: 'Type and handler/controller class in the form <type>=<controller class>.', short: '-t', parse: [ :type, :handler ] },
-  type_key: { val: 'kind', doc: 'Shell type_key.' },
+  type_key: { val: 'kind', type: String, doc: 'Shell type_key.' },
   http: {
-    dir: { val: File.join('$BASE', 'pages'), doc: 'Directory where HTTP content resides.' },
-    port: { val: 6363, doc: 'HTTP Port to listen on.' },
+    dir: { val: File.join('$BASE', 'pages'), type: String, doc: 'Directory where HTTP content resides.' },
+    port: { val: 6363, type: Integer, doc: 'HTTP Port to listen on.' },
   },
-  verbosity: { val: 'WARN', doc: 'Log level. (ERROR, WARN, INFO, DEBUG)' },
+  verbosity: { val: 'WARN', type: String, doc: 'Log level. (ERROR, WARN, INFO, DEBUG)' },
 }
 
 config = WAB::Impl::Configuration.new(usage, options)
