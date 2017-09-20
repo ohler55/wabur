@@ -142,16 +142,16 @@ module WAB
           if node.is_a?(Hash)
             key = key.to_sym
             unless node.has_key?(key)
-              ai = key_to_int_ok(path[i + 1])
+              ai = Utils.key_to_int_ok(path[i + 1])
               node[key] = ai.nil? ? {} : []
             end
             node = node[key]
           elsif node.is_a?(Array)
-            key = key_to_int(key)
+            key = Utils.key_to_int(key)
             if key < node.length && -node.length < key
               node = node[key]
             else
-              ai = key_to_int_ok(path[i + 1])
+              ai = Utils.key_to_int_ok(path[i + 1])
               nn = ai.nil? ? {} : []
               if key < -node.length
                 node.unshift(nn)
@@ -169,7 +169,7 @@ module WAB
           key = key.to_sym
           node[key] = value
         elsif node.is_a?(Array)
-          key = key_to_int(key)
+          key = Utils.key_to_int(key)
           if key < -node.length
             node.unshift(value)
           else
@@ -345,32 +345,6 @@ module WAB
         else
           block.call(path, value)
         end
-      end
-
-      def key_to_int(key)
-        return key if key.is_a?(Integer)
-
-        key = key.to_s if key.is_a?(Symbol)
-        if key.is_a?(String)
-          i = key.to_i
-          return i if i.to_s == key
-        end
-        return key if WAB::Utils.pre_24_fixnum?(key)
-
-        raise WAB::Error, 'path key must be an integer for an Array.'
-      end
-
-      # returns either an int or nil.
-      def key_to_int_ok(key)
-        return key if key.is_a?(Integer)
-
-        key = key.to_s if key.is_a?(Symbol)
-        if key.is_a?(String)
-          i = key.to_i
-          return i if i.to_s == key
-        end
-        return key if WAB::Utils.pre_24_fixnum?(key)
-        nil
       end
 
       def deep_dup_value(value)
