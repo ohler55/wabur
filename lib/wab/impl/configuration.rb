@@ -47,15 +47,15 @@ module WAB
       def add_options(opts, options, path='')
         options.each_pair { |k,v|
           next unless v.is_a?(Hash)
-          key_path = path.empty? ? k.to_s : path + '.' + k.to_s
+          key_path = path.empty? ? k.to_s : "#{path}.#{k}"
           if v.has_key?(:val)
             default = v[:val]
             if default.is_a?(Array)
               opts.on(v[:short], "--#{key_path} PAIR", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
             elsif v[:short].nil?
-              opts.on("--#{key_path} VALUE", v[:type], v[:doc] + " Default: #{default}") { |val| set(key_path, val) }
+              opts.on("--#{key_path} VALUE", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
             else
-              opts.on(v[:short].to_s, "--#{key_path} VALUE", v[:type], v[:doc] + " Default: #{default}") { |val| set(key_path, val) }
+              opts.on(v[:short].to_s, "--#{key_path} VALUE", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
             end
           else
             add_options(opts, v, key_path)
@@ -82,7 +82,7 @@ module WAB
       def build_default_map(options, path='')
         options.each_pair { |k,v|
           next unless v.is_a?(Hash)
-          key_path = path.empty? ? k.to_s : path + '.' + k.to_s
+          key_path = path.empty? ? k.to_s : "#{path}.#{k}"
           if v.has_key?(:val)
             set(key_path, v[:val])
           else
