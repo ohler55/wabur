@@ -22,10 +22,11 @@ require 'wab/impl'
 usage = %{
 Usage: wabur [options]
 
-A pure Ruby WAB Runner. Configuration is either by command line or a
-configuration file which can be a UNIX style conf file, a JSON file, or a YAML
-file. The configuration typically includes designating Controller classes for
-each URL path to be handled.
+A pure Ruby WAB Runner.
+Configured directly via command-line options or via a configuration file which
+can either be a UNIX-style conf file, or a JSON file, or a YAML file.
+The configuration typically includes designating Controller classes for each
+URL path to be handled.
 
 }
 
