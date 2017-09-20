@@ -64,5 +64,5 @@ done
 if [ -z $# ] || [[ $1 != *'o'* && $1 != *'e'* ]]
 then
   echo -e "\n  Starting Ruby Runner.."
-  bundle exec wabur --base $sampledir
+  bundle exec wabur -I $sampledir -c $sampledir/wabur/wabur.conf
 fi
