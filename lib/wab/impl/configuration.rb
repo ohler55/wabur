@@ -26,14 +26,14 @@ module WAB
         }
 
         # Process command-line arguments and append them, in order, to an empty hash @map
-        add_options(opts, options, '')
+        add_options(opts, options)
 
         opts.parse(ARGV)
 
         # Move the @map sideways and replace with defaults.
         command_line_map = @map
         @map = {}
-        build_default_map(options, '')
+        build_default_map(options)
 
         # If a config file was specified load it and merge into @map.
         @map = merge_map(@map, parse_config_file(config_file)) unless config_file.nil?
@@ -44,7 +44,7 @@ module WAB
 
       # Walks the options map and calls +opts.on+ for each option so that all
       # are provided when +--help+ is called.
-      def add_options(opts, options, path)
+      def add_options(opts, options, path='')
         options.each_pair { |k,v|
           next unless v.is_a?(Hash)
           key_path = path.empty? ? k.to_s : path + '.' + k.to_s
@@ -79,7 +79,7 @@ module WAB
       end
 
       # Builds a map from the default options passed in.
-      def build_default_map(options, path)
+      def build_default_map(options, path='')
         options.each_pair { |k,v|
           next unless v.is_a?(Hash)
           key_path = path.empty? ? k.to_s : path + '.' + k.to_s
