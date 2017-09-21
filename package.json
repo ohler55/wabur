@@ -1,0 +1,10 @@
+{
+    "name": "wabur",
+    "version": "0.2.0",
+    "scripts": {
+        "build": "babel -o view/pages/assets/js/wab.js view/js/wab.js view/js/list.js view/js/obj.js view/js/view.js"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.0.0"
+    }
+}
