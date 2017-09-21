@@ -88,29 +88,10 @@ module WAB
       # array of path node identifiers. For example, child.grandchild is the
       # same as ['child', 'grandchild'].
       def get(path)
-        if path.is_a?(Symbol)
-          node = @root[path]
-        else
-          path = path.to_s.split('.') unless path.is_a?(Array)
-          node = @root
-          path.each { |key|
-            if node.is_a?(Hash)
-              node = node[key.to_sym]
-            elsif node.is_a?(Array)
-              i = key.to_i
-              if 0 == i && '0' != key && 0 != key
-                node = nil
-                break
-              end
-              node = node[i]
-            else
-              node = nil
-              break
-            end
-          }
-        end
-        return Data.new(node, false, false) if node.is_a?(Hash) || node.is_a?(Array)
-        node
+        node = Utils.get_node(@root, path)
+
+        return node unless node.is_a?(Hash) || node.is_a?(Array)
+        Data.new(node, false, false)
       end
 
       # Sets the node value identified by the path where the path elements are
@@ -136,49 +117,7 @@ module WAB
           validate_value(value)
         end
         node = @root
-        path = path.to_s.split('.') unless path.is_a?(Array)
-        path[0..-2].each_index { |i|
-          key = path[i]
-          if node.is_a?(Hash)
-            key = key.to_sym
-            unless node.has_key?(key)
-              ai = Utils.attempt_key_to_int(path[i + 1])
-              node[key] = ai.nil? ? {} : []
-            end
-            node = node[key]
-          elsif node.is_a?(Array)
-            key = Utils.key_to_int(key)
-            if key < node.length && -node.length < key
-              node = node[key]
-            else
-              ai = Utils.attempt_key_to_int(path[i + 1])
-              nn = ai.nil? ? {} : []
-              if key < -node.length
-                node.unshift(nn)
-              else
-                node[key] = nn
-              end
-              node = nn
-            end
-          else
-            raise WAB::TypeError, "Can not set a member of an #{node.class}."
-          end
-        }
-        key = path[-1]
-        if node.is_a?(Hash)
-          key = key.to_sym
-          node[key] = value
-        elsif node.is_a?(Array)
-          key = Utils.key_to_int(key)
-          if key < -node.length
-            node.unshift(value)
-          else
-            node[key] = value
-          end
-        else
-          raise WAB::TypeError, "Can not set a member of an #{node.class}."
-        end
-        value
+        Utils.set_value(node, path, value)
       end
 
       # Each child of the Data instance is provided as an argument to a block
