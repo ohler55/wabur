@@ -32,7 +32,8 @@ end
 def generate_js
   minified = ARGV.include?('-m') ? '--minified ' : ''
   dest = "#{dest_dir('js')}/wab.js"
-  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{js_src_dir}/wab.js #{js_src_dir}/list.js #{js_src_dir}/obj.js #{js_src_dir}/view.js`
+  src = %w(wab list obj view).map { |e| "#{js_src_dir}/#{e}.js" }.join(' ')
+  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
   if out.empty?
     success_message(dest)
   else
