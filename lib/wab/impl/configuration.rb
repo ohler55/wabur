@@ -148,48 +148,7 @@ Bundler or directly, and try loading again.
 
       def set_map(node, path, value)
         return node if path.empty?
-        path = path.to_s.split('.') unless path.is_a?(Array)
-        path[0..-2].each_index { |i|
-          key = path[i]
-          if node.is_a?(Hash)
-            key = key.to_sym
-            unless node.has_key?(key)
-              ai = Utils.attempt_key_to_int(path[i + 1])
-              node[key] = ai.nil? ? {} : []
-            end
-            node = node[key]
-          elsif node.is_a?(Array)
-            key = Utils.key_to_int(key)
-            if key < node.length && -node.length < key
-              node = node[key]
-            else
-              nn = Utils.attempt_key_to_int(path[i + 1]).nil? ? {} : []
-              if key < -node.length
-                node.unshift(nn)
-              else
-                node[key] = nn
-              end
-              node = nn
-            end
-          else
-            raise WAB::TypeError, "Can not set a member of an #{node.class}."
-          end
-        }
-        key = path[-1]
-        if node.is_a?(Hash)
-          key = key.to_sym
-          node[key] = value
-        elsif node.is_a?(Array)
-          key = Utils.key_to_int(key)
-          if key < -node.length
-            node.unshift(value)
-          else
-            node[key] = value
-          end
-        else
-          raise WAB::TypeError, "Can not set a member of an #{node.class}."
-        end
-        value
+        Utils.set_value(node, path, value)
       end
 
       def set(path, value)
@@ -198,28 +157,7 @@ Bundler or directly, and try loading again.
       alias []= set
 
       def get(path)
-        if path.is_a?(Symbol)
-          node = @map[path]
-        else
-          path = path.to_s.split('.') unless path.is_a?(Array)
-          node = @map
-          path.each { |key|
-            if node.is_a?(Hash)
-              node = node[key.to_sym]
-            elsif node.is_a?(Array)
-              i = key.to_i
-              if 0 == i && '0' != key && 0 != key
-                node = nil
-                break
-              end
-              node = node[i]
-            else
-              node = nil
-              break
-            end
-          }
-        end
-        node
+        Utils.get_node(@map, path)
       end
       alias [] get
 
