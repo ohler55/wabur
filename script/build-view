@@ -3,104 +3,16 @@
 
 require 'fileutils'
 
-def compact_js(src, dest)
-  cnt = 0
-  sf = File.new(path_to('js', src))
-
-  sf.each_line do |line|
-    cnt += 1
-    line.strip!
-    # Remove comments from all but the two header lines.
-    if 2 < cnt
-      line = remove_js_comment(line)
-      line = compact_js_line(line)
-    end
-    dest.puts(line) unless line.empty?
-  end
-end
-
-def remove_js_comment(line)
-  quote = nil
-  slash = 0
-  i = 0
-  line.each_char { |c|
-    i += 1
-    if quote.nil?
-      if '"' == c || "'" == c
-        quote = c
-      elsif '/' == c
-        slash += 1
-        if 2 <= slash
-          return line[0, i - 2]
-        end
-      else
-        slash = 0
-      end
-    else
-      if c == quote
-        quote = nil
-      end
-    end
-  }
-  line
-end
-
-$punc = '(){}[]/*-+=|&%^:;<>?,'
-
-def compact_js_line(line)
-  quote = nil
-  space = false
-  past_punc = false
-  new_line = ''
-  line.each_char { |c|
-    if quote.nil?
-      if '"' == c || "'" == c
-        quote = c
-        past_punc = false
-        new_line += c
-      elsif ' ' == c || "\t" == c
-        space = !past_punc
-        past_punc = false
-      else
-        if $punc.include?(c)
-          past_punc = true
-          space = false
-          # TBD if an alphanum then put in space if needed
-          # if /+=-{()} then drop space
-        else
-          past_punc = false
-          if space
-            new_line += ' '
-            space = false
-          end
-        end
-        new_line += c
-      end
-    else
-      if c == quote
-        quote = nil
-      end
-      new_line += c
-    end
-  }
-  new_line
-end
-
 def path_to(*subdirs)
-  File.expand_path(File.join('..', 'view', *subdirs), __dir__)
+  File.expand_path(File.join('..', *subdirs), __dir__)
 end
 
 def dest_dir(*contents)
-  path_to('pages', 'assets', *contents)
+  path_to('view', 'pages', 'assets', *contents)
 end
 
-def generate_css
-  src  ||= path_to('styles', 'wab.scss')
-  dest ||= dest_dir('css', 'wab.css')
-
-  FileUtils.mkdir_p dest_dir('css')
-  `sass #{src} #{dest} --style compressed`
-  success_message(dest)
+def js_src_dir
+  path_to('view', 'js')
 end
 
 def success_message(file)
@@ -108,27 +20,30 @@ def success_message(file)
   puts "#{'Generated'.rjust(15)}: #{path}"
 end
 
-begin
-  FileUtils.mkdir_p dest_dir('js')
-  File.open(dest_dir('js', 'wab.js'), 'wb') do |file|
-    # TBD: automatically list script-filenames in the source `js` directory
-    #      in the required order.
-    %w(
-      wab
-      view
-      list
-      obj
-    ).each { |src| compact_js("#{src}.js", file) }
+def generate_css
+  src  ||= path_to('view', 'styles', 'wab.scss')
+  dest ||= dest_dir('css', 'wab.css')
+
+  FileUtils.mkdir_p dest_dir('css')
+  `sass #{src} #{dest} --style compressed`
+  success_message(dest)
+end
+
+def generate_js
+  minified = ARGV.include?('-m') ? '--minified ' : ''
+  dest = "#{dest_dir('js')}/wab.js"
+  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{js_src_dir}/wab.js #{js_src_dir}/list.js #{js_src_dir}/obj.js #{js_src_dir}/view.js`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
   end
-  success_message(dest_dir('js', 'wab.js'))
-rescue => e
-  puts "#{e.class}: #{e.message}"
-  e.backtrace.each { |line| puts line }
 end
 
 begin
   require 'sass'
   generate_css
+  generate_js
 rescue LoadError
   puts "\n'sass' gem not found. Installing.."
   puts `gem install sass --no-ri --no-rdoc`
