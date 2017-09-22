@@ -30,6 +30,7 @@ def generate_css
 end
 
 def generate_js
+  FileUtils.mkdir_p dest_dir('js')
   minified = ARGV.include?('-m') ? '--minified ' : ''
   dest = "#{dest_dir('js')}/wab.js"
   src = %w(wab list obj view).map { |e| "#{js_src_dir}/#{e}.js" }.join(' ')
