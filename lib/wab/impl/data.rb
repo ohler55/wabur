@@ -166,14 +166,9 @@ module WAB
       # value:: value to validate
       def validate(value)
         if value.is_a?(Hash)
-          value.each_pair { |k, v|
-            raise WAB::KeyError unless k.is_a?(Symbol)
-            validate_value(v)
-          }
+          validate_hash(value)
         elsif value.is_a?(Array)
-          value.each { |v|
-            validate_value(v)
-          }
+          value.each { |v| validate_value(v) }
         else
           raise WAB::TypeError
         end
@@ -181,45 +176,44 @@ module WAB
       end
 
       def validate_value(value)
-        value_class = value.class
-        if value.nil? ||
-            TrueClass  == value_class ||
-            FalseClass == value_class ||
-            Integer    == value_class ||
-            Float      == value_class ||
-            String     == value_class ||
-            Time       == value_class ||
-            BigDecimal == value_class ||
-            URI::HTTP  == value_class ||
-            WAB::UUID  == value_class ||
-            WAB::Utils.pre_24_fixnum?(value)
-          return value # already valid
-        elsif Hash == value_class
-          value.each_pair { |k, v|
-            raise WAB::KeyError unless k.is_a?(Symbol)
-            validate_value(v)
-          }
-        elsif Array == value_class
-          value.each { |v|
-            validate_value(v)
-          }
+        return value if valid_class(value)
+        if value.is_a?(Hash)
+          validate_hash(value)
+        elsif value.is_a?(Array)
+          value.each { |v| validate_value(v) }
         else
           raise WAB::TypeError, "#{value_class} is not a valid Data value."
         end
-        value
       end
 
-      # Fix values by returing either the value or the fixed alternative. In
-      # the case of Hash, a copy is always made. (its just easier)
+      def validate_hash(hsh)
+        hsh.each_pair { |k, v|
+          raise WAB::KeyError unless k.is_a?(Symbol)
+          validate_value(v)
+        }
+      end
+
+      def valid_class(value)
+        value_class = value.class
+        value.nil? ||
+          TrueClass  == value_class ||
+          FalseClass == value_class ||
+          Integer    == value_class ||
+          Float      == value_class ||
+          String     == value_class ||
+          Time       == value_class ||
+          BigDecimal == value_class ||
+          URI::HTTP  == value_class ||
+          WAB::UUID  == value_class ||
+          WAB::Utils.pre_24_fixnum?(value)
+      end
+
+      # Fix values by returing either the value or the fixed alternative.
       def fix(value)
-        if value.is_a?(Hash)
-          old = value
-          value = {}
-          old.each_pair { |k, v|
-            k = k.to_sym unless k.is_a?(Symbol)
-            value[k] = fix_value(v)
-          }
-        elsif value.is_a?(Array)
+        value_class = value.class
+        if Hash == value_class
+          value = fix_hash(value)
+        elsif Array == value_class
           value = value.map { |v| fix_value(v) }
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
           value = value.to_h
@@ -232,26 +226,11 @@ module WAB
       end
 
       def fix_value(value)
+        return value if valid_class(value)
+
         value_class = value.class
-        if value.nil? ||
-            TrueClass  == value_class ||
-            FalseClass == value_class ||
-            Integer    == value_class ||
-            Float      == value_class ||
-            String     == value_class ||
-            Time       == value_class ||
-            BigDecimal == value_class ||
-            URI::HTTP  == value_class ||
-            WAB::UUID  == value_class ||
-            WAB::Utils.pre_24_fixnum?(value)
-          return value # already valid
-        elsif Hash == value_class
-          old = value
-          value = {}
-          old.each_pair { |k, v|
-            k = k.to_sym unless k.is_a?(Symbol)
-            value[k] = fix_value(v)
-          }
+        if Hash == value_class
+          value = fix_hash(value)
         elsif Array == value_class
           value = value.map { |v| fix_value(v) }
         elsif value.respond_to?(:to_h) && 0 == value.method(:to_h).arity
@@ -265,6 +244,16 @@ module WAB
           raise WAB::TypeError, "#{value_class} is not a valid Data value."
         end
         value
+      end
+
+      def fix_hash(hsh)
+        old = hsh
+        hsh = {}
+        old.each_pair { |k, v|
+          k = k.to_sym unless k.is_a?(Symbol)
+          hsh[k] = fix_value(v)
+        }
+        hsh
       end
 
       def each_node(path, value, block)
