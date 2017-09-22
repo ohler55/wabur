@@ -1,2 +1,13 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
+- installing npm and babel
+ - ./node_modules/.bin/babel -o view/pages/assets/js/wab.js view/js/wab.js view/js/list.js view/js/obj.js view/js/view.js"
+
+- where to put es6 source
+ - js subdir or stay with view/js
+
+- babel build should go where?
+ - place where it can be copied with other assets to wab.systems
+ - maybe view/assets
+
+- where are wabfonts sourced from?
