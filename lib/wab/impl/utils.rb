@@ -5,12 +5,8 @@ module WAB
 
       class << self
 
-        # Convert a given key to an +Integer+ or raise based on the
-        # conversion-mode.
-        #
-        # Returns zero integer on unsuccessful conversion.
-        # Raises on unsuccessful conversion under 'strict' mode.
-        def convert_to_integer(key, mode = nil)
+        # Convert a key to an +Integer+ or raise.
+        def key_to_int(key)
           return key if key.is_a?(Integer)
 
           key = key.to_s if key.is_a?(Symbol)
@@ -20,10 +16,21 @@ module WAB
           end
           return key if WAB::Utils.pre_24_fixnum?(key)
 
-          return 0 unless mode == "strict"
           raise WAB::Error, 'path key must be an integer for an Array.'
         end
 
+        # Returns either an +Integer+ or +nil+.
+        def attempt_key_to_int(key)
+          return key if key.is_a?(Integer)
+
+          key = key.to_s if key.is_a?(Symbol)
+          if key.is_a?(String)
+            i = key.to_i
+            return i if i.to_s == key
+          end
+          return key if WAB::Utils.pre_24_fixnum?(key)
+          nil
+        end
 
         # Gets the Data element or value identified by the path where the path
         # elements are separated by the '.' character.
@@ -58,15 +65,15 @@ module WAB
             if node.is_a?(Hash)
               key = key.to_sym
               unless node.has_key?(key)
-                node[key] = convert_to_integer(path[i + 1]).zero? ? {} : []
+                node[key] = attempt_key_to_int(path[i + 1]).nil? ? {} : []
               end
               node = node[key]
             elsif node.is_a?(Array)
-              key = convert_to_integer(key, "strict")
+              key = key_to_int(key)
               if key < node.length && -node.length < key
                 node = node[key]
               else
-                entry = convert_to_integer(path[i + 1]).zero? ? {} : []
+                entry = attempt_key_to_int(path[i + 1]).nil? ? {} : []
                 if key < -node.length
                   node.unshift(entry)
                 else
@@ -84,7 +91,7 @@ module WAB
           if node.is_a?(Hash)
             node[key.to_sym] = value
           elsif node.is_a?(Array)
-            key = convert_to_integer(key, "strict")
+            key = key_to_int(key)
             if key < -node.length
               node.unshift(value)
             else
