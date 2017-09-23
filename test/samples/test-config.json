@@ -1,0 +1,13 @@
+{
+  "store": {
+    "dir": "$BASE/test/store/data"
+  },
+  "handler": [
+    {
+      "type": "Article"
+    }
+  ],
+  "http": {
+    "dir": "$BASE/view/test-pages"
+  }
+}

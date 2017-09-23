@@ -1,0 +1,9 @@
+# test.yml
+# Test Configuration file for the Pure Ruby WAB Runner.
+
+store:
+  dir: $BASE/test/store/data
+handler:
+  - type: Article
+http:
+  dir: $BASE/view/test-pages
