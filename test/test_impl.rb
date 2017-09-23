@@ -32,6 +32,7 @@ class TestImpl < Minitest::Test
   end
 end # TestImpl
 
+require 'test_configuration'
 require 'test_data'
 require 'test_expr'
 require 'test_model'
