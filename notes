@@ -1,13 +1,31 @@
 ;; -*- mode: outline; outline-regexp: " *[-\+]"; indent-tabs-mode: nil -*-
 
-- installing npm and babel
- - ./node_modules/.bin/babel -o view/pages/assets/js/wab.js view/js/wab.js view/js/list.js view/js/obj.js view/js/view.js"
 
-- where to put es6 source
- - js subdir or stay with view/js
+https://philipwalton.com/articles/deploying-es2015-code-in-production-today/
+
+Enable ES6
+  Safari 10.1 - already enabled
+  Chrome Canary 60 – behind the Experimental Web Platform flag in chrome:flags. (also Experimental JavaScript)
+  Firefox 54 – behind the dom.moduleScripts.enabled setting in about:config.
+  Edge 15 – behind the Experimental JavaScript Features setting in about:flags.
+
+
+- create dirs
+- build script
+- tutorial setup, symlink, script to so that
+- implement basic /v1/ui read
+- wab module
+ - request (get, create, updated, delete)
+
+- es6
+ - view/es6
+
+- export dir
+ - build and put assets into this for copy to wab.systems
+ - links from tutorial to export
+ 
+- better place for wabfonts and css
+ - maybe view/fonts
 
 - babel build should go where?
  - place where it can be copied with other assets to wab.systems
- - maybe view/assets
-
-- where are wabfonts sourced from?

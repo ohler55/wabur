@@ -33,7 +33,12 @@ module WAB
         @controllers  = {}
 
         requires      = config[:require]
-        requires.split(',').each { |r| require r.strip } unless requires.nil?
+        case requires
+        when Array
+          requires.each { |r| require r.strip }
+        when String
+          requires.split(',').each { |r| require r.strip }
+        end
 
         if config[:handler].is_a?(Array)
           config[:handler].each { |hh| register_controller(hh[:type], hh[:handler]) }

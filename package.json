@@ -5,6 +5,10 @@
         "build": "babel -o view/pages/assets/js/wab.js view/js/wab.js view/js/list.js view/js/obj.js view/js/view.js"
     },
     "devDependencies": {
-        "babel-cli": "^6.0.0"
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.6.0"
+    },
+    "dependencies": {
+        "babel-preset-es2015": "^6.24.1"
     }
 }
