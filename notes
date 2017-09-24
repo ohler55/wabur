@@ -10,6 +10,34 @@ Enable ES6
   Edge 15 – behind the Experimental JavaScript Features setting in about:flags.
 
 
+- view
+ - wab
+  - es6
+ - ui
+  - es6
+  - styles
+  - wabfont
+ - vendor
+
+- myapp
+ - index.html
+ - wab -> ../export/v0.4.0
+
+- export - built from
+- export
+ - v0.4.0
+  - wab.js
+  - ui
+   - ui.js
+   - assets
+    - es6
+    - js
+    - css
+    - wabfont
+    - vender
+
+
+
 - create dirs
 - build script
 - tutorial setup, symlink, script to so that

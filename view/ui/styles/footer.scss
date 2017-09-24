@@ -1,0 +1,20 @@
+.footer a:hover {
+  color: darken($cyan, 10%);
+}
+
+.footer {
+  width: calc(100% - #{$sidebar-width});
+  margin-left: $sidebar-width;
+  background: darken($light-grey, 5%);
+  color: #999;
+  text-align: center;
+
+  .attribution {
+    padding: 15px 0 12px;
+  }
+
+  .brand {
+    color: $cyan;
+    font-weight: bold;
+  }
+}
