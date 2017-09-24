@@ -1,11 +1,40 @@
 # Architecture
 
+The architecture provides many options but keeps a clean and clear API between
+modules. This pluggable design allows for unit test drivers and various levels
+of deployment options from straight Ruby to a high performance C runner that
+handles HTTP and data storage.
+
+Three configuration are available. One uses a Runner that calls to the Ruby
+core controller through pipes on ```$stdin``` and ```$stdout```. A second is
+to implement a runner in Ruby (bin/wabur). The third is to use a C Runner with
+embedded Ruby (OpO-Rub).
+
 The WAB architecture is a Mode View Controller with clear APIs between each
 part of the MVC. The design allows the non-business related tasks such as the
 HTTP server and data store to be treated as service to the Controller which
 contains the business logic.
 
-![](http://www.opo.technology/wab/wab_arch.svg)
+A Runner that spawns (forks) and runs a Ruby Controller makes use of the
+```::WAB::IO::Shell```.
+
+![](wab_remote_arch.svg)
+
+The Ruby Runner and C Runner with embedded ruby follow the same architecture.
+
+![](wab_embedded_arch.svg)
+
+Access to data can follow two paths. A direct access to the data is possible
+as portrayed by the red line that flows from HTTP server to the runner and
+onto the Model. The other path is to dive down into the Ruby Controller and
+allow the Controller to modify and control what is returned by a request. The
+Benchmark results in the example/sample/README.md includes the latest results.
+
+![](wab_access_paths.svg)
+
+Simplified the logical view is:
+
+![](wab_parts.svg)
 
 ## MVC
 
