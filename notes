@@ -8,13 +8,50 @@ Enable ES6
   Chrome Canary 60 – behind the Experimental Web Platform flag in chrome:flags. (also Experimental JavaScript)
   Firefox 54 – behind the dom.moduleScripts.enabled setting in about:config.
   Edge 15 – behind the Experimental JavaScript Features setting in about:flags.
-  Opera - 
+  Opera - about:flags - Experimental JavaScript - enable (doesn't seem to work)
 
 https://github.com/mbeaudru/modern-js-cheatsheet
 http://babeljs.io/learn-es2015/
 http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 
+
+{
+  "code": 0,
+  "results": [
+    {
+      "name": "Entry.list"
+      "class": "wab.List",
+      "header": "<div> </div>",
+      "row": "<div> </div>",
+      
+    },
+    {
+      "name": "Entry.view",
+      "class": "wab.View",
+      "html": "<div> </div>"
+    },
+    {
+      "name": "Entry.create"
+      "class": "wab.View",
+      "html": "<div> </div>"
+    },
+    {
+      "name": "Entry.update",
+      "class": "wab.Update",
+      "html": {
+         "div": {
+             "id": "ui.Entry.update",
+             "class": "some-style-class",
+             "style": "width: 20px",
+             "children": []
+           }
+         }
+      },
+      "entry": true
+    }
+  ]
+}
 
 - view
  - wab

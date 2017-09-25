@@ -6,13 +6,15 @@ module WAB
     class Update < View
       
       # TBD pass in fields for the update
-      def initialize(name)
-        super(name)
+      def initialize(name, display_class)
+        super(name, display_class)
       end
 
       def spec
-        # TBD other spec fields  as well as the buttons for creating, might have to change button labels from View
-        { name: @name }
+        ui_spec = super
+        
+        # TBD other spec fields like table options, header, and row template
+        ui_spec
       end
 
     end # Update

@@ -5,13 +5,18 @@ module WAB
     class Display
 
       attr_reader :name
+      attr_accessor :display_class
       
-      def initialize(name)
+      def initialize(name, display_class)
         @name = name
+        @display_class = display_class
       end
 
       def spec
-        { name: @name }
+        {
+          name: @name,
+          display_class: @display_class
+        }
       end
 
     end # Display

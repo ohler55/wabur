@@ -8,8 +8,8 @@ module WAB
       attr_accessor :fields
       
       # TBD pass in fields for the view
-      def initialize(name)
-        super(name)
+      def initialize(name, display_class)
+        super(name, display_class)
         @fields = []
       end
 
@@ -18,8 +18,10 @@ module WAB
       end
 
       def spec
-        # TBD other spec fields 
-        { name: @name }
+        ui_spec = super
+        
+        # TBD other spec fields like table options, header, and row template
+        ui_spec
       end
 
     end # Voew

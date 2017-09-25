@@ -3,15 +3,21 @@ module WAB
   module UI
 
     class List < Display
-      
-      # TBD pass in fields for the list
-      def initialize(name)
-        super(name)
-      end
 
+      attr_accessor :table
+      attr_accessor :row
+      
+      def initialize(name, display_class, table, row)
+        super(name, display_class)
+        @table = table
+        @row = row
+      end
+      
       def spec
-        # TBD other spec fields like table options, header, and row template
-        { name: @name }
+        ui_spec = super
+        ui_spec[:table] = @table
+        ui_spec[:row] = @row
+        ui_spec
       end
 
     end # List
