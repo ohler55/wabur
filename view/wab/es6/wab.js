@@ -1,33 +1,11 @@
 
 var pathPrefix = '/v1';
 
-function request(method, path, content, requester, callback, errorCallback) {
-    let h = new XMLHttpRequest();
-
-    h.open(method, path, true);
-    h.responseType = 'json';
-    h.onreadystatechange = function() {
-        if (4 == h.readyState) {
-            if (200 == h.status) {
-                callback(requester, h.response);
-            } else {
-                errorCallback(requester, h.response);
-            }
-        }
-    };
-    if (null != content) {
-        h.setRequestHeader('Content-Type', 'application/json');
-        h.send(JSON.stringify(content));
-    } else {
-        h.send();
-    }
-}
-
 function pathAppendCondition(path, condition) {
     if (null != condition) {
         path += '/?';
         let first = true;
-        for (let key of Object.keys(condition)) {
+        for (let key in condition) {
             if (first) {
                 path += '${key}=${condition[key]}';
                 first = false;
@@ -39,35 +17,99 @@ function pathAppendCondition(path, condition) {
     return path;
 }
 
-function createObject(kind, obj, condition, requester, callback, errorCallback) {
-    request('PUT', pathAppendCondition('${pathPrefix}/${kind}', condition), obj, requester, callback, errorCallback);
+function createPromise(kind, obj, condition) {
+    return new Promise(
+        function(resolve, reject) {
+            let path = pathAppendCondition(`${pathPrefix}/${kind}`, condition);
+            let options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            };
+
+            fetch(path, options).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-function getObject(kind, ref, requester, callback, errorCallback) {
-    request('GET', '${pathPrefix}/${kind}/${ref}', null, requester, callback, errorCallback);
+function updatePromise(kind, ref, obj, condition) {
+    return new Promise(
+        function(resolve, reject) {
+            let options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            };
+
+            fetch(`${pathPrefix}/${kind}/${ref}`, options).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-function updateObject(kind, ref, obj, requester, callback, errorCallback) {
-    request('POST', '${pathPrefix}/${kind}/${ref}', obj, requester, callback, errorCallback);
+function getPromise(kind, ref) {
+    return new Promise(
+        function(resolve, reject) {
+            fetch(`${pathPrefix}/${kind}/${ref}`).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-function deleteObject(kind, ref, requester, callback, errorCallback) {
-    request('DELETE', '${pathPrefix}/${kind}/${ref}', null, requester, callback, errorCallback);
+function deletePromise(kind, ref) {
+    return new Promise(
+        function(resolve, reject) {
+            fetch(`${pathPrefix}/${kind}/${ref}`, {method: 'GET'}).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-function listObjects(kind, condition, requester, callback, errorCallback) {
-    // string templates did not work in firefox
-    //request('GET', pathAppendCondition('${pathPrefix}/${kind}', condition), null, requester, callback, errorCallback);
-    request('GET', pathAppendCondition(pathPrefix + '/' + kind, condition), null, requester, callback, errorCallback);
+function listPromise(kind, condition) {
+    return new Promise(
+        function(resolve, reject) {
+            let path = pathAppendCondition(`${pathPrefix}/${kind}`, condition);
+
+            fetch(path, {method: 'GET'}).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-function query(kind, tql, requester, callback, errorCallback) {
-    request('GET', '${pathPrefix}/${kind}', null, tql, requester, callback, errorCallback);
+function queryPromise(kind, tql) {
+    return new Promise(
+        function(resolve, reject) {
+            let path = (null == kind) ? pathPrefix : `${pathPrefix}/${kind}`
+            let options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tql)
+            };
+
+            fetch(path, options).then(function(response) {
+                return response.json();
+            }).then(function(j) {
+                resolve(j);
+            }).catch(reject)
+        });
 }
 
-export function foo() {
-    console.log('foo called');
-}
-
-export { request, createObject, getObject, updateObject, deleteObject, listObjects, query };
+export { createPromise, getPromise, updatePromise, deletePromise, listPromise, queryPromise };
 export { pathPrefix };

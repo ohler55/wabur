@@ -10,7 +10,14 @@ function errorResponse(obj, response) {
 }
 
 // returns the UI specification
-wab.listObjects('ui', null, null, logResponse, errorResponse);
+//wab.listObjects('ui', null, null, logResponse, errorResponse);
 
-var foo = { class: 'my-class' };
-console.log('my class: ' + foo.class)
+function logOk(response) {
+    console.log('Ok - ' + JSON.stringify(response, null, 2));
+}
+
+function logError(response) {
+    console.log('Error - ' + JSON.stringify(response, null, 2));
+}
+
+wab.listPromise('ui', null).then(logOk).catch(logError);
