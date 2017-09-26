@@ -14,4 +14,4 @@ class UIController < WAB::UI::RestFlow
           }, [:title, :content])
   end
 
-end # SampleController
+end # UIController

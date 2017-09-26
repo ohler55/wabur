@@ -17,7 +17,7 @@ function pathAppendCondition(path, condition) {
     return path;
 }
 
-function createPromise(kind, obj, condition) {
+function create(kind, obj, condition) {
     return new Promise(
         function(resolve, reject) {
             let path = pathAppendCondition(`${pathPrefix}/${kind}`, condition);
@@ -37,7 +37,7 @@ function createPromise(kind, obj, condition) {
         });
 }
 
-function updatePromise(kind, ref, obj, condition) {
+function update(kind, ref, obj, condition) {
     return new Promise(
         function(resolve, reject) {
             let options = {
@@ -56,7 +56,7 @@ function updatePromise(kind, ref, obj, condition) {
         });
 }
 
-function getPromise(kind, ref) {
+function get(kind, ref) {
     return new Promise(
         function(resolve, reject) {
             fetch(`${pathPrefix}/${kind}/${ref}`).then(function(response) {
@@ -67,7 +67,7 @@ function getPromise(kind, ref) {
         });
 }
 
-function deletePromise(kind, ref) {
+function del(kind, ref) {
     return new Promise(
         function(resolve, reject) {
             fetch(`${pathPrefix}/${kind}/${ref}`, {method: 'GET'}).then(function(response) {
@@ -78,7 +78,7 @@ function deletePromise(kind, ref) {
         });
 }
 
-function listPromise(kind, condition) {
+function list(kind, condition) {
     return new Promise(
         function(resolve, reject) {
             let path = pathAppendCondition(`${pathPrefix}/${kind}`, condition);
@@ -91,7 +91,7 @@ function listPromise(kind, condition) {
         });
 }
 
-function queryPromise(kind, tql) {
+function query(kind, tql) {
     return new Promise(
         function(resolve, reject) {
             let path = (null == kind) ? pathPrefix : `${pathPrefix}/${kind}`
@@ -111,5 +111,5 @@ function queryPromise(kind, tql) {
         });
 }
 
-export { createPromise, getPromise, updatePromise, deletePromise, listPromise, queryPromise };
+export { create, get, update, del, list, query };
 export { pathPrefix };

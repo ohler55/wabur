@@ -26,26 +26,26 @@ module WAB
 
       def add_list(kind, template, list_paths)
         id = "#{kind}.list"
-        display = List.new(id, 'wab.List', html_list_table(id, list_paths), html_list_row(list_paths))
+        display = List.new(kind, id, 'ui.List', html_list_table(id, list_paths), html_list_row(list_paths))
         add_display(display, true)
       end
 
       def add_view(kind, template)
-        display = View.new("#{kind}.view", 'wab.View')
+        display = View.new(kind, "#{kind}.view", 'ui.View')
         # TBD additional configurations
-        add_display(display, true)
+        add_display(display)
       end
 
       def add_create(kind, template)
-        display = Create.new("#{kind}.create", 'wab.Create')
+        display = Create.new(kind, "#{kind}.create", 'ui.Create')
         # TBD additional configurations
-        add_display(display, true)
+        add_display(display)
       end
 
       def add_update(kind, template)
-        display = Update.new("#{kind}.update", 'wab.Update')
+        display = Update.new(kind, "#{kind}.update", 'ui.Update')
         # TBD additional configurations
-        add_display(display, true)
+        add_display(display)
       end
 
       # Returns an HTML string to be used as the table of a list of
@@ -74,14 +74,14 @@ module WAB
       #
       # list_paths:: array of field paths into an object that will be displayed
       def html_list_row(list_paths)
-        row = list_paths.map { |path| %{<td class="obj-list" path="#{path}"></td>}}.join('')
+        row = list_paths.map { |path| %{<td class="obj-list" path="#{path}"></td>}}.join
         buttons = [
                    { title: 'View', icon: 'icon icon-eye', cn: 'actions' },
                    { title: 'Edit', icon: 'icon icon-pencil', cn: 'actions' },
                    { title: 'Delete', icon: 'icon icon-trash-o', cn: 'actions delete' }
                   ].map { |spec|
           %{<td class="#{spec[:cn]}"><span class="#{spec[:icon]}" title="#{spec[:title]}"></span></td>}
-        }
+        }.join
         "<tr>#{row}#{buttons}</tr>"
       end
 

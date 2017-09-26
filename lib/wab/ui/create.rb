@@ -6,8 +6,8 @@ module WAB
     class Create < View
       
       # TBD pass in fields for the create
-      def initialize(name, display_class)
-        super(name, display_class)
+      def initialize(kind, name, display_class)
+        super(kind, name, display_class)
       end
 
       def spec
