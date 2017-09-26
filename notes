@@ -16,6 +16,14 @@ http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
+- webrick
+ - servlet for Access-Control-Allow-Origin: *
+ - servelet for es6
+ 
+- add transitions
+- view display
+
+
 {
   "code": 0,
   "results": [

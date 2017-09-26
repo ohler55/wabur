@@ -48,7 +48,11 @@ module WAB
       # Start listening. This should be called after registering Controllers
       # with the Shell.
       def start()
-        server = WEBrick::HTTPServer.new(Port: @http_port, DocumentRoot: @http_dir)
+        mime_types = WEBrick::HTTPUtils::DefaultMimeTypes
+        mime_types['es6'] = 'application/javascript'
+        server = WEBrick::HTTPServer.new(Port: @http_port,
+                                         DocumentRoot: @http_dir,
+                                         MimeTypes: mime_types)
         server.mount(@pre_path, WAB::Impl::Handler, self)
 
         trap 'INT' do server.shutdown end

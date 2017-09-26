@@ -1,5 +1,5 @@
 
-import * as wab from '../../wab/es6/wab.js';
+import * as wab from './wab.es6';
 
 function displayError(msg) {
     // TBD handle this better than an alert. Create an error display and call master.setFlow
