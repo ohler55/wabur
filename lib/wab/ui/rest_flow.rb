@@ -59,9 +59,9 @@ module WAB
       # list_paths:: array of field paths into an object that will be displayed
       def html_list_table(id, list_paths)
         # The column headers.
-        head = list_paths.map { |path| "<th>#{path.capitalize}</th>"}.join('')
+        head = list_paths.map { |path| "<th>#{path.capitalize}</th>"}.join
         # Add the view, edit, and delete buttons header.
-        head += %{<th colspan="3">Actions</th>}
+        head << %{<th colspan="3">Actions</th>}
         %{<div class="table-wrapper"><div class="btn" id="#{id}.create_button"><span>Create</span></div><table class="obj-list-table" id="#{id}.table"><tr>#{head}</tr></table></div>}
       end
 
