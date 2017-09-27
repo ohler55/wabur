@@ -6,15 +6,17 @@ module WAB
     class Create < View
       
       # TBD pass in fields for the create
-      def initialize(kind, name, display_class, transitions)
-        super(kind, name, display_class, transitions)
+      def initialize(kind, id, template, transitions)
+        super(kind, id, template, transitions, 'ui.Create')
       end
 
-      def spec
-        ui_spec = super
-        
-        # TBD other spec fields like table options, header, and row template
-        ui_spec
+      def html
+        html = %{<div class="obj-form-frame"><table class="obj-form">}
+        html = append_fields(html, @name, template, false)
+        html << '</table>'
+        html << %{<div class="btn" id="#{@name}.save_button"><span>Save</span></div>}
+        html << %{<div class="btn" style="float:right;" id="#{@name}.cancel_button"><span>Cancel</span></div>}
+        html << '</div>'
       end
 
     end # Create

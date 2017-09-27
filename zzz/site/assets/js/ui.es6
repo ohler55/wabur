@@ -36,16 +36,16 @@ function objSet(obj, path, index, value) {
 // This fuunction is not intended for public use.
 function buildDisplay(spec) {
     switch (spec.display_class) {
-    case 'ui.List':
-        return new List(spec);
-    case 'ui.Create':
-        return new Create(spec);
-    case 'ui.View':
-        return new View(spec);
-    case 'ui.Update':
-        return new Update(spec);
-    default:
-        displayError(`${spec.display_class} is not a known display class.`);
+        case 'ui.List':
+            return new List(spec);
+        case 'ui.Create':
+            return new Create(spec);
+        case 'ui.View':
+            return new View(spec);
+        case 'ui.Update':
+            return new Update(spec);
+        default:
+            displayError(`${spec.display_class} is not a known display class.`);
     }
     return null;
 }
@@ -57,7 +57,9 @@ export class Master {
 
         // If no response or error response expect the setFlow() method will
         // be called later.
-        wab.list('ui', null).then((flow) => { this.setFlow(flow); }).catch(function(response) {});
+        wab.list('ui', null).then(flow => {
+            this.setFlow(flow);
+        }).catch(function (response) {});
     }
 
     setFlow(spec) {
@@ -79,7 +81,7 @@ export class Master {
 
     setDisplay(displayId, ref) {
         let child;
-        
+
         // Clear out any existing elements in the view.
         while (null != (child = this.view.firstChild)) {
             this.view.removeChild(child);
@@ -105,11 +107,13 @@ export class Display {
     }
 
     _del(target, ref) {
-        wab.del(this.spec.kind, ref).then((response) => {
+        wab.del(this.spec.kind, ref).then(response => {
             if (null != target) {
                 master.setDisplay(target, ref);
             }
-        }).catch(function(response) { displayError(response); });
+        }).catch(function (response) {
+            displayError(response);
+        });
     }
 
     display(view, ref) {}
@@ -138,17 +142,23 @@ export class List extends Display {
             }
             for (let child of tr.getElementsByTagName('*')) {
                 switch (child.getAttribute('title')) {
-                case 'View':
-                    child.onclick = (event) => { this._transition(this.spec.transitions.view, obj.id); };
-                    break;
-                case 'Edit':
-                    child.onclick = (event) => { this._transition(this.spec.transitions.edit, obj.id); };
-                    break;
-                case 'Delete':
-                    child.onclick = (event) => { this._del(this.spec.transitions['delete'], obj.id); };
-                    break;
-                default:
-                    break;
+                    case 'View':
+                        child.onclick = event => {
+                            this._transition(this.spec.transitions.view, obj.id);
+                        };
+                        break;
+                    case 'Edit':
+                        child.onclick = event => {
+                            this._transition(this.spec.transitions.edit, obj.id);
+                        };
+                        break;
+                    case 'Delete':
+                        child.onclick = event => {
+                            this._del(this.spec.transitions['delete'], obj.id);
+                        };
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -161,9 +171,15 @@ export class List extends Display {
         let button = document.getElementById(`${this.spec.name}.create_button`);
 
         if (null != button) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.create, null); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.create, null);
+            };
         }
-        wab.list(this.spec.kind, null).then((response) => { this._appendObjects(response); }).catch(function(response) { displayError(response); });
+        wab.list(this.spec.kind, null).then(response => {
+            this._appendObjects(response);
+        }).catch(function (response) {
+            displayError(response);
+        });
     }
 }
 
@@ -176,7 +192,7 @@ export class ObjectDisplay extends Display {
     _setFields(path, obj) {
         let element;
         let value;
-        
+
         for (let key in obj) {
             if (obj.hasOwnProperty(key) && null != (element = document.getElementById(`${path}.${key}`))) {
                 value = obj[key];
@@ -188,20 +204,21 @@ export class ObjectDisplay extends Display {
             }
         }
     }
-    
+
     _populate(ref) {
-        wab.get(this.spec.kind, ref).then((response) => {
+        wab.get(this.spec.kind, ref).then(response => {
             if (0 != response.code) {
                 throw response.error;
-            }            
+            }
             let obj = response.results[0];
 
             if (null != obj) {
                 this.ref = obj.id;
                 this._setFields(this.spec.name, obj.data);
             }
-
-        }).catch(function(response) { displayError(response); });
+        }).catch(function (response) {
+            displayError(response);
+        });
     }
 
     display(view, ref) {
@@ -220,20 +237,26 @@ export class View extends ObjectDisplay {
         let button;
 
         if (null != (button = document.getElementById(`${this.spec.name}.list_button`))) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.list, null); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.list, null);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.edit_button`))) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.edit, this.ref); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.edit, this.ref);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.delete_button`))) {
-            button.onclick = (event) => { this._del(this.spec.transitions['delete'], this.ref); };
+            button.onclick = event => {
+                this._del(this.spec.transitions['delete'], this.ref);
+            };
         }
     }
 }
 
 function addToObject(obj, input) {
     let value;
-    
+
     if ('checkbox' == input.type) {
         value = input.checked;
     } else if ('number' == input.type || 'range' == input.type) {
@@ -259,8 +282,8 @@ export class Create extends ObjectDisplay {
         for (let input of document.getElementsByTagName('TEXTAREA')) {
             addToObject(obj, input);
         }
-        
-        wab.create(this.spec.kind, obj, null).then((response) => {
+
+        wab.create(this.spec.kind, obj, null).then(response => {
             if (0 != response.code) {
                 throw response.error;
             }
@@ -268,17 +291,23 @@ export class Create extends ObjectDisplay {
             if (null != target) {
                 master.setDisplay(target, this.ref);
             }
-        }).catch(function(response) { displayError(response); });
+        }).catch(function (response) {
+            displayError(response);
+        });
     }
 
     _setupButtons() {
         let button;
 
         if (null != (button = document.getElementById(`${this.spec.name}.save_button`))) {
-            button.onclick = (event) => { this._save(this.spec.transitions.save); };
+            button.onclick = event => {
+                this._save(this.spec.transitions.save);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.cancel_button`))) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.cancel, null); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.cancel, null);
+            };
         }
     }
     _populate(ref) {}
@@ -298,8 +327,8 @@ export class Update extends ObjectDisplay {
         for (let input of document.getElementsByTagName('TEXTAREA')) {
             addToObject(obj, input);
         }
-        
-        wab.update(this.spec.kind, this.ref, obj, null).then((response) => {
+
+        wab.update(this.spec.kind, this.ref, obj, null).then(response => {
             if (0 != response.code) {
                 throw response.error;
             }
@@ -307,23 +336,33 @@ export class Update extends ObjectDisplay {
             if (null != target) {
                 master.setDisplay(target, this.ref);
             }
-        }).catch(function(response) { displayError(response); });
+        }).catch(function (response) {
+            displayError(response);
+        });
     }
 
     _setupButtons() {
         let button;
 
         if (null != (button = document.getElementById(`${this.spec.name}.save_button`))) {
-            button.onclick = (event) => { this._save(this.spec.transitions.save, this.ref); };
+            button.onclick = event => {
+                this._save(this.spec.transitions.save, this.ref);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.cancel_button`))) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.cancel, this.ref); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.cancel, this.ref);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.list_button`))) {
-            button.onclick = (event) => { this._transition(this.spec.transitions.list, null); };
+            button.onclick = event => {
+                this._transition(this.spec.transitions.list, null);
+            };
         }
         if (null != (button = document.getElementById(`${this.spec.name}.delete_button`))) {
-            button.onclick = (event) => { this._del(this.spec.transitions['delete'], this.ref); };
+            button.onclick = event => {
+                this._del(this.spec.transitions['delete'], this.ref);
+            };
         }
     }
 }
