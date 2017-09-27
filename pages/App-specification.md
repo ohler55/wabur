@@ -3,22 +3,23 @@
 
 ```sh
 ./app-name
-├───assets                      # Front-end directory linked from within *./index.html*
-|   ├─── css
-|   |    └─── wab.css           # App stylesheet
-|   ├─── fonts
-|   |    └─── wabfont
-|   └─── js
-|        ├─── foo.es6           # ES6 Module component
-|        ├─── bar.es6           # ES6 Module component
-|        ├─── wab.es6           # Base ES6 Module that *imports* every other module components
-|        └─── wab.js            # ES5 Javascript for old browsers
-├─── config                     # Place for all App config files, including JSON and YAML files
+├───site
+|   ├───assets                      # Front-end directory linked from within *./index.html*
+|   |   ├─── css
+|   |   |    └─── wab.css           # App stylesheet
+|   |   ├─── fonts
+|   |   |    └─── wabfont
+|   |   └─── js
+|   |        ├─── foo.es6           # ES6 Module component
+|   |        ├─── bar.es6           # ES6 Module component
+|   |        ├─── wab.es6           # Base ES6 Module that *imports* every other module components
+|   |        └─── wab.js            # ES5 Javascript for old browsers
+|   └─── index.html                 # The base HTML file accessed at server root.
+├─── config                         # Place for all App config files, including JSON and YAML files
 |    └─── wab.conf
-├─── controllers                # Place for all controllers in App.
-|    ├─── sample_controller.rb
-|    └─── foo_controller.rb
-└─── index.html                 # The base HTML file accessed at server root.
+└─── lib                            # Place for all controllers in App.
+     ├─── sample_controller.rb
+     └─── foo_controller.rb
 ```
 
 ```html
