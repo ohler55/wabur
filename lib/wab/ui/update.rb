@@ -6,8 +6,8 @@ module WAB
     class Update < View
       
       # TBD pass in fields for the update
-      def initialize(kind, name, display_class)
-        super(kind, name, display_class)
+      def initialize(kind, name, display_class, transitions)
+        super(kind, name, display_class, transitions)
       end
 
       def spec

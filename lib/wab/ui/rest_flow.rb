@@ -26,24 +26,48 @@ module WAB
 
       def add_list(kind, template, list_paths)
         id = "#{kind}.list"
-        display = List.new(kind, id, 'ui.List', html_list_table(id, list_paths), html_list_row(list_paths))
+        transitions = {
+          create: "#{kind}.create",
+          view: "#{kind}.view",
+          edit: "#{kind}.edit",
+          delete: id,
+        }
+        display = List.new(kind, id, 'ui.List', html_list_table(id, list_paths), html_list_row(list_paths), transitions)
         add_display(display, true)
       end
 
       def add_view(kind, template)
-        display = View.new(kind, "#{kind}.view", 'ui.View')
+        id = "#{kind}.view"
+        transitions = {
+          "#{id}.edit_button": "#{kind}.edit",
+          "#{id}.list_button": "#{kind}.list",
+          "#{id}.delete_button": "#{kind}.list",
+        }
+        display = View.new(kind, id, 'ui.View', transitions)
         # TBD additional configurations
         add_display(display)
       end
 
       def add_create(kind, template)
-        display = Create.new(kind, "#{kind}.create", 'ui.Create')
+        id = "#{kind}.create"
+        transitions = {
+          "#{id}.save_button": "#{kind}.view",
+          "#{id}.cancel_button": "#{kind}.list",
+        }
+        display = Create.new(kind, id, 'ui.Create', transitions)
         # TBD additional configurations
         add_display(display)
       end
 
       def add_update(kind, template)
-        display = Update.new(kind, "#{kind}.update", 'ui.Update')
+        id = "#{kind}.update"
+        transitions = {
+          "#{id}.save_button": "#{kind}.view",
+          "#{id}.cancel_button": "#{kind}.view",
+          "#{id}.list_button": "#{kind}.list",
+          "#{id}.delete_button": "#{kind}.list",
+        }
+        display = Update.new(kind, "#{kind}.update", 'ui.Update', transitions)
         # TBD additional configurations
         add_display(display)
       end

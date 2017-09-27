@@ -7,8 +7,8 @@ module WAB
       attr_accessor :table
       attr_accessor :row
       
-      def initialize(kind, name, display_class, table, row)
-        super(kind, name, display_class)
+      def initialize(kind, name, display_class, table, row, transitions)
+        super(kind, name, display_class, transitions)
         @table = table
         @row = row
       end

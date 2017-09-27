@@ -70,7 +70,7 @@ function get(kind, ref) {
 function del(kind, ref) {
     return new Promise(
         function(resolve, reject) {
-            fetch(`${pathPrefix}/${kind}/${ref}`, {method: 'GET'}).then(function(response) {
+            fetch(`${pathPrefix}/${kind}/${ref}`, {method: 'DELETE'}).then(function(response) {
                 return response.json();
             }).then(function(j) {
                 resolve(j);

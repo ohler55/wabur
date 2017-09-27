@@ -47,11 +47,11 @@ export class Master {
             }
         }
         if (null != entry) {
-            this.setDisplay(entry);
+            this.setDisplay(entry, null);
         }
     }
 
-    setDisplay(displayId) {
+    setDisplay(displayId, ref) {
         let child;
         
         // Clear out any existing elements in the view.
@@ -63,8 +63,7 @@ export class Master {
             displayError(`Display ${displayId} not found.`);
             return;
         }
-        display.reset();
-        display.display(this.view);
+        display.display(this.view, ref);
     }
 
 }
@@ -74,11 +73,7 @@ export class Display {
         this.spec = spec;
     }
 
-    reset() {
-        console.log(`*** reset ${this.spec.name}`);
-    }
-
-    display(view) {
+    display(view, ref) {
         console.log(`*** display ${this.spec.name}`);
     }
 }
@@ -87,11 +82,6 @@ export class List extends Display {
     constructor(spec) {
         super(spec);
         this.table = null;
-    }
-
-    reset() {
-        console.log(`*** list reset ${this.spec.name}`);
-        // TBD reset or zero out all fields
     }
 
     _appendObjects(response) {
@@ -105,38 +95,116 @@ export class List extends Display {
             this.table.appendChild(tr);
             for (let child of tr.childNodes) {
                 let path = child.getAttribute('path');
-                if (null == path) {
-                    continue;
+                if (null != path) {
+                    child.appendChild(document.createTextNode(String(obj.data[path])));
                 }
                 // TBD need to supported nested attributes
-                child.appendChild(document.createTextNode(String(obj.data[path])));
+            }
+            for (let child of tr.getElementsByTagName('*')) {
+                switch (child.getAttribute('title')) {
+                case 'View':
+                    child.onclick = (event) => { this._view(event, this.spec.transitions.view, obj.id); };
+                    break;
+                case 'Edit':
+                    child.onclick = (event) => { this._edit(event, this.spec.transitions.edit, obj.id); };
+                    break;
+                case 'Delete':
+                    child.onclick = (event) => { this._del(event, this.spec.transitions['delete'], obj.id); };
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
 
-    display(view) {
+    _create(event, target) {
+        console.log(`*** create clicked - ${target}`);
+        if (null != target) {
+            master.setDisplay(target, null);
+        }
+    }
+
+    _view(event, target, ref) {
+        console.log(`*** view clicked - ${ref}`);
+        if (null != target) {
+            master.setDisplay(target, ref);
+        }
+    }
+
+    _edit(event, target, ref) {
+        console.log(`*** edit clicked - ${ref}`);
+        if (null != target) {
+            master.setDisplay(target, ref);
+        }
+    }
+
+    _del(event, target, ref) {
+        wab.del(this.spec.kind, ref).then((response) => {
+            if (null != target) {
+                master.setDisplay(target, ref);
+            }
+        }).catch(function(response) { displayError(response); });
+    }
+
+    display(view, ref) {
         view.innerHTML = this.spec.table;
         this.table = document.getElementById(`${this.spec.name}.table`);
 
+        let button = document.getElementById(`${this.spec.name}.create_button`);
+
+        if (null != button) {
+            button.onclick = (event) => { this._create(event, this.spec.transitions.create); };
+        }
         wab.list(this.spec.kind, null).then((response) => { this._appendObjects(response); }).catch(function(response) { displayError(response); });
     }
 }
 
-export class View extends Display {
+export class ObjectDisplay extends Display {
     constructor(spec) {
         super(spec);
     }
-}
 
-export class Create extends Display {
-    constructor(spec) {
-        super(spec);
+    _populate(ref) {
+        // TBD
+    }
+
+    display(view, ref) {
+        view.innerHTML = this.spec.html;
+        this._setupButtons();
+        this._populate(ref);
     }
 }
 
-export class Update extends Display {
+export class View extends ObjectDisplay {
     constructor(spec) {
         super(spec);
+    }
+
+    _setupButtons() {
+        // TBD
+    }
+}
+
+export class Create extends ObjectDisplay {
+    constructor(spec) {
+        super(spec);
+    }
+
+    _setupButtons() {
+        // TBD
+    }
+
+    _populate(ref) {}
+}
+
+export class Update extends ObjectDisplay {
+    constructor(spec) {
+        super(spec);
+    }
+
+    _setupButtons() {
+        // TBD
     }
 }
 

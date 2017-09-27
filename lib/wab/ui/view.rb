@@ -8,8 +8,8 @@ module WAB
       attr_accessor :fields
       
       # TBD pass in fields for the view
-      def initialize(kind, name, display_class)
-        super(kind, name, display_class)
+      def initialize(kind, name, display_class, transitions)
+        super(kind, name, display_class, transitions)
         @fields = []
       end
 
