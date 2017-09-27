@@ -9,12 +9,11 @@
 |   ├─── fonts
 |   |    └─── wabfont
 |   └─── js
-|        ├─── js-next
-|        |    ├─── foo.js       # ES6 Module component
-|        |    ├─── bar.js       # ES6 Module component
-|        |    └─── wab.js       # Base ES6 Module that *imports* every other module components
+|        ├─── foo.es6           # ES6 Module component
+|        ├─── bar.es6           # ES6 Module component
+|        ├─── wab.es6           # Base ES6 Module that *imports* every other module components
 |        └─── wab.js            # ES5 Javascript for old browsers
-├─── configs                    # Place for all App config files, including JSON and YAML files
+├─── config                     # Place for all App config files, including JSON and YAML files
 |    └─── wab.conf
 ├─── controllers                # Place for all controllers in App.
 |    ├─── sample_controller.rb
@@ -31,7 +30,7 @@
     <link rel="stylesheet" href="assets/css/wab.css" />
   </head>
   <body>
-    <script type="module" src="assets/js/js-next/wab.js"></script>
+    <script type="module" src="assets/js/wab.es6"></script>
     <script nomodule src="assets/js/wab.js"></script>
   </body>
 </html>
