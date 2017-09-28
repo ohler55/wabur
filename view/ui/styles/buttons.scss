@@ -1,0 +1,42 @@
+.btn {
+  float: left;
+  margin-right: 12px;
+  margin-bottom: 5px;
+  padding: 8px 15px;
+  color: #444;
+  text-align: center;
+  cursor: pointer;
+  background: $light-grey;
+  border-top: 1px solid #eee;
+  box-shadow: 0 1px 1px #999;
+
+  &:hover {
+    color: #fff;
+    background: $blue;
+    box-shadow: 0 0 1px #888;
+    border-top-color: transparent;
+  }
+
+  .table-wrapper > & {
+    margin-left: 1px;
+    margin-bottom: 18px;
+  }
+}
+
+.create-btn {
+  margin-bottom: 15px;
+}
+
+.lock-btn {
+  width: 35px;
+  padding: 8px 8px 5px;
+
+  &:hover {
+    color: #444;
+    background: #fff;
+  }
+}
+
+.delete-btn:hover {
+  background: $red;
+}

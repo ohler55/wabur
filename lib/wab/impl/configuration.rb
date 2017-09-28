@@ -48,9 +48,15 @@ module WAB
           if v.has_key?(:val)
             default = v[:val]
             if default.is_a?(Array)
-              opts.on(v[:short], "--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
-            else
+              if v.has_key?(:short)
+                opts.on(v[:short], "--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              else
+                opts.on("--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              end
+            elsif v.has_key?(:short)
               opts.on(v[:short], "--#{key_path} #{v[:arg]}", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
+            else 
+              opts.on("--#{key_path} #{v[:arg]}", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
             end
           else
             add_options(opts, v, key_path)

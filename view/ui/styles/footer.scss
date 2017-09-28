@@ -3,8 +3,8 @@
 }
 
 .footer {
-  width: 100%;
-  margin-left: 0px;
+  width: calc(100% - #{$sidebar-width});
+  margin-left: $sidebar-width;
   background: darken($light-grey, 5%);
   color: #999;
   text-align: center;

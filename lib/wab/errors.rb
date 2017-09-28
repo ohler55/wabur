@@ -16,4 +16,10 @@ module WAB
     end
   end
 
+  class DuplicateError < Error
+    def initialize(key)
+      super("#{key} already exists")
+    end
+  end
+
 end # WAB
