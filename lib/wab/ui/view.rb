@@ -16,12 +16,12 @@ module WAB
       end
 
       def html
-        html = %{<div class="obj-form-frame"><table class="obj-form">}
+        html = %{<div class="obj-form-frame readonly"><table class="obj-form">}
         html = append_fields(html, @name, template, true)
         html << '</table>'
         html << %{<div class="btn" id="#{@name}.edit_button"><span>Edit</span></div>}
         html << %{<div class="btn" id="#{@name}.list_button"><span>List</span></div>}
-        html << %{<div class="btn" style="float:right;" id="#{@name}.delete_button"><span>Delete</span></div>}
+        html << %{<div class="btn delete-btn" style="float:right;" id="#{@name}.delete_button"><span>Delete</span></div>}
         html << '</div>'
       end
 

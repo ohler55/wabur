@@ -17,7 +17,7 @@ module WAB
         html << %{<div class="btn" id="#{@name}.save_button"><span>Save</span></div>}
         html << %{<div class="btn" id="#{@name}.cancel_button"><span>Cancel</span></div>}
         html << %{<div class="btn" id="#{@name}.list_button"><span>List</span></div>}
-        html << %{<div class="btn" style="float:right;" id="#{@name}.delete_button"><span>Delete</span></div>}
+        html << %{<div class="btn delete-btn" style="float:right;" id="#{@name}.delete_button"><span>Delete</span></div>}
         html << '</div>'
       end
 
