@@ -30,8 +30,10 @@ module WAB
         @logger.level = config[:verbosity] unless @logger.nil?
         @http_dir     = (config['http.dir'] || File.join(base, 'pages')).gsub('$BASE', base)
         @http_port    = (config['http.port'] || 6363).to_i
+        @export_proxy = config['export_proxy']
+        @export_proxy = true if @export_proxy.nil? # The default is true if not present.
         @controllers  = {}
-
+        
         requires      = config[:require]
         case requires
         when Array
@@ -54,6 +56,9 @@ module WAB
                                          DocumentRoot: @http_dir,
                                          MimeTypes: mime_types)
         server.mount(@pre_path, WAB::Impl::Handler, self)
+        if @export_proxy
+          server.mount('/', WAB::Impl::ExportProxy, @http_dir)
+        end
 
         trap 'INT' do server.shutdown end
         server.start

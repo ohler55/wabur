@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables << 'wabur'
 
-  s.files = Dir['{lib,test}/**/*.rb'] + ['LICENSE', 'README.md'] + Dir['pages/*.md'] + Dir['bin/*']
+  s.files = Dir['{lib,test}/**/*.rb'] + ['LICENSE', 'README.md'] + Dir['pages/*.md'] + Dir['bin/*'] + Dir['export/**/*']
   s.test_files = Dir['test/**/*.rb']
 
   s.has_rdoc = true
