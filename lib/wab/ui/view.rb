@@ -30,23 +30,26 @@ module WAB
         template.each_pair { |id,value|
           next if :kind == id
           input = nil
+          input_id = "#{path}.#{id}"
+          text_input = %{<input class="form-field" id="#{input_id}" type="text" value="#{value}" #{readonly}>}
+
           if value.is_a?(String)
             count = value.count("\n")
             if 0 < count # a text area
-              input = %{<textarea class="form-field" id="#{path}.#{id}" rows="#{count}" #{readonly}>#{value.strip}</textarea>}
+              input = %{<textarea class="form-field" id="#{input_id}" rows="#{count}" #{readonly}>#{value.strip}</textarea>}
             else
-              input = %{<input class="form-field" id="#{path}.#{id}" type="text" value="#{value}" #{readonly}>}
+              input = text_input
             end
           elsif value.is_a?(TrueClass)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" checked #{readonly}>}
+            input = %{<input class="form-field" id="#{input_id}" type="checkbox" checked>}
           elsif value.is_a?(FalseClass)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" #{readonly}>}
+            input = %{<input class="form-field" id="#{input_id}" type="checkbox">}
           elsif value.is_a?(Integer) || WAB::Utils.pre_24_fixnum?(value) || value.is_a?(Number)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="number" value="#{value} #{readonly}">}
+            input = %{<input class="form-field" id="#{input_id}" type="number" value="#{value}" #{readonly}>}
           elsif value.is_a?(Hash)
-            append_fields(html, "#{path}.#{id}", value)
+            append_fields(html, input_id, value)
           else
-            input = %{<input class="form-field" id="#{path}.#{id}" type="text" value="#{value}" #{readonly}>}
+            input = text_input
           end
           html << %{<tr><td class="field-label">#{id.capitalize}</td><td>#{input}</td></tr>}
         }
