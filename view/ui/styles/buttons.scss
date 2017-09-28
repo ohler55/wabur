@@ -3,22 +3,20 @@
   margin-right: 12px;
   margin-bottom: 5px;
   padding: 8px 15px;
-  color: #444;
+  min-width: 80px;
+  color: #fff;
   text-align: center;
   cursor: pointer;
-  background: $light-grey;
-  border-top: 1px solid #eee;
-  box-shadow: 0 1px 1px #999;
+  background: $blue;
+  border-radius: 3px;
 
   &:hover {
     color: #fff;
-    background: $blue;
-    box-shadow: 0 0 1px #888;
-    border-top-color: transparent;
+    background: darken($cyan, 2%);
   }
 
   .table-wrapper > & {
-    margin-left: 1px;
+    margin-left: 30px;
     margin-bottom: 18px;
   }
 }
@@ -38,5 +36,5 @@
 }
 
 .delete-btn:hover {
-  background: $red;
+  background: darken($red, 5%);
 }

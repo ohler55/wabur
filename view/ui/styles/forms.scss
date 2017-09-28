@@ -4,6 +4,10 @@
   padding: 15px;
   background: $light-grey;
   border: 1px solid darken($light-grey, 11%);
+  &.readonly {
+    background: none;
+    border-color: darken($light-grey, 5%);
+  }
 }
 
 .obj-form td {
@@ -19,6 +23,10 @@
   width: 100%;
   font-family: inherit;
   border: 1px solid darken($light-grey, 11%);
+  .readonly & {
+    color: #545454;
+    border-color: darken($light-grey, 5%);
+  }
 }
 
 .field-label {

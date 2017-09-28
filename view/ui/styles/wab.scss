@@ -38,6 +38,10 @@ tr, th, td {
   border-collapse: collapse;
 }
 
+textarea[readonly]:focus {
+  outline: none;
+}
+
 .container {
   margin: 0 auto;
   width: 100%;
@@ -49,9 +53,9 @@ tr, th, td {
 }
 
 .view-content {
-  width: calc(100% - #{$sidebar-width});
-  margin-left: $sidebar-width;
-  padding: 100px 60px 50px;
+  width: calc(100% - 60px);
+  margin: auto;
+  padding: 100px 15px 50px;
 }
 
 // import partials
