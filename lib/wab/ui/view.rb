@@ -31,13 +31,14 @@ module WAB
           next if :kind == id
           input = nil
           input_id = "#{path}.#{id}"
+          text_input = %{<input class="form-field" id="#{input_id}" type="text" value="#{value}" #{readonly}>}
 
           if value.is_a?(String)
             count = value.count("\n")
             if 0 < count # a text area
               input = %{<textarea class="form-field" id="#{input_id}" rows="#{count}" #{readonly}>#{value.strip}</textarea>}
             else
-              input = %{<input class="form-field" id="#{input_id}" type="text" value="#{value}" #{readonly}>}
+              input = text_input
             end
           elsif value.is_a?(TrueClass)
             input = %{<input class="form-field" id="#{input_id}" type="checkbox" checked>}
@@ -48,7 +49,7 @@ module WAB
           elsif value.is_a?(Hash)
             append_fields(html, input_id, value)
           else
-            input = %{<input class="form-field" id="#{input_id}" type="text" value="#{value}" #{readonly}>}
+            input = text_input
           end
           html << %{<tr><td class="field-label">#{id.capitalize}</td><td>#{input}</td></tr>}
         }
