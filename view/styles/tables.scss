@@ -1,5 +1,4 @@
 .table-wrapper {
-  max-width: 1029px;
   overflow-x: auto;
 }
 
@@ -26,7 +25,6 @@
   }
 
   th {
-    width: 582px;
     text-align: left;
     color: #ffffff;
     background: lighten($dark-grey, 7%);
@@ -49,8 +47,6 @@
   }
 
   td {
-    width: 600px;
-
     &:first-of-type {
       width: 278px;
     }

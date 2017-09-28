@@ -26,7 +26,7 @@ module WAB
       # element with the name joined with '.create_button' should be the +id+ of
       # the element.
       def html_table
-        html = %{<div class="table-wrapper"><div>#{@kind} List</div><div class="btn" style="float: right;" id="#{@name}.create_button"><span>Create</span></div><table class="obj-list-table" id="#{@name}.table"><tr>}
+        html = %{<div class="table-wrapper"><h2 style="float: left; margin-top: 2px">#{@kind} List</h2><div class="btn" style="float: left" id="#{@name}.create_button"><span>Create</span></div><table class="obj-list-table" id="#{@name}.table"><tr>}
         # The column headers.
         @list_paths.map { |path| html << "<th>#{path.capitalize}</th>" }
         # Add the view, edit, and delete buttons header.
