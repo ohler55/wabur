@@ -8,7 +8,6 @@ module WAB
 end
 
 require 'wab/ui/display'
-require 'wab/ui/field'
 require 'wab/ui/flow'
 
 # These are the classes needed for the REST displays/flow.
