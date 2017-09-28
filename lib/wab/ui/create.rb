@@ -2,14 +2,15 @@
 module WAB
   module UI
 
-    # An object create display where the display is built from multiple fields.
+    # An object create display.
     class Create < View
       
-      # TBD pass in fields for the create
+      # Create an instance that will generate the HTML for a display.
       def initialize(kind, id, template, transitions)
         super(kind, id, template, transitions, 'ui.Create')
       end
 
+      # Returns the HTML for a display.
       def html
         html = %{<div class="obj-form-frame"><table class="obj-form">}
         html = append_fields(html, @name, template, false)

@@ -2,7 +2,7 @@
 module WAB
   module UI
 
-    # An object update display where the display is built from multiple fields.
+    # An object update display.
     class Update < View
       
       # TBD pass in fields for the update

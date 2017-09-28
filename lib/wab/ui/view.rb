@@ -2,7 +2,7 @@
 module WAB
   module UI
 
-    # An object view display where the display is built from multiple fields.
+    # An object view display.
     class View < Display
 
       def initialize(kind, id, template, transitions, display_class='ui.View')

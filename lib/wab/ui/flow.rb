@@ -2,6 +2,8 @@
 module WAB
   module UI
 
+    # A controller that provides a description of the UI for the WAB UI
+    # reference implementation.
     class Flow < WAB::Controller
 
       attr_accessor :entry
@@ -11,6 +13,7 @@ module WAB
         @displays = {}
       end
 
+      # Adds a display to the flow.
       def add_display(display, entry=false)
         name = display.name
         raise DuplicateError(name) if @displays.has_key?(name)

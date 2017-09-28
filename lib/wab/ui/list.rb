@@ -2,6 +2,7 @@
 module WAB
   module UI
 
+    # Represents a list display.
     class List < Display
 
       attr_accessor :list_paths

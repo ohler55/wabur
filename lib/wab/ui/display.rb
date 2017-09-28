@@ -2,6 +2,7 @@
 module WAB
   module UI
 
+    # Base class for other displays.
     class Display
 
       attr_reader :name
@@ -9,7 +10,7 @@ module WAB
       attr_accessor :template
       attr_accessor :display_class
       attr_accessor :transitions
-      
+
       def initialize(kind, name, template, transitions, display_class)
         @kind = kind
         @name = name
