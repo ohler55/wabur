@@ -26,6 +26,7 @@ module WAB
       end
 
       def append_fields(html, path, template, readonly)
+        disabled = readonly ? ' disabled="disabled"' : ''
         readonly = readonly ? ' readonly' : ''
         template.each_pair { |id,value|
           next if :kind == id
@@ -41,9 +42,9 @@ module WAB
               input = text_input
             end
           elsif value.is_a?(TrueClass)
-            input = %{<input class="form-field" id="#{input_id}" type="checkbox" checked>}
+            input = %{<input class="form-field" id="#{input_id}" type="checkbox"#{disabled} checked>}
           elsif value.is_a?(FalseClass)
-            input = %{<input class="form-field" id="#{input_id}" type="checkbox">}
+            input = %{<input class="form-field" id="#{input_id}" type="checkbox"#{disabled}>}
           elsif value.is_a?(Integer) || WAB::Utils.pre_24_fixnum?(value) || value.is_a?(Number)
             input = %{<input class="form-field" id="#{input_id}" type="number" value="#{value}" #{readonly}>}
           elsif value.is_a?(Hash)
