@@ -42,7 +42,7 @@ module WAB
           elsif value.is_a?(FalseClass)
             input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" #{readonly}>}
           elsif value.is_a?(Integer) || WAB::Utils.pre_24_fixnum?(value) || value.is_a?(Number)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="number" value="#{value} #{readonly}">}
+            input = %{<input class="form-field" id="#{path}.#{id}" type="number" value="#{value}" #{readonly}>}
           elsif value.is_a?(Hash)
             append_fields(html, "#{path}.#{id}", value)
           else
