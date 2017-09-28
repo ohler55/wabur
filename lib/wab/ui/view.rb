@@ -38,9 +38,9 @@ module WAB
               input = %{<input class="form-field" id="#{path}.#{id}" type="text" value="#{value}" #{readonly}>}
             end
           elsif value.is_a?(TrueClass)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" checked #{readonly}>}
+            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" checked>}
           elsif value.is_a?(FalseClass)
-            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox" #{readonly}>}
+            input = %{<input class="form-field" id="#{path}.#{id}" type="checkbox">}
           elsif value.is_a?(Integer) || WAB::Utils.pre_24_fixnum?(value) || value.is_a?(Number)
             input = %{<input class="form-field" id="#{path}.#{id}" type="number" value="#{value}" #{readonly}>}
           elsif value.is_a?(Hash)
