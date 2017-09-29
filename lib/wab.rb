@@ -6,7 +6,7 @@ module WAB
   def self.get_export(path)
     if path.empty?
       path = '/index.html'
-    elsif '/' != path[0]
+    elsif !path.start_with?('/')
       path = "/#{path}"
     end
     raise ForbiddenError.new(path) if path.include?('..')
