@@ -4,7 +4,14 @@ module WAB
 
   # Returns a file contents from the gem export directory.
   def self.get_export(path)
-    File.open(File.expand_path("#{__dir__}/../export#{path}")) { |f| f.read() }
+    if path.empty?
+      path = '/index.html'
+    elsif '/' != path[0]
+      path = "/#{path}"
+    end
+    raise ForbiddenError.new(path) if path.include?('..')
+    path = File.expand_path("#{__dir__}/../export#{path}")
+    File.open(path) { |f| f.read() }
   end
 
 end
@@ -18,4 +25,3 @@ require 'wab/shell_logger'
 require 'wab/utils'
 require 'wab/uuid'
 require 'wab/version'
-

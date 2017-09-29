@@ -21,7 +21,7 @@ module WAB
       #
       # config:: Configuration object
       def initialize(config)
-        @pre_path      = config[:path_prefix] || '/v1'
+        @pre_path     = config[:path_prefix] || '/v1'
         @path_pos     = @pre_path.split('/').length - 1
         base          = config[:base] || '.'
         @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base))
@@ -56,9 +56,7 @@ module WAB
                                          DocumentRoot: @http_dir,
                                          MimeTypes: mime_types)
         server.mount(@pre_path, WAB::Impl::Handler, self)
-        if @export_proxy
-          server.mount('/', WAB::Impl::ExportProxy, @http_dir)
-        end
+        server.mount('/', ExportProxy, @http_dir) if @export_proxy
 
         trap 'INT' do server.shutdown end
         server.start

@@ -16,7 +16,7 @@ module WAB
       # Adds a display to the flow.
       def add_display(display, entry=false)
         name = display.name
-        raise DuplicateError(name) if @displays.has_key?(name)
+        raise DuplicateError.new(name) if @displays.has_key?(name)
         @displays[name] = display
         @entry = name if entry
       end
