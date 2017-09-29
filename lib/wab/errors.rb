@@ -22,4 +22,10 @@ module WAB
     end
   end
 
+  class ForbiddenError < Error
+    def initialize(path)
+      super("#{path} forbidden")
+    end
+  end
+
 end # WAB

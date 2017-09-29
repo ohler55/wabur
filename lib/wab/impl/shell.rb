@@ -21,7 +21,7 @@ module WAB
       #
       # config:: Configuration object
       def initialize(config)
-        @pre_path      = config[:path_prefix] || '/v1'
+        @pre_path     = config[:path_prefix] || '/v1'
         @path_pos     = @pre_path.split('/').length - 1
         base          = config[:base] || '.'
         @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base))
@@ -30,6 +30,8 @@ module WAB
         @logger.level = config[:verbosity] unless @logger.nil?
         @http_dir     = (config['http.dir'] || File.join(base, 'pages')).gsub('$BASE', base)
         @http_port    = (config['http.port'] || 6363).to_i
+        @export_proxy = config['export_proxy']
+        @export_proxy = true if @export_proxy.nil? # The default is true if not present.
         @controllers  = {}
 
         requires      = config[:require]
@@ -53,7 +55,8 @@ module WAB
         server = WEBrick::HTTPServer.new(Port: @http_port,
                                          DocumentRoot: @http_dir,
                                          MimeTypes: mime_types)
-        server.mount(@pre_path, WAB::Impl::Handler, self)
+        server.mount(@pre_path, Handler, self)
+        server.mount('/', ExportProxy, @http_dir) if @export_proxy
 
         trap 'INT' do server.shutdown end
         server.start
