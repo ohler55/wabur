@@ -21,11 +21,11 @@ to more details with a link entitled "tell me more...".
 
 The tutorial starts with a simple object design and continues with a
 description of the WABuR development environment. Once the basics have been
-covered a blog will be implemented.
+covered a blog project is started with a simple implementation.
 
 ## [Lesson 2 - UI Options](lesson-2/README.md)
 
-The view and displays are refined with dimensions. Controller logging is also
+The view and displays are refined. Controller logging is also
 added.
 
 ## [Lesson 3 - Unit Testing](lesson-3/README.md)
