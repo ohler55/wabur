@@ -4,7 +4,7 @@ module WAB
 
   # Returns a file contents from the gem export directory.
   def self.get_export(path)
-    if path.empty?
+    if path.nil? || path.empty?
       path = '/index.html'
     elsif !path.start_with?('/')
       path = "/#{path}"
