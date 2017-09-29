@@ -7,6 +7,7 @@ module WAB
     class Flow < WAB::Controller
 
       attr_accessor :entry
+      attr_reader :displays
       
       def initialize(shell)
         super
@@ -22,7 +23,7 @@ module WAB
       end
 
       def get_display(name)
-        @displays[name.to_sym]
+        @displays[name]
       end
 
       # Returns a description of the UI to be used. If a display name is

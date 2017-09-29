@@ -25,7 +25,15 @@ module WAB
         # Process command-line arguments and append them, in order, to an empty hash @map
         add_options(opts, options)
 
-        opts.parse(ARGV)
+        modes = opts.parse(ARGV)
+        @map[:mode] = 0 < modes.length ? modes[0] : 'run'
+        @map[:rest] =  modes[1..-1] if 1 < modes.length
+
+        unless ['run', 'new', 'init'].include?(@map[:mode])
+          puts "\n*-*-* #{@map[:mode]} is not a valid mode"
+          puts opts.help
+          Process.exit!(-1)
+        end
 
         # Move the @map sideways and replace with defaults.
         command_line_map = @map

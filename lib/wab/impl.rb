@@ -15,6 +15,7 @@ require 'wab/impl/bool_expr'
 require 'wab/impl/shell'
 require 'wab/impl/export_proxy'
 require 'wab/impl/utils'
+require 'wab/impl/init'
 
 # Require the concrete Expr subclasses so a mapping table can be created for
 # the parser.

@@ -9,6 +9,7 @@ end
 
 require 'wab/ui/display'
 require 'wab/ui/flow'
+require 'wab/ui/multi_flow'
 
 # These are the classes needed for the REST displays/flow.
 require 'wab/ui/rest_flow'

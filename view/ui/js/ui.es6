@@ -6,7 +6,7 @@ function displayError(msg) {
     alert(msg);
 }
 
-function objGet(obj, path, index) {
+function _objGet(obj, path, index) {
     if (path.length - 1 == index) {
         return obj[path[index]];
     }
@@ -14,10 +14,17 @@ function objGet(obj, path, index) {
         let node = obj[path[index]];
 
         if (null != node) {
-            return objGet(node, path, index + 1);
+            return _objGet(node, path, index + 1);
         }
     }
     return null;
+}
+
+function objGet(obj, path) {
+    if ('$ref' == path) {
+        return obj.id;
+    }
+    return _objGet(obj.data, path.split('.'), 0);
 }
 
 function objSet(obj, path, index, value) {
@@ -133,7 +140,7 @@ export class List extends Display {
             for (let child of tr.childNodes) {
                 let path = child.getAttribute('path');
                 if (null != path) {
-                    child.appendChild(document.createTextNode(String(objGet(obj.data, path.split('.'), 0))));
+                    child.appendChild(document.createTextNode(String(objGet(obj, path))));
                 }
             }
             for (let child of tr.getElementsByTagName('*')) {
