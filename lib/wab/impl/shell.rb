@@ -33,7 +33,7 @@ module WAB
         @export_proxy = config['export_proxy']
         @export_proxy = true if @export_proxy.nil? # The default is true if not present.
         @controllers  = {}
-        
+
         requires      = config[:require]
         case requires
         when Array
