@@ -24,6 +24,8 @@ module WAB
           FileUtils.mkdir_p(lib_dir)
 
           write_ui_controllers(lib_dir, types)
+          write_spawn(lib_dir, types)
+
           write_wabur_conf(config_dir, types)
           write_opo_conf(config_dir, types)
           write_opo_rub_conf(config_dir, types)
@@ -60,6 +62,18 @@ module WAB
           }
         end
         
+        def write_spawn(dir, types)
+          template = File.open("#{__dir__}/templates/spawn.rb.template") { |f| f.read }
+          File.open("#{dir}/spawn.rb", 'w') { |f|
+            controllers = ''
+            types.each { |type|
+              controllers << %|
+shell.register_controller('#{type}', WAB::OpenController.new(shell))|
+            }
+            f.write(template.gsub('%{controllers}', controllers))
+          }
+        end
+
         def write_wabur_conf(dir, types)
           template = File.open("#{__dir__}/templates/wabur.conf.template") { |f| f.read }
           File.open("#{dir}/wabur.conf", 'w') { |f|

@@ -33,9 +33,10 @@ $opts.parse(ARGV)
 
 shell = WAB::IO::Shell.new($thread_count, 'kind', 1)
 shell.logger.level = Logger::INFO if $verbose
-shell.register_controller('Article', SampleController.new(shell))
-shell.register_controller('Other', SampleController.new(shell))
-#shell.register_controller(nil, SampleController.new(shell))
+
+shell.register_controller('ui', UIController.new(shell))
+%{controllers}
+
 begin
   shell.start
 rescue Interrupt
