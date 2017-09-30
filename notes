@@ -8,9 +8,15 @@ Enable ES6
   Chrome Canary 60 – behind the Experimental Web Platform flag in chrome:flags. (also Experimental JavaScript)
   Firefox 54 – behind the dom.moduleScripts.enabled setting in about:config.
   Edge 15 – behind the Experimental JavaScript Features setting in about:flags.
+  Opera - about:flags - Experimental JavaScript - enable (doesn't seem to work)
+
+https://github.com/mbeaudru/modern-js-cheatsheet
+http://babeljs.io/learn-es2015/
+http://exploringjs.com/es6/ch_modules.html
+https://webapplog.com/es6/
+https://ponyfoo.com/articles/es6#promises
 
 
-- create dirs
 - build script
 - tutorial setup, symlink, script to so that
 - implement basic /v1/ui read
@@ -26,6 +32,3 @@ Enable ES6
  
 - better place for wabfonts and css
  - maybe view/fonts
-
-- babel build should go where?
- - place where it can be copied with other assets to wab.systems

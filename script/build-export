@@ -1,14 +1,18 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+puts File.expand_path('..', __dir__)
+$LOAD_PATH << File.expand_path(File.join('..', 'lib'), __dir__)
+
 require 'fileutils'
+require 'wab'
 
 def path_to(*subdirs)
   File.expand_path(File.join('..', *subdirs), __dir__)
 end
 
 def dest_dir(*contents)
-  path_to('view', 'pages', 'assets', *contents)
+  path_to('export', 'assets', *contents)
 end
 
 def js_src_dir
@@ -30,11 +34,36 @@ def generate_css
 end
 
 def generate_js
-  FileUtils.mkdir_p dest_dir('js')
   minified = ARGV.include?('-m') ? '--minified ' : ''
-  dest = "#{dest_dir('js')}/wab.js"
-  src = %w(wab list obj view).map { |e| "#{js_src_dir}/#{e}.js" }.join(' ')
+
+  FileUtils.mkdir_p dest_dir('js')
+
+  dest = dest_dir('js', 'wab.es6')
+  src = path_to('view', 'wab', 'wab.es6')
   out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
+  end
+
+  dest = dest_dir('js', 'ui.es6')
+  src = path_to('view', 'ui', 'js', 'ui.es6')
+  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
+  end
+end
+
+def copy_fonts
+  dest = dest_dir('fonts')
+  src = path_to('view', 'ui', 'wabfont')
+
+  FileUtils.mkdir_p dest
+
+  out = `cp -r #{src} #{dest}`
   if out.empty?
     success_message(dest)
   else
@@ -46,6 +75,7 @@ begin
   require 'sass'
   generate_css
   generate_js
+  copy_fonts
 rescue LoadError
   puts "\n'sass' gem not found. Installing.."
   puts `gem install sass --no-ri --no-rdoc`

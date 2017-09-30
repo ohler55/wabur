@@ -57,3 +57,5 @@ view/pages/assets/js/wab.js
 
 node_modules
 package-lock.json
+
+export/assets

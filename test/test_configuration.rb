@@ -16,7 +16,7 @@ class TestConfiguration < TestImpl
   end
 
   def test_initialization
-    assert_equal({:environment=>"test"}, @config.map )
+    assert_equal({environment:'test', mode:'run'}, @config.map )
   end
 
   def test_parse_config_file

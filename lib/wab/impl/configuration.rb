@@ -25,7 +25,15 @@ module WAB
         # Process command-line arguments and append them, in order, to an empty hash @map
         add_options(opts, options)
 
-        opts.parse(ARGV)
+        modes = opts.parse(ARGV)
+        @map[:mode] = 0 < modes.length ? modes[0] : 'run'
+        @map[:rest] =  modes[1..-1] if 1 < modes.length
+
+        unless ['run', 'new', 'init'].include?(@map[:mode])
+          puts "\n*-*-* #{@map[:mode]} is not a valid mode"
+          puts opts.help
+          Process.exit!(-1)
+        end
 
         # Move the @map sideways and replace with defaults.
         command_line_map = @map
@@ -48,9 +56,15 @@ module WAB
           if v.has_key?(:val)
             default = v[:val]
             if default.is_a?(Array)
-              opts.on(v[:short], "--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
-            else
+              if v.has_key?(:short)
+                opts.on(v[:short], "--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              else
+                opts.on("--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              end
+            elsif v.has_key?(:short)
               opts.on(v[:short], "--#{key_path} #{v[:arg]}", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
+            else 
+              opts.on("--#{key_path} #{v[:arg]}", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
             end
           else
             add_options(opts, v, key_path)

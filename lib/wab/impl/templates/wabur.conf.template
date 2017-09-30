@@ -1,0 +1,36 @@
+# wabur.conf
+
+# Configuration file for the Pure Ruby WAB Runner.
+
+# The directory to store the runner data (relative to source directory).
+store.dir = wabur/data
+
+# URL path prefix for the data records.
+path_prefix = /v1
+
+# Field to expect the type, class, or kind of record in the stored JSON.
+type_key = kind
+
+# HTTP site directory.
+http.dir =  site
+
+# HTTP port to listen on.
+http.port = 6363
+
+# Logging verbosity. Can be ERROR, WARN, INFO, or DEBUG.
+verbosity = WARN
+
+# The Ruby requires. Generally what ever class in the lib directory that
+# should be imported.
+require = ui_controller
+
+# If export_proxy is true the wab default index.html, CSS, JavaScript, and
+# fonts are loaded from the gem's export directory is they are not found in
+# the site directory.
+export_proxy = true
+
+# Handlers for each type of record and for the UI shich are Ruby generated UI
+# configuration records.
+handler.0.type = ui
+handler.0.handler = UIController
+%{handlers}
