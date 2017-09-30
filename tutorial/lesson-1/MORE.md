@@ -131,6 +131,7 @@ blog
             └── wab.css
         └── fonts
             └── wabfont
+                ...
         └── index.html
         └── js
             └── wab.es6
@@ -150,6 +151,11 @@ the `site` sub-directory. For lesson-1 there is no site directory and the
 wabur defaults will be used.
 
 The `config` directory includes configuration files for the Runners.
+
+The `js` directory is for JavaScript files. Both ECMAScript2015 (ES6) and ES5
+Javascript are supported. Both versions of the files are included in the `js`
+directory. The ES6 files have a `.es6` suffix to avoid confusion. Runners are
+setup to identify that extension as an `application/json` mime type.
 
 ## Implementation
 
