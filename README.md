@@ -21,9 +21,10 @@ For further reading there is an [architecture page](pages/Architecture.md)
 
 ## Try It!
 
-Want to know more, a sample is available in the [sample](examples/sample)
-directory along with configurations for three run options available
-today. There are some preliminary benchmark results described in the README.
+Want to know more, a tutorial is available in the [tutorial](tutorial/README.md)
+directory.
+
+More interested in the benchmarks then take a look at (benchmarks README.md)[benchmarks/README.md].
 
 ## Participate and Contribute
 
