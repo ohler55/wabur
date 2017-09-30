@@ -23,32 +23,39 @@ The tutorial starts with a simple object design and continues with a
 description of the WABuR development environment. Once the basics have been
 covered a blog project is started with a simple implementation.
 
-## [Lesson 2 - UI Options](lesson-2/README.md)
+## [Lesson 2 - CSS Customization](lesson-2/README.md)
 
-The view and displays are refined. Controller logging is also
-added.
+The CSS is modified to create a new look.
 
-## [Lesson 3 - Unit Testing](lesson-3/README.md)
+## [Lesson 3 - Logging](lesson-3/README.md)
+
+Logging and helpful hints for tracing the application.
+
+## [Lesson 4 - HTML Customization](lesson-4/README.md)
+
+The HTML of individual pages is modified.
+
+## [Lesson 5 - Controllers](lesson-5/README.md)
+
+A custom controller is created to add a timestamp to the blog entries.
+
+## [Lesson 6 - Unit Testing](lesson-6/README.md)
 
 Create unit tests for the Controller and the Controller as part of a Runner.
 
-## [Lesson 4 - Aggregate Objects](lesson-4/README.md)
+## [Lesson 7 - Advanced Runners](lesson-7/README.md)
+
+Learn how to use high performance runners.
+
+## [Lesson 8 - Aggregate Objects](lesson-8/README.md)
 
 A new object type, a Comment, is added along with updated displays for the
 inclusion of Comments in a blog Entry.
 
-## [Lesson 5 - CSS Customization](lesson-5/README.md)
+## [Lesson 9 - Custom JavaScript](lesson-9/README.md)
 
-TBD
+Add new features by adding JavaScript.
 
-## [Lesson 6 - Custom JavaScript](lesson-6/README.md)
+## [Lesson 10 - Writing a Runner and Shell](lesson-10/README.md)
 
-TBD
-
-## [Lesson 7 - Advanced Runners](lesson-7/README.md)
-
-TBD
-
-## [Lesson 8 - Writing a Runner and Shell](lesson-8/README.md)
-
-TBD
+Describe what is required to write a custom runner and shell.

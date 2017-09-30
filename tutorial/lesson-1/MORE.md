@@ -134,9 +134,7 @@ blog
                 ...
         └── index.html
         └── js
-            └── wab.es6
             └── wab.js
-            └── ui.es6
             └── ui.js
     └── index.html
 ```
@@ -152,10 +150,12 @@ wabur defaults will be used.
 
 The `config` directory includes configuration files for the Runners.
 
-The `js` directory is for JavaScript files. Both ECMAScript2015 (ES6) and ES5
-Javascript are supported. Both versions of the files are included in the `js`
-directory. The ES6 files have a `.es6` suffix to avoid confusion. Runners are
-setup to identify that extension as an `application/json` mime type.
+The `js` directory is for JavaScript files. The WABuR reference implementaion
+name, **ui** uses ECMAScript2015 (ES6). For browsers that do not support ES6
+SystemJS is used. Both ES6 and ES5 files can be included in the `js`
+directory. If a mix is used then the ES6 files should have a `.es6` suffix to
+avoid confusion. Runners are setup to identify that extension as an
+`application/json` mime type.
 
 ## Implementation
 
