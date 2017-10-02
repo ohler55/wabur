@@ -24,6 +24,10 @@ class TestImplInit < TestImpl
     wabur_config = File.read("#{@dir}/config/wabur.conf")
     assert_match /handler.1.type = Entry\nhandler.1.handler = WAB::OpenController/, wabur_config
     assert_match /handler.2.type = Article\nhandler.2.handler = WAB::OpenController/, wabur_config
+
+    opo_rub_config = File.read("#{@dir}/config/opo-rub.conf")
+    assert_match /handler.entry.path = \/v1\/Entry\/\*\*\nhandler.entry.class = WAB::OpenController/, opo_rub_config
+    assert_match /handler.article.path = \/v1\/Article\/\*\*\nhandler.article.class = WAB::OpenController/, opo_rub_config
   end
 
 end # TestImplInit
