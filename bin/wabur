@@ -35,14 +35,14 @@ URL path to be handled.
 
 Modes (the first non-option) available are:
 
-  run: Runs a wabur as a runner and shell. Also the default. Any types
-       specified will be ignored.
+   run: Runs wabur as a runner and shell. Also the default. Any types
+        specified will be ignored.
 
-  new: New project directory created and set up. The --base options must be
-       provided to specify the directory to create and initialize. Not
-       providing a base will revert to the init mode.
+   new: New project directory created and set up. The `--base` options must be
+        provided to specify the directory to create and initialize. Not
+        providing the `--base` switch will revert to the `init` mode.
 
-  init - Initialize a project when called from the project directory.
+  init: Initialize a project into the current directory.
 
 }
 
@@ -111,7 +111,7 @@ config = WAB::Impl::Configuration.new(usage, options)
 if 'new' == config[:mode]
   dir = config[:base] || '.'
   dir = File.expand_path(dir)
-  FileUtils.mkdir_p(dir) unless File.expand_path(',') == dir
+  FileUtils.mkdir_p(dir) unless File.expand_path('.') == dir
   WAB::Impl::Init.setup(File.expand_path(dir), config)
 elsif 'init' == config[:mode]
   WAB::Impl::Init.setup(File.expand_path('.'), config)
@@ -126,4 +126,3 @@ else
   # Start a shell initialized with the final configuration.
   WAB::Impl::Shell.new(config).start
 end
-
