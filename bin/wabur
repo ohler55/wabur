@@ -42,7 +42,11 @@ Modes (the first non-option) available are:
         provided to specify the directory to create and initialize. Not
         providing the `--base` switch will revert to the `init` mode.
 
+          e.g.: wabur new Entry Article --base my_app
+
   init: Initialize a project into the current directory.
+
+          e.g.: wabur init Entry Article
 
 }
 
