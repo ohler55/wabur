@@ -126,16 +126,15 @@ blog
 ├── lib
 |   └── ui_controller.rb
 └── site
-    └── assets
-        └── css
-            └── wab.css
-        └── fonts
-            └── wabfont
-                ...
-        └── index.html
-        └── js
-            └── wab.js
-            └── ui.js
+    ├── assets
+    |   ├── css
+    |   |   └── wab.css
+    |   ├── fonts
+    |   |   └── wabfont
+    |   |       ...
+    |   └── js
+    |       └── wab.js
+    |       └── ui.js
     └── index.html
 ```
 

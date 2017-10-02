@@ -61,10 +61,9 @@ blog
 |   └── ui_controller.rb
 └── site
     └── assets
-        └── css
-        └── fonts
-        └── index.html
-        └── js
+    |   ├── css
+    |   ├── fonts
+    |   └── js
     └── index.html
 ```
 
