@@ -189,6 +189,14 @@ $ wabur init Entry
 This will generate all the files needed to run but since the Entry type has
 not been defined it will be a rather boring display.
 
+To start from scratch, locally, use `wabur new` mode. Simply run the following
+to create a project directory at './blog' and initialize controllers for type
+Entry:
+
+```
+$ wabur new --base blog Entry
+```
+
 To define the Entry type the `lib/ui_controller.rb` is edited. Two attributes
 will be added, 'title' and 'content'. After opening the file notice the
 creation of a RestFlow where the second argument is a template for the Entry

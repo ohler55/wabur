@@ -100,6 +100,7 @@ not been defined it will be a rather boring display.
 To start from scratch, locally, use `wabur new` mode. Simply run the following
 to create a project directory at './blog' and initialize controllers for type
 Entry:
+
 ```
 $ wabur new --base blog Entry
 ```
