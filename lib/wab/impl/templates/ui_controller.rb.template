@@ -1,6 +1,5 @@
 # encoding: UTF-8
 
-require 'wab'
 require 'wab/ui'
 
 class UIController < WAB::UI::MultiFlow

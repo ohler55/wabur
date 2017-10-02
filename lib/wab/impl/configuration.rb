@@ -40,8 +40,10 @@ module WAB
         @map = {}
         build_default_map(options)
 
-        # If a config file was specified load it and merge into @map.
-        @map = merge_map(@map, parse_config_file(config_file)) unless config_file.nil?
+        config_file = './config/wabur.conf' if config_file.nil?
+
+        # Load it and merge th econfig file into @map.
+        @map = merge_map(@map, parse_config_file(config_file))
 
         # Merge in the command line map.
         @map = merge_map(@map, command_line_map) unless command_line_map.empty?
