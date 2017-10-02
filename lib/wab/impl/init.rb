@@ -51,7 +51,15 @@ module WAB
           rest_flows = ''
           types.each { |type|
             rest_flows << %|
-    add_flow(UI::RestFlow.new(shell, { kind: '#{type}'}, ['$ref']))|
+    add_flow(
+      WAB::UI::RestFlow.new(
+        shell,
+        {
+          kind: '#{type}',
+        },
+        ['$ref']
+      )
+    )|
           }
           write_file(dir, 'ui_controller.rb', { rest_flows: rest_flows })
         end
