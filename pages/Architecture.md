@@ -1,15 +1,15 @@
 # Architecture
 
-WABuR is a Web Application Builder using Ruby. It strives to keep be simple to
+WABuR is a Web Application Builder using Ruby. It strives to be simple to
 use and maintain not only for the trivial case but for more advanced
 applications as well. It utilizes a Mode/View/Controller pattern with well
 defined APIs between each element of the MVC approach.
 
 One of the more interesting benefits of well defined APIs between MVC
 components is that it allows multiple Views without changing any other
-components. A View can be a single page JavaScript application asis used in
-the WABuR reference implementation or it can simply be `curl` used to send
-HTTP requests as is used in later lessons in the tutorial.
+components. A View can be a single page JavaScript application as is used in
+the WABuR reference implementation or it can simply be a `curl` command used
+to send HTTP requests as is used in later lessons in the tutorial.
 
 The architecture provides many options but keeps clean and clear API between
 components. This pluggable design allows for unit test drivers and various levels
