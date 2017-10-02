@@ -18,12 +18,12 @@ class TestImplInit < TestImpl
     WAB::Impl::Init.setup(File.expand_path(@dir), @config)
 
     controller = File.read("#{@dir}/lib/ui_controller.rb")
-    assert_match %r!kind: 'Entry',\n!, controller
-    assert_match %r!kind: 'Article',\n!, controller
+    assert_match /kind: 'Entry',\n/, controller
+    assert_match /kind: 'Article',\n/, controller
 
     wabur_config = File.read("#{@dir}/config/wabur.conf")
-    assert_match %r!handler.1.type = Entry\nhandler.1.handler = WAB::OpenController!, wabur_config
-    assert_match %r!handler.2.type = Article\nhandler.2.handler = WAB::OpenController!, wabur_config
+    assert_match /handler.1.type = Entry\nhandler.1.handler = WAB::OpenController/, wabur_config
+    assert_match /handler.2.type = Article\nhandler.2.handler = WAB::OpenController/, wabur_config
   end
 
 end # TestImplInit
