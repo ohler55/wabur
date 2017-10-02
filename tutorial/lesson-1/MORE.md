@@ -120,8 +120,8 @@ is laid out as indicated in sub-directories.
 ```
 blog
 ├── config
-|   └── wabur.conf
-|   └── opo.conf
+|   ├── wabur.conf
+|   ├── opo.conf
 |   └── opo-rub.conf
 ├── lib
 |   └── ui_controller.rb
@@ -133,7 +133,7 @@ blog
     |   |   └── wabfont
     |   |       ...
     |   └── js
-    |       └── wab.js
+    |       ├── wab.js
     |       └── ui.js
     └── index.html
 ```

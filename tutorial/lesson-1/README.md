@@ -54,8 +54,8 @@ be laid out as indicated.
 ```
 blog
 ├── config
-|   └── wabur.conf
-|   └── opo.conf
+|   ├── wabur.conf
+|   ├── opo.conf
 |   └── opo-rub.conf
 ├── lib
 |   └── ui_controller.rb
