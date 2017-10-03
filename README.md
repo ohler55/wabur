@@ -6,25 +6,25 @@
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
 WABuR is a Web Application Builder using Ruby. It employs a modern NoSQL JSON
-data store and a one page UI using JavaScript. The best part is that it is
-simple and very fast hitting over 200,000 fetches a second with a Ruby core!
+data store and a single-page UI using JavaScript. The best part is that it is
+simple and very fast, hitting over 200,000 fetches a second with a Ruby core!
 
 It is pluggable and extendable in many ways to allow new additions,
 alternative databases, and any number of UIs.
 
-A natural question is "what about Rails". Rails is well established and has a
-huge user base. WABuR is not a replacement for Rails. It is an alternative for
-those who want to explore using JSON databases with a one page dynamic
+A natural question is *"What about Rails?"*. Rails is well established and has
+a huge user base. WABuR is not a replacement for Rails. It is an alternative
+for those who want to explore using JSON databases with a single-page dynamic
 JavaScript UI.
 
 For further reading there is an [architecture page](pages/Architecture.md)
 
 ## Try It!
 
-Want to know more, a tutorial is available in the [tutorial](tutorial/README.md)
+Want to know more? A tutorial is available in the [tutorial](tutorial/README.md)
 directory.
 
-More interested in the benchmarks then take a look at (benchmarks README.md)[benchmarks/README.md].
+More interested in the benchmarks? Then take a look at the [benchmarks page](benchmarks/README.md).
 
 ## Participate and Contribute
 

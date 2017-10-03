@@ -240,7 +240,7 @@ first is expected to be a derivative of [OpO](http://opo.technology) as it
 takes shape. This WAB Shell will also draw on the libraries use by [Piper
 Push Cache](http://piperpushcache.com) to provide WebSocket and SSE support.
 
-## wabur Gem layout
+## WABuR Repository layout
 
 Knowing what the concepts involved in the WABuR architecture and design does
 not make it obvious where all the parts described reside in the
@@ -285,7 +285,7 @@ wabur
 |       Unit and compatibility tests.
 ├── tutorial
 |       Tutorial for building a WABuR application from the ground up.
-├── view
+└── view
     |   Source code for JavaScript, CSS, fonts, and other View related
     |   components. This is where the reference UI implemenation sources
     |   reside or at least the non-configuration defining portions.
