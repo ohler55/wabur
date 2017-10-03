@@ -102,6 +102,12 @@ options = {
       arg: 'PORT',
     },
   },
+  indent: {
+    val: 0,
+    type: Integer,
+    doc: 'JSON indentation.',
+    arg: 'INDENT',
+  },
   verbosity: {
     val: 'WARN',
     type: String,

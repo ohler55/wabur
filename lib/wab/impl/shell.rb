@@ -14,6 +14,8 @@ module WAB
       attr_reader :type_key
       attr_reader :path_pos
 
+      attr_accessor :indent
+      
       # Call the Model instance with these methods.
       def_delegators :@model, :get, :query
 
@@ -21,10 +23,11 @@ module WAB
       #
       # config:: Configuration object
       def initialize(config)
+        @indent = config['indent'] || 0
         @pre_path     = config[:path_prefix] || '/v1'
         @path_pos     = @pre_path.split('/').length - 1
         base          = config[:base] || '.'
-        @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base))
+        @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base), indent)
         @type_key     = config[:type_key] || 'kind'
         @logger       = config[:logger]
         @logger.level = config[:verbosity] unless @logger.nil?
