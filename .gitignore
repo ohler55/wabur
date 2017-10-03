@@ -58,4 +58,9 @@ view/pages/assets/js/wab.js
 node_modules
 package-lock.json
 
-export/assets
+export/assets/css
+export/assets/fonts
+export/assets/js/wab.js
+export/assets/js/ui.js
+export/assets/js/transpile.js
+

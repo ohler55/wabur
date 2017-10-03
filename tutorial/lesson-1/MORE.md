@@ -320,7 +320,11 @@ pull in the wab UI JavaScript.
       </div>
     </footer>
 
-    <script src="assets/js/ui.es6" type="module"></script>
+    <script src="assets/js/ui.js" type="module"></script>
+
+    <script nomodule src="assets/js/systemjs/system.js"></script>
+    <script nomodule src="assets/js/transpile.js"></script>
+
   </body>
 </html>
 
