@@ -76,8 +76,8 @@ module WAB
         result = @shell.data(result) unless result.is_a?(WAB::Data)
         res.status = 200
         res['Content-Type'] = 'application/json'
-        @shell.logger.debug("reply to #{path.join('/')}#{query}: #{result.json}") if @shell.logger.debug?
-        res.body = result.json
+        @shell.logger.debug("reply to #{path.join('/')}#{query}: #{result.json(@shell.indent)}") if @shell.logger.debug?
+        res.body = result.json(@shell.indent)
       end
 
       # Sends an error from a rescued call.
@@ -86,7 +86,7 @@ module WAB
         res['Content-Type'] = 'application/json'
         body = { code: -1, error: "#{e.class}: #{e.message}" }
         body[:backtrace] = e.backtrace
-        res.body = @shell.data(body).json
+        res.body = @shell.data(body).json(@shell.indent)
         @shell.logger.warn(%|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|)
       end
 

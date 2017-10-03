@@ -29,6 +29,10 @@ require = ui_controller
 # the site directory.
 export_proxy = true
 
+# The number of spaces to indent the JSON written to disk by the model and the
+# JSON sent as a response to View requests.
+indent = 0
+
 # Handlers for each type of record and for the UI shich are Ruby generated UI
 # configuration records.
 handler.0.type = ui
