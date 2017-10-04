@@ -30,7 +30,9 @@ module WAB
           write_opo_rub_conf(config_dir, types)
 
         rescue StandardError => e
-          puts "*-*-* #{e.class}: #{e.message}"
+          # TBD: Issue more helpful error message
+          puts %|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|
+          abort
         end
 
         private
