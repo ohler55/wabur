@@ -45,3 +45,11 @@ These are the simple guidelines for contributing.
 
 4. Write straight forward, clean, and simple code. No magic stuff, no monkey
    patching Ruby core classes, and no inheriting from core classes.
+
+## References and Links
+
+ - [Oj](https://github.com/ohler55/oj) JSON parser used in WABuR.
+ - [OpO](http://opo.technology) home of the Opo-Rub runner.
+ - [Sass](http://sass-lang.com) used to build the reference implementation UI CSS.
+ - [SystemJS Babel Plugin](https://github.com/systemjs/plugin-babel) also used to transpile JavaScript.
+ - [SystemJS](https://github.com/systemjs/systemjs) used to convert JavaScript ES6 to ES5 in the browser.
