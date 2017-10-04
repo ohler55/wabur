@@ -23,7 +23,7 @@ module WAB
       #
       # config:: Configuration object
       def initialize(config)
-        @indent       = config['indent'].to_i || 0
+        @indent       = config[:indent].to_i || 0
         @pre_path     = config[:path_prefix] || '/v1'
         @path_pos     = @pre_path.split('/').length - 1
         base          = config[:base] || '.'
@@ -33,7 +33,7 @@ module WAB
         @logger.level = config[:verbosity] unless @logger.nil?
         @http_dir     = (config['http.dir'] || File.join(base, 'pages')).gsub('$BASE', base)
         @http_port    = (config['http.port'] || 6363).to_i
-        @export_proxy = config['export_proxy']
+        @export_proxy = config[:export_proxy]
         @export_proxy = true if @export_proxy.nil? # The default is true if not present.
         @controllers  = {}
 
