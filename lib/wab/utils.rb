@@ -1,8 +1,8 @@
 module WAB
   module Utils
     class << self
-      UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-      TIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/
+      UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.freeze
+      TIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}\.\d{9}Z$/.freeze
 
       def ruby_series
         RbConfig::CONFIG.values_at('MAJOR', 'MINOR').join.to_i
@@ -22,14 +22,14 @@ module WAB
       # "123e4567-e89b-12d3-a456-426655440000"
       def uuid_format?(str)
         return false unless 36 == str.length
-        !UUID_REGEX.match(str).nil?
+        UUID_REGEX === str
       end
 
       # Detect if given string matches a Time format as encoded by WAB components:
       # "2017-09-01T12:45:15.123456789Z"
       def wab_time_format?(str)
         return false unless 30 == str.length
-        !TIME_REGEX.match(str).nil?
+        TIME_REGEX === str
       end
     end
   end
