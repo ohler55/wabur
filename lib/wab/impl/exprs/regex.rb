@@ -15,7 +15,7 @@ module WAB
 
       def eval(data)
         value = data.get(@path)
-        return !@rx.match(value).nil? if value.is_a?(String)
+        return @rx === value if value.is_a?(String)
         false
       end
 

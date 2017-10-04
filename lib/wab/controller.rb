@@ -232,9 +232,9 @@ module WAB
       # ok as is
       return value if !value.empty? && value.start_with?("'")
 
-      if !/^-?\d+$/.match(value).nil?
+      if /^-?\d+$/ === value
         value.to_i
-      elsif !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.match(value).nil?
+      elsif /^-?\d*\.?\d+([eE][-+]?\d+)?$/ === value
         value.to_f
       elsif WAB::Utils.uuid_format?(value)
         WAB::UUID.new(value)
