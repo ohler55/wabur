@@ -119,12 +119,14 @@ options = {
 config = WAB::Impl::Configuration.new(usage, options)
 
 if 'new' == config[:mode]
-  dir = config[:base] || '.'
-  dir = File.expand_path(dir)
+  dir = File.expand_path(config[:base] || '.')
   FileUtils.mkdir_p(dir) unless File.expand_path('.') == dir
-  WAB::Impl::Init.setup(File.expand_path(dir), config)
+  WAB::Impl::Init.setup(dir, config)
+  puts "Successfully created a new WAB workspace at #{dir}"
 elsif 'init' == config[:mode]
-  WAB::Impl::Init.setup(File.expand_path('.'), config)
+  dir = File.expand_path('.')
+  WAB::Impl::Init.setup(dir, config)
+  puts "Successfully initialized a new WAB workspace at #{dir}"
 else
   # The Configuration object can be modified before initializing the Shell. By
   # setting the +config[:logger]+ the Shell will use that as the logger. The
