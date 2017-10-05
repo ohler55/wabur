@@ -15,43 +15,43 @@ module WAB
 
       def do_GET(req, res)
         controller, path, query = extract_req(req)
-        log_response('controller.read', path, query) if @shell.logger.info?
-        send_result(controller.read(path, query), res)
+        log_request('controller.read', path, query) if @shell.logger.info?
+        send_result(controller.read(path, query), res, path, query)
       rescue StandardError => e
         send_error(e, res)
       end
 
       def do_PUT(req, res)
         controller, path, query, body = extract_req(req)
-        log_response_with_body('controller.create', path, query, body) if @shell.logger.info?
-        send_result(controller.create(path, query, body), res)
+        log_request_with_body('controller.create', path, query, body) if @shell.logger.info?
+        send_result(controller.create(path, query, body), res, path, query)
       rescue StandardError => e
         send_error(e, res)
       end
 
       def do_POST(req, res)
         controller, path, query, body = extract_req(req)
-        log_response_with_body('controller.update', path, query, body) if @shell.logger.info?
-        send_result(controller.update(path, query, body), res)
+        log_request_with_body('controller.update', path, query, body) if @shell.logger.info?
+        send_result(controller.update(path, query, body), res, path, query)
       rescue StandardError => e
         send_error(e, res)
       end
 
       def do_DELETE(req, res)
         controller, path, query = extract_req(req)
-        log_response('controller.delete', path, query) if @shell.logger.info?
-        send_result(controller.delete(path, query), res)
+        log_request('controller.delete', path, query) if @shell.logger.info?
+        send_result(controller.delete(path, query), res, path, query)
       rescue StandardError => e
         send_error(e, res)
       end
 
       private
 
-      def log_response(caller, path, query)
+      def log_request(caller, path, query)
         @shell.logger.info("#{caller}(#{path.join('/')}#{query})")
       end
 
-      def log_response_with_body(caller, path, query, body)
+      def log_request_with_body(caller, path, query, body)
         @shell.logger.info("#{caller}(#{path.join('/')}#{query}, #{body.json})")
       end
 
@@ -72,12 +72,12 @@ module WAB
       end
 
       # Sends the results from a controller request.
-      def send_result(result, res)
+      def send_result(result, res, path, query)
         result = @shell.data(result) unless result.is_a?(WAB::Data)
         res.status = 200
         res['Content-Type'] = 'application/json'
-        @shell.logger.debug("Reply: #{result.json}") if @shell.logger.debug?
-        res.body = result.json
+        @shell.logger.debug("reply to #{path.join('/')}#{query}: #{result.json(@shell.indent)}") if @shell.logger.debug?
+        res.body = result.json(@shell.indent)
       end
 
       # Sends an error from a rescued call.
@@ -86,7 +86,7 @@ module WAB
         res['Content-Type'] = 'application/json'
         body = { code: -1, error: "#{e.class}: #{e.message}" }
         body[:backtrace] = e.backtrace
-        res.body = @shell.data(body).json
+        res.body = @shell.data(body).json(@shell.indent)
         @shell.logger.warn(%|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|)
       end
 

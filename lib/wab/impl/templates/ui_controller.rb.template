@@ -1,0 +1,12 @@
+# encoding: UTF-8
+
+require 'wab/ui'
+
+class UIController < WAB::UI::MultiFlow
+
+  def initialize(shell)
+    super
+    %{rest_flows}
+  end
+
+end # UIController

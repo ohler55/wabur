@@ -16,4 +16,16 @@ module WAB
     end
   end
 
+  class DuplicateError < Error
+    def initialize(key)
+      super("#{key} already exists")
+    end
+  end
+
+  class ForbiddenError < Error
+    def initialize(path)
+      super("#{path} forbidden")
+    end
+  end
+
 end # WAB

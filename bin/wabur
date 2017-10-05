@@ -3,10 +3,15 @@
 
 while (index = ARGV.index('-I'))
   _, path = ARGV.slice!(index, 2)
-  $: << path
+  $LOAD_PATH << path
 end
 
+# Always add ./lib to the load path as that is the default location for Ruby
+# files in a project.
+$LOAD_PATH << File.expand_path('./lib')
+
 require 'optparse'
+require 'fileutils'
 require 'logger'
 
 require 'wab'
@@ -20,13 +25,28 @@ require 'wab/impl'
 # Prepare the +usage+ string.
 # Basically a banner text and description passed on +OptionParser+.
 usage = %{
-Usage: wabur [options]
+Usage: wabur [run|new|init] [options] [types]
 
-A pure Ruby WAB Runner.
+A pure Ruby WAB Runner and multi-purpose tool for WABuR development.
 Configured directly via command-line options or via a configuration file which
 can either be a UNIX-style conf file, or a JSON file, or a YAML file.
 The configuration typically includes designating Controller classes for each
 URL path to be handled.
+
+Modes (the first non-option) available are:
+
+   run: Runs wabur as a runner and shell. Also the default. Any types
+        specified will be ignored.
+
+   new: New project directory created and set up. The `--base` options must be
+        provided to specify the directory to create and initialize. Not
+        providing the `--base` switch will revert to the `init` mode.
+
+          e.g.: wabur new Entry Article --base my_app
+
+  init: Initialize a project into the current directory.
+
+          e.g.: wabur init Entry Article
 
 }
 
@@ -82,6 +102,12 @@ options = {
       arg: 'PORT',
     },
   },
+  indent: {
+    val: 0,
+    type: Integer,
+    doc: 'JSON indentation.',
+    arg: 'INDENT',
+  },
   verbosity: {
     val: 'WARN',
     type: String,
@@ -92,12 +118,23 @@ options = {
 
 config = WAB::Impl::Configuration.new(usage, options)
 
-# The Configuration object can be modified before initializing the Shell. By
-# setting the +config[:logger]+ the Shell will use that as the logger. The
-# +config[:handler]+ array can also be modified by setting path values along
-# with a Controller instance, a Controller class, or the name of a Controller
-# class.
-config[:logger] = Logger.new(STDOUT)
+if 'new' == config[:mode]
+  dir = File.expand_path(config[:base] || '.')
+  FileUtils.mkdir_p(dir) unless File.expand_path('.') == dir
+  WAB::Impl::Init.setup(dir, config)
+  puts "Successfully created a new WAB workspace at #{dir}"
+elsif 'init' == config[:mode]
+  dir = File.expand_path('.')
+  WAB::Impl::Init.setup(dir, config)
+  puts "Successfully initialized a new WAB workspace at #{dir}"
+else
+  # The Configuration object can be modified before initializing the Shell. By
+  # setting the +config[:logger]+ the Shell will use that as the logger. The
+  # +config[:handler]+ array can also be modified by setting path values along
+  # with a Controller instance, a Controller class, or the name of a
+  # Controller class.
+  config[:logger] = Logger.new(STDOUT)
 
-# Start a shell initialized with the final configuration.
-WAB::Impl::Shell.new(config).start
+  # Start a shell initialized with the final configuration.
+  WAB::Impl::Shell.new(config).start
+end

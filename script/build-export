@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+# In addition to the build done here the systemjs
+# (git@github.com:systemjs/systemjs.git) dist directory should be copied to
+# export/assets/js/systemjs. The plugin-babel
+# (git@github.com:systemjs/plugin-babel.git) JavaScript files should be copied
+# to export/js/plugin-babel. That includes the babel-helpers directory.
+
+puts File.expand_path('..', __dir__)
+$LOAD_PATH << File.expand_path(File.join('..', 'lib'), __dir__)
+
+require 'fileutils'
+require 'wab'
+
+def path_to(*subdirs)
+  File.expand_path(File.join('..', *subdirs), __dir__)
+end
+
+def dest_dir(*contents)
+  path_to('export', 'assets', *contents)
+end
+
+def js_src_dir
+  path_to('view', 'js')
+end
+
+def success_message(file)
+  path = file.sub("#{Dir.pwd}/", '')
+  puts "#{'Generated'.rjust(15)}: #{path}"
+end
+
+def generate_css
+  src  ||= path_to('view', 'ui', 'styles', 'wab.scss')
+  dest ||= dest_dir('css', 'wab.css')
+
+  FileUtils.mkdir_p dest_dir('css')
+  `sass #{src} #{dest} --style compressed`
+  success_message(dest)
+end
+
+def generate_js_file(src, dest_name)
+  minified = ARGV.include?('-m') ? '--minified ' : ''
+  dest = dest_dir('js', dest_name)
+  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
+  end
+end
+
+def generate_js
+  FileUtils.mkdir_p dest_dir('js')
+  generate_js_file(path_to('view', 'wab', 'wab.js'), 'wab.js')
+  generate_js_file(path_to('view', 'ui', 'js', 'ui.js'), 'ui.js')
+  generate_js_file(path_to('view', 'wab', 'transpile.js'), 'transpile.js')
+end
+
+def copy_fonts
+  dest = dest_dir('fonts')
+  src = path_to('view', 'ui', 'wabfont')
+
+  FileUtils.mkdir_p dest
+
+  out = `cp -r #{src} #{dest}`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
+  end
+end
+
+begin
+  require 'sass'
+  generate_css
+rescue LoadError
+  puts "\n'sass' gem not found. Installing.."
+  puts `gem install sass --no-ri --no-rdoc`
+  puts ''
+  generate_css
+end
+
+generate_js
+copy_fonts

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.0 - 2017-10-04
+
+	UI release
+	- A reference implementation UI is included in this release.
+	- Additional updates included.
+	- Tutorial updated.
+	- wabur app now runs, inits, and created new projects.
+
 ## 0.4.0 - 2017-09-23
 
 	Sample release

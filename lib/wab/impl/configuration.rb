@@ -25,15 +25,25 @@ module WAB
         # Process command-line arguments and append them, in order, to an empty hash @map
         add_options(opts, options)
 
-        opts.parse(ARGV)
+        modes = opts.parse(ARGV)
+        @map[:mode] = 0 < modes.length ? modes[0] : 'run'
+        @map[:rest] =  modes[1..-1] if 1 < modes.length
+
+        unless ['run', 'new', 'init'].include?(@map[:mode])
+          puts "\n*-*-* #{@map[:mode]} is not a valid mode"
+          puts opts.help
+          Process.exit!(-1)
+        end
 
         # Move the @map sideways and replace with defaults.
         command_line_map = @map
         @map = {}
         build_default_map(options)
 
-        # If a config file was specified load it and merge into @map.
-        @map = merge_map(@map, parse_config_file(config_file)) unless config_file.nil?
+        config_file = './config/wabur.conf' if config_file.nil?
+
+        # Load it and merge th econfig file into @map.
+        @map = merge_map(@map, parse_config_file(config_file))
 
         # Merge in the command line map.
         @map = merge_map(@map, command_line_map) unless command_line_map.empty?
@@ -47,10 +57,18 @@ module WAB
           key_path = path.empty? ? k.to_s : "#{path}.#{k}"
           if v.has_key?(:val)
             default = v[:val]
+            switch = "--#{key_path} #{v[:arg]}"
+            doc_with_default = "#{v[:doc]} Default: #{default}"
             if default.is_a?(Array)
-              opts.on(v[:short], "--#{key_path} #{v[:arg]}", String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
-            else
-              opts.on(v[:short], "--#{key_path} #{v[:arg]}", v[:type], "#{v[:doc]} Default: #{default}") { |val| set(key_path, val) }
+              if v.has_key?(:short)
+                opts.on(v[:short], switch, String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              else
+                opts.on(switch, String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
+              end
+            elsif v.has_key?(:short)
+              opts.on(v[:short], switch, v[:type], doc_with_default) { |val| set(key_path, val) }
+            else 
+              opts.on(switch, v[:type], doc_with_default) { |val| set(key_path, val) }
             end
           else
             add_options(opts, v, key_path)

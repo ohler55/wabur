@@ -5,74 +5,26 @@
 [![Gem Version](https://badge.fury.io/rb/wabur.svg)](https://rubygems.org/gems/wabur)
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
-Ruby is a great language but for performance C is the better alternative. It is
-possible to get the best of both as evident with [Oj](http://www.ohler.com/oj)
-and [Ox](http://www.ohler.com/ox). C by itself allowed
-[Piper](http://piperpushcache.com), a fast push web server to be developed, and
-is being used to develop [OpO](http://opo.technology) a high performance graph
-and JSON database. This project takes from all of those projects for a high
-performance Ruby web framework.
+WABuR is a Web Application Builder using Ruby. It employs a modern NoSQL JSON
+data store and a single-page UI using JavaScript. The best part is that it is
+simple and very fast, hitting over 200,000 fetches a second with a Ruby core!
 
-Ruby on Rails has made Ruby mainstream. While RoR is fine for some
-applications there are others that might be better served with an alternative.
-This project was started as an alternative to Ruby on Rails with a focus on
-performance and ease of use. The use of Javascript for views and NoSQL JSON
-databases are some of the most notable differences.
+It is pluggable and extendable in many ways to allow new additions,
+alternative databases, and any number of UIs.
 
-Why develop an alternative to Rails? Developers that want to make more custom
-web sites with heavier use of Javascript, Websockets, and SSE along with a
-JSON database don't fit nicely in the Rails mold. WAB attempts to address that
-area that falls outside of Rail's strengths.
+A natural question is *"What about Rails?"*. Rails is well established and has
+a huge user base. WABuR is not a replacement for Rails. It is an alternative
+for those who want to explore using JSON databases with a single-page dynamic
+JavaScript UI.
 
-## Goals
-
-Lets start with the primary assumption, that we want to continue using
-Ruby. The goal of this project is to provide a high performance, easy to use,
-and a fully featured web framework with Ruby at the core. By keeping the core,
-the business logic, in Ruby but allowing options for other parts to be in
-different languages, the best of each language can be utilized.
-
-Targets are a throughput of 100K page fetches per second at a latency of no
-more than 1 millisecond on a desktop machine. That is more than an order of
-magnitude faster than Rails and on par with other top of the performance tier
-web frameworks across all languages.
-
-[Continue reading ...](pages/Goals.md)
-
-## Architecture
-
-The architecture provides many options but keeps a clean and clear API between
-modules. This pluggable design allows for unit test drivers and various levels
-of deployment options from straight Ruby to a high performance C runner that
-handles HTTP and data storage.
-
-Three configuration are planned. One is to use a Runner that calls to the Ruby
-core controller through pipes on ```$stdin``` and ```$stdout```. A second is to implement
-a runner in Ruby. The third is to use a C Runner with embedded Ruby.
-
-A Runner that spawns (forks) and runs a Ruby Controller makes use of the
-```::WAB::IO::Shell```.
-
-![](http://www.opo.technology/wab/wab_remote_arch.svg)
-
-The Ruby Runner and C Runner with embedded ruby follow the same architecture.
-
-![](http://www.opo.technology/wab/wab_embedded_arch.svg)
-
-Access to data can follow two paths. A direct access to the data is possible
-as portrayed by the red line that flows from HTTP server to the runner and
-onto the Model. The other path is to dive down into the Ruby Controller and
-allow the Controller to modify and control what is returned by a request. The
-Benchmark results in the example/sample/README.md includes the latest results.
-
-![](http://www.opo.technology/wab/wab_access_paths.svg)
-
-[Continue reading ...](pages/Architecture.md)
+For further reading there is an [architecture page](pages/Architecture.md)
 
 ## Try It!
 
-A sample is now available in the ```examples/sample/``` directory. There are
-some preliminary laptop benchmark results described in the README.
+Want to know more? A tutorial is available in the [tutorial](tutorial/README.md)
+directory.
+
+More interested in the benchmarks? Then take a look at the [benchmarks page](benchmarks/README.md).
 
 ## Participate and Contribute
 
@@ -94,8 +46,10 @@ These are the simple guidelines for contributing.
 4. Write straight forward, clean, and simple code. No magic stuff, no monkey
    patching Ruby core classes, and no inheriting from core classes.
 
-## Planning
+## References and Links
 
-The plan is informal and high level until more details are defined.
-
-[Details ...](pages/Plan.md)
+ - [Oj](https://github.com/ohler55/oj) JSON parser used in WABuR.
+ - [OpO](http://opo.technology) home of the Opo-Rub runner.
+ - [Sass](http://sass-lang.com) used to build the reference implementation UI CSS.
+ - [SystemJS Babel Plugin](https://github.com/systemjs/plugin-babel) also used to transpile JavaScript.
+ - [SystemJS](https://github.com/systemjs/systemjs) used to convert JavaScript ES6 to ES5 in the browser.
