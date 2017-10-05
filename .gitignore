@@ -10,6 +10,8 @@
 /test/version_tmp/
 /tmp/
 *~
+.DS_Store
+.ruby-version
 
 # Used by dotenv library to load environment variables.
 # .env

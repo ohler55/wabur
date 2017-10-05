@@ -39,38 +39,22 @@ def generate_css
   success_message(dest)
 end
 
-def generate_js
+def generate_js_file(src, dest_name)
   minified = ARGV.include?('-m') ? '--minified ' : ''
+  dest = dest_dir('js', dest_name)
+  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
+  if out.empty?
+    success_message(dest)
+  else
+    puts out
+  end
+end
 
+def generate_js
   FileUtils.mkdir_p dest_dir('js')
-
-  dest = dest_dir('js', 'wab.js')
-  src = path_to('view', 'wab', 'wab.js')
-  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
-  if out.empty?
-    success_message(dest)
-  else
-    puts out
-  end
-
-  dest = dest_dir('js', 'ui.js')
-  src = path_to('view', 'ui', 'js', 'ui.js')
-  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
-  if out.empty?
-    success_message(dest)
-  else
-    puts out
-  end
-
-  dest = dest_dir('js', 'transpile.js')
-  src = path_to('view', 'wab', 'transpile.js')
-  out = `#{path_to('node_modules', '.bin', 'babel')} #{minified}-o #{dest} #{src}`
-  if out.empty?
-    success_message(dest)
-  else
-    puts out
-  end
-
+  generate_js_file(path_to('view', 'wab', 'wab.js'), 'wab.js')
+  generate_js_file(path_to('view', 'ui', 'js', 'ui.js'), 'ui.js')
+  generate_js_file(path_to('view', 'wab', 'transpile.js'), 'transpile.js')
 end
 
 def copy_fonts
@@ -90,11 +74,12 @@ end
 begin
   require 'sass'
   generate_css
-  generate_js
-  copy_fonts
 rescue LoadError
   puts "\n'sass' gem not found. Installing.."
   puts `gem install sass --no-ri --no-rdoc`
   puts ''
   generate_css
 end
+
+generate_js
+copy_fonts
