@@ -9,19 +9,20 @@ module WAB
       # instances of subclasses of the Expr class.
       #
       # args:: argument to the OR expression
-      def initialize(*args)
-        super
-      end
+      #
+      # def initialize(*args)
+      #   super
+      # end
 
       def eval(data)
-        @args.each { |a|
+        args.each { |a|
           return true if a.eval(data)
         }
         false
       end
 
       def native()
-        @args.map(&:native).unshift('OR')
+        args.map(&:native).unshift('OR')
       end
 
     end # Or

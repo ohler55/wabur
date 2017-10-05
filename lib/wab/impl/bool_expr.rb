@@ -20,6 +20,9 @@ module WAB
         false
       end
 
+      private
+      attr_reader :args
+
     end # BoolExpr
   end # Impl
 end # WAB

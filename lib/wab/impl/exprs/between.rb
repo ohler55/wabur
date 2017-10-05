@@ -26,14 +26,14 @@ module WAB
       end
 
       def eval(data)
-        value = data.get(@path)
+        value = data.get(path)
         return false if (@min_incl ? value < @min : value <= @min)
         return false if (@max_incl ? @max < value : @max <= value)
         true
       end
 
       def native()
-        ['BETWEEN', @path, @min, @max, @min_incl, @max_incl]
+        ['BETWEEN', path, @min, @max, @min_incl, @max_incl]
       end
 
     end # Between

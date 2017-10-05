@@ -9,19 +9,20 @@ module WAB
       # instances of subclasses of the Expr class.
       #
       # args:: argument to the AND expression
-      def initialize(*args)
-        super
-      end
+      #
+      # def initialize(*args)
+      #   super
+      # end
 
       def eval(data)
-        @args.each { |a|
+        args.each { |a|
           return false unless a.eval(data)
         }
         true
       end
 
       def native()
-        @args.map(&:native).unshift('AND')
+        args.map(&:native).unshift('AND')
       end
 
     end # And

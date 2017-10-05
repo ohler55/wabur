@@ -14,13 +14,13 @@ module WAB
       end
 
       def eval(data)
-        value = data.get(@path)
+        value = data.get(path)
         return @rx === value if value.is_a?(String)
         false
       end
 
       def native()
-        ['REGEX', @path, @rx.source]
+        ['REGEX', path, @rx.source]
       end
 
     end # Regex
