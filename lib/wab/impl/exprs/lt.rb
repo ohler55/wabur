@@ -18,11 +18,11 @@ module WAB
       end
 
       def eval(data)
-        data.get(@path) < @value
+        data.get(path) < @value
       end
 
       def native()
-        ['LT', @path, @value]
+        ['LT', path, @value]
       end
 
     end # Lt

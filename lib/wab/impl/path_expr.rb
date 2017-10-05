@@ -9,6 +9,9 @@ module WAB
         @path = path
       end
 
+      private
+      attr_reader :path
+
     end # PathExpr
   end # Impl
 end # WAB

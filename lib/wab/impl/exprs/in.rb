@@ -16,11 +16,11 @@ module WAB
       end
 
       def eval(data)
-        @values.include?(data.get(@path))
+        @values.include?(data.get(path))
       end
 
       def native()
-        ['IN', @path].concat(@values)
+        ['IN', path].concat(@values)
       end
 
     end # In

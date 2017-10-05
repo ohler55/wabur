@@ -14,11 +14,11 @@ module WAB
       end
 
       def eval(data)
-        data.has?(@path)
+        data.has?(path)
       end
 
       def native()
-        ['HAS', @path]
+        ['HAS', path]
       end
 
     end # Has

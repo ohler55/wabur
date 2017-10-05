@@ -16,11 +16,11 @@ module WAB
       end
 
       def eval(data)
-        data.get(@path) == @value
+        data.get(path) == @value
       end
 
       def native()
-        ['EQ', @path, @value]
+        ['EQ', path, @value]
       end
 
     end # Eq
