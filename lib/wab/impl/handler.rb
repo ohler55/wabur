@@ -85,10 +85,13 @@ module WAB
       def send_error(e, res)
         res.status = 500
         res['Content-Type'] = 'application/json'
-        body = { code: -1, error: "#{e.class}: #{e.message}" }
-        body[:backtrace] = e.backtrace
+        error_class = e.class
+        error_msg = e.message
+        backtrace = e.backtrace
+        body = { code: -1, error: "#{error_class}: #{error_msg}" }
+        body[:backtrace] = backtrace
         res.body = @shell.data(body).json(@shell.indent)
-        @shell.logger.warn(%|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|)
+        @shell.logger.warn(%|*-*-* #{error_class}: #{error_msg}\n      #{backtrace.join("\n      ")}|)
       end
 
     end # Handler
