@@ -22,14 +22,14 @@ module WAB
       private
 
       def initialize(path, config)
-        types      = config[:rest]
+        types      = config[:rest] || []
         config_dir = "#{path}/config"
         lib_dir    = "#{path}/lib"
 
-        raise WAB::Error.new('At least one record type is required for new or init.') if types.nil? || types.empty?
+        raise WAB::Error.new('At least one record type is required for new or init.') if (types.nil? || types.empty?) && !config[:site]
 
         @verbose = config[:verbosity]
-        @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose
+        @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose || Logger::INFO == @verbose || Logger::DEBUG == @verbose
 
         FileUtils.mkdir_p([config_dir,lib_dir])
 
