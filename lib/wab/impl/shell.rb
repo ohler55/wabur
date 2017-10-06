@@ -97,16 +97,16 @@ module WAB
         return path_controller(path) unless path.nil? || (path.length <= @path_pos)
 
         content = data.get(:content)
-        return @controllers[content.get(@type_key)] || @controllers[nil] unless content.nil?
+        return @controllers[content.get(@type_key)] || default_controller unless content.nil?
 
-        @controllers[nil]
+        default_controller
       end
 
       # Returns the controller according to the type in the path.
       #
       # path: path Array such as from a URL
       def path_controller(path)
-        @controllers[path[@path_pos]] || @controllers[nil]
+        @controllers[path[@path_pos]] || default_controller
       end
 
       # Create and return a new data instance with the provided initial value.
@@ -122,6 +122,12 @@ module WAB
       # repair:: flag indicating invalid value should be repaired if possible
       def data(value={}, repair=false)
         Data.new(value, repair)
+      end
+
+      private
+
+      def default_controller
+        @default_controller ||= @controllers[nil]
       end
 
     end # Shell
