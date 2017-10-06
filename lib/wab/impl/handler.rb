@@ -61,10 +61,11 @@ module WAB
         path = req.path.split('/')[1..-1]
         query = {}
         req.query.each { |k,v| query[k.to_sym] = v }
-        if req.body.nil?
+        request_body = req.body
+        if request_body.nil?
           body = nil
         else
-          body = Oj.strict_load(req.body, symbol_keys: true)
+          body = Oj.strict_load(request_body, symbol_keys: true)
           body = Data.new(body, false)
           body.detect
         end
