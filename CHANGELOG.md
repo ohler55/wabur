@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.6.0 - 2017-10-10
+
+	wabur full site generator
+	- A --site option has been added to the wabur app that populates a full web site content.
+	- wabur new will only create a new workspace and aborts if the provided base already exists.
+	- JavaScript and CSS is no longer compressed making it easier to modify.
+
 ## 0.5.0 - 2017-10-04
 
 	UI release

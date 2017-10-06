@@ -66,9 +66,11 @@ module WAB
                 opts.on(switch, String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
               end
             elsif v.has_key?(:short)
-              opts.on(v[:short], switch, v[:type], doc_with_default) { |val| set(key_path, val) }
+              # If val is nil then the option was a flag so set to true
+              opts.on(v[:short], switch, v[:type], doc_with_default) { |val| set(key_path, val || true) }
             else 
-              opts.on(switch, v[:type], doc_with_default) { |val| set(key_path, val) }
+              # If val is nil then the option was a flag so set to true
+              opts.on(switch, v[:type], doc_with_default) { |val| set(key_path, val || true) }
             end
           else
             add_options(opts, v, key_path)
