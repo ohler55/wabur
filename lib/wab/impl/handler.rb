@@ -74,10 +74,11 @@ module WAB
       # Sends the results from a controller request.
       def send_result(result, res, path, query)
         result = @shell.data(result) unless result.is_a?(WAB::Data)
+        response_body = result.json(@shell.indent)
         res.status = 200
         res['Content-Type'] = 'application/json'
-        @shell.logger.debug("reply to #{path.join('/')}#{query}: #{result.json(@shell.indent)}") if @shell.logger.debug?
-        res.body = result.json(@shell.indent)
+        @shell.logger.debug("reply to #{path.join('/')}#{query}: #{response_body}") if @shell.logger.debug?
+        res.body = response_body
       end
 
       # Sends an error from a rescued call.
