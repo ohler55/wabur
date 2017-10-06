@@ -46,7 +46,7 @@ module WAB
     # data:: the data to use as a new object.
     def create(path, query, data) # :doc:
       tql = { }
-      kind = path[@shell.path_pos]
+      kind = path[path_pos]
       if WAB::Utils.populated_hash?(query)
         tql[:where] = and_where(kind, query)
       end
@@ -70,11 +70,11 @@ module WAB
     #         pairs. Note that duplicate keys will result in only the last
     #         option being present,
     def read(path, query) # :doc:
-      kind = path[@shell.path_pos]
+      kind = path[path_pos]
       # Check for the type and object reference pattern as well as the list
       # pattern.
-      if @shell.path_pos + 2 == path.length
-        ref = path[@shell.path_pos + 1]
+      if path_pos + 2 == path.length
+        ref = path[path_pos + 1]
         return list_select(kind, query) if 'list' == ref
 
         # Read a single object/record.
@@ -100,9 +100,9 @@ module WAB
     # data:: the data to use as a new object.
     def update(path, query, data) # :doc:
       tql = { }
-      kind = path[@shell.path_pos]
-      if @shell.path_pos + 2 == path.length # has an object reference in the path
-        tql[:where] = path[@shell.path_pos + 1].to_i
+      kind = path[path_pos]
+      if path_pos + 2 == path.length # has an object reference in the path
+        tql[:where] = path[path_pos + 1].to_i
       elsif WAB::Utils.populated_hash?(query)
         tql[:where] = and_where(kind, query)
       else
@@ -128,9 +128,9 @@ module WAB
     #         the target or a +.+ delimited set of keys.
     def delete(path, query) # :doc:
       tql = { }
-      kind = path[@shell.path_pos]
-      tql[:where] = if @shell.path_pos + 2 == path.length # has an object reference in the path
-                      path[@shell.path_pos + 1].to_i
+      kind = path[path_pos]
+      tql[:where] = if path_pos + 2 == path.length # has an object reference in the path
+                      path[path_pos + 1].to_i
                     elsif WAB::Utils.populated_hash?(query)
                       and_where(kind, query)
                     else
@@ -158,6 +158,10 @@ module WAB
     def changed(data) # :doc:
       # TBD filter accoding to subscriptions
       @shell.changed(data)
+    end
+
+    def path_pos
+      @path_pos ||= @shell.path_pos
     end
 
     # A private method to gather sets of Hashes that include the fields
