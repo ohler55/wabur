@@ -58,6 +58,7 @@ module WAB
         server = WEBrick::HTTPServer.new(Port: @http_port,
                                          DocumentRoot: @http_dir,
                                          MimeTypes: mime_types)
+        server.logger.level = 5 - @logger.level unless @logger.nil?
         server.mount(@pre_path, Handler, self)
         server.mount('/', ExportProxy, @http_dir) if @export_proxy
 
