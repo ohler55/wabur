@@ -133,7 +133,7 @@ if 'new' == config[:mode]
 elsif 'init' == config[:mode]
   dir = File.expand_path('.')
   WAB::Impl::Init.setup(dir, config)
-  puts "Successfully initialized a new WAB workspace at #{dir}"
+  puts "Successfully initialized a WAB workspace at #{dir}"
 else
   # The Configuration object can be modified before initializing the Shell. By
   # setting the +config[:logger]+ the Shell will use that as the logger. The

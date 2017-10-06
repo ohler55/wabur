@@ -30,7 +30,7 @@ module WAB
 
         @verbose = config[:verbosity]
         @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose
-        
+
         FileUtils.mkdir_p([config_dir,lib_dir])
 
         write_ui_controllers(lib_dir, types)
