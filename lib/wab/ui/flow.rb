@@ -32,9 +32,10 @@ module WAB
       # path:: array of tokens in the path.
       def read(path, _query)
         results = []
-        if @shell.path_pos + 2 == path.length
+        path_pos = @shell.path_pos
+        if path_pos + 2 == path.length
           # Return the description of the named display.
-          name = path[@shell.path_pos + 1]
+          name = path[path_pos + 1]
           display = get_display(name)
           display[:entry] = true if !display.nil? && display.name == @entry
           results << {id: name, data: display.spec} unless display.nil?
