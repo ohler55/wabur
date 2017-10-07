@@ -189,7 +189,7 @@ $ wabur init --site
 ```
 
 > Pro-tip: Alternatively, the `--site` option can be passed to `wabur new` as
-well, to generate these files alongwith the config files and UI Controller.
+well, to generate these files along with the config files and UI Controller.
 
 The `index.html` should now be present as `site/index.html`. Make some
 modifications and try running `wabur` again and the new files will be
