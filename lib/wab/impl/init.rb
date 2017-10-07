@@ -25,13 +25,16 @@ module WAB
         types      = config[:rest] || []
         config_dir = "#{path}/config"
         lib_dir    = "#{path}/lib"
+        init_site  = config[:site]
 
-        raise WAB::Error.new('At least one record type is required for new or init.') if (types.nil? || types.empty?) && !config[:site]
+        if (types.nil? || types.empty?) && !init_site
+          raise WAB::Error.new("At least one record type is required for 'new' or 'init'.")
+        end
 
         @verbose = config[:verbosity]
         @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose || Logger::INFO == @verbose || Logger::DEBUG == @verbose
 
-        FileUtils.mkdir_p([config_dir,lib_dir])
+        FileUtils.mkdir_p([config_dir, lib_dir])
 
         write_ui_controllers(lib_dir, types)
         write_spawn(lib_dir, types)
@@ -40,12 +43,12 @@ module WAB
         write_opo_conf(config_dir, types)
         write_opo_rub_conf(config_dir, types)
 
-        copy_site(File.expand_path("#{__dir__}/../../../export"), "#{path}/site") if config[:site]
+        copy_site(File.expand_path("#{__dir__}/../../../export"), "#{path}/site") if init_site
 
       rescue StandardError => e
         # TBD: Issue more helpful error message
         puts %|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|
-          abort
+        abort
       end
 
       def write_ui_controllers(dir, types)
@@ -72,9 +75,10 @@ shell.register_controller('#{type}', WAB::OpenController.new(shell))|
       def write_wabur_conf(dir, types)
         handlers = ''
         types.each_index { |index|
+          natural_index = index + 1
           handlers << %|
-handler.#{index + 1}.type = #{types[index]}
-handler.#{index + 1}.handler = WAB::OpenController|
+handler.#{natural_index}.type = #{types[index]}
+handler.#{natural_index}.handler = WAB::OpenController|
         }
         write_file(dir, 'wabur.conf', { handlers: handlers })
       end
@@ -87,16 +91,17 @@ handler.#{index + 1}.handler = WAB::OpenController|
         handlers = ''
         types.each_index { |index|
           type = types[index]
+          slug = type.downcase
           handlers << %|
-handler.#{type.downcase}.path = /v1/#{type}/**
-handler.#{type.downcase}.class = WAB::OpenController
+handler.#{slug}.path = /v1/#{type}/**
+handler.#{slug}.class = WAB::OpenController
 |
         }
         write_file(dir, 'opo-rub.conf', { handlers: handlers })
       end
 
       def copy_site(src, dest)
-        FileUtils.mkdir_p([dest])
+        FileUtils.mkdir_p(dest)
         Dir.foreach(src) { |filename|
           next if filename.start_with?('.')
           src_path = "#{src}/#{filename}"

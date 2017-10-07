@@ -36,5 +36,4 @@ indent = 0
 # Handlers for each type of record and for the UI shich are Ruby generated UI
 # configuration records.
 handler.0.type = ui
-handler.0.handler = UIController
-%{handlers}
+handler.0.handler = UIController%{handlers}

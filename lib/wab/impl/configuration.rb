@@ -52,15 +52,15 @@ module WAB
       end
 
       def log_level_adjust(log_increase)
-        if 0 < log_increase
-          verbosity = @map[:verbosity] || 'INFO'
-          @map[:verbosity] = {
-            'ERROR' => Logger::ERROR,
-            'WARN'  => Logger::WARN,
-            'INFO'  => Logger::INFO,
-            'DEBUG' => Logger::DEBUG,
-          }[verbosity].to_i - log_increase
-        end
+        return if log_increase.zero?
+
+        verbosity = @map[:verbosity] || 'INFO'
+        @map[:verbosity] = {
+          'ERROR' => Logger::ERROR,
+          'WARN'  => Logger::WARN,
+          'INFO'  => Logger::INFO,
+          'DEBUG' => Logger::DEBUG,
+        }[verbosity].to_i - log_increase
       end
 
       # Walks the options map and calls +opts.on+ for each option so that all
