@@ -114,19 +114,27 @@ options = {
     doc: 'Log level. (ERROR, WARN, INFO, DEBUG)',
     arg: 'LEVEL',
   },
+  site: {
+    val: false,
+    doc: 'populate site directory',
+    short: '-s',
+  },
 }
 
 config = WAB::Impl::Configuration.new(usage, options)
+mode = config[:mode]
 
-if 'new' == config[:mode]
+if 'new' == mode
   dir = File.expand_path(config[:base] || '.')
-  FileUtils.mkdir_p(dir) unless File.expand_path('.') == dir
+  # TBD check if dir already exists
+  abort("#{dir} already exists. Refusing to over-write. Use init instead.") if Dir.exist?(dir)
+  FileUtils.mkdir_p(dir)
   WAB::Impl::Init.setup(dir, config)
   puts "Successfully created a new WAB workspace at #{dir}"
-elsif 'init' == config[:mode]
+elsif 'init' == mode
   dir = File.expand_path('.')
   WAB::Impl::Init.setup(dir, config)
-  puts "Successfully initialized a new WAB workspace at #{dir}"
+  puts "Successfully initialized a WAB workspace at #{dir}"
 else
   # The Configuration object can be modified before initializing the Shell. By
   # setting the +config[:logger]+ the Shell will use that as the logger. The

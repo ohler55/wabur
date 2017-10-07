@@ -15,11 +15,11 @@ module WAB
         @map = {}
         opts = OptionParser.new(usage)
         config_file = nil
-        log_level = Logger::WARN
+        log_increase = 0
         
         opts.on('-c', '--config PATH', String, 'Configuration file.') { |c| config_file = c }
         opts.on('-r', '--require LIBRARY', String, 'Require.')        { |r| require r }
-        opts.on('-v', '--verbose', 'Increase verbosity.')             { log_level += 1 }
+        opts.on('-v', '--verbose', 'Increase verbosity.')             { log_increase += 1 }
         opts.on('-h', '--help', 'Show this display.')                 { puts opts.help; Process.exit!(0) }
 
         # Process command-line arguments and append them, in order, to an empty hash @map
@@ -47,6 +47,20 @@ module WAB
 
         # Merge in the command line map.
         @map = merge_map(@map, command_line_map) unless command_line_map.empty?
+        # Apply the log_increase.
+        log_level_adjust(log_increase)
+      end
+
+      def log_level_adjust(log_increase)
+        return if log_increase.zero?
+
+        verbosity = @map[:verbosity] || 'INFO'
+        @map[:verbosity] = {
+          'ERROR' => Logger::ERROR,
+          'WARN'  => Logger::WARN,
+          'INFO'  => Logger::INFO,
+          'DEBUG' => Logger::DEBUG,
+        }[verbosity].to_i - log_increase
       end
 
       # Walks the options map and calls +opts.on+ for each option so that all
@@ -66,9 +80,11 @@ module WAB
                 opts.on(switch, String, v[:doc]) { |val| arg_append(key_path, val, v[:parse]) }
               end
             elsif v.has_key?(:short)
-              opts.on(v[:short], switch, v[:type], doc_with_default) { |val| set(key_path, val) }
+              # If val is nil then the option was a flag so set to true
+              opts.on(v[:short], switch, v[:type], doc_with_default) { |val| set(key_path, val || true) }
             else 
-              opts.on(switch, v[:type], doc_with_default) { |val| set(key_path, val) }
+              # If val is nil then the option was a flag so set to true
+              opts.on(switch, v[:type], doc_with_default) { |val| set(key_path, val || true) }
             end
           else
             add_options(opts, v, key_path)

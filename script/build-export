@@ -31,11 +31,13 @@ def success_message(file)
 end
 
 def generate_css
+  minified = ARGV.include?('-m') ? ' --style compressed ' : ''
+
   src  ||= path_to('view', 'ui', 'styles', 'wab.scss')
   dest ||= dest_dir('css', 'wab.css')
 
   FileUtils.mkdir_p dest_dir('css')
-  `sass #{src} #{dest} --style compressed`
+  `sass #{src} #{dest}#{minified}`
   success_message(dest)
 end
 

@@ -262,7 +262,7 @@ directories which will be in 'opo` and 'wabur' depending on the runner used.
 
 The `wabur` Runner is used for this lesson. To start the Runner, the wabur gem
 must be installed or the wabur source must be available. Assuming the gem is
-installed and the run location is in the `lesson-1/blog` directory the command
+installed and the run location is in the `blog` directory the command
 to run the application is:
 
 ```
@@ -282,9 +282,23 @@ to different URL paths or routes.
 ## Index.html
 
 Since this is your blog a more customized front page is probably preferred. So
-far there is no `site` directory and no `index.html` file. The `index.html`
-file used is default in the export directory of the wab gem. By creating a
-`site/index.html` and running wabur again the new index file will be used.
+far there is no `site` directory or an `index.html` file. Those files are
+virtual, by default. In other words, they're accessed from within the `wabur`
+gem itself.
+
+To customize these files easily, they can be generated at the current WAB
+workspace by running the `wabur init` command with a `--site` option.
+
+```
+$ wabur init --site
+```
+
+> Pro-tip: Alternatively, the `--site` option can be passed to `wabur new` as
+well, to generate these files along with the config files and UI Controller.
+
+The `index.html` should now be present as `site/index.html`. Make some
+modifications and try running `wabur` again and the new files will be
+used. The CSS files and the JavaScript can also be modified.
 
 There are a few things that should be present in the `index.html` file. For
 this lesson the wab CSS is used so a link in the head is needed to pick those
