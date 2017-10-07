@@ -52,7 +52,7 @@ module WAB
       end
 
       def log_request_with_body(caller, path, query, body)
-        @shell.logger.info("#{caller}(#{path.join('/')}#{query}, #{body.json})")
+        @shell.logger.info("#{caller} #{path.join('/')}#{query}\n#{body.json(@shell.indent)}")
       end
 
       # Pulls and converts the request path, query, and body. Also returns the
