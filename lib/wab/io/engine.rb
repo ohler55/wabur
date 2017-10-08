@@ -29,7 +29,7 @@ module WAB
               begin
                 break unless process_msg(@queue.pop)
               rescue Exception => e
-                $stderr.puts %|*-*-* #{e.class}: #{e.message}\n#{e.backtrace.join("\n  ")}|
+                $stderr.puts WAB::Impl.format_error(e)
               end
             end
           }
@@ -60,7 +60,7 @@ module WAB
             proc_threads.each { |t| Thread.kill(t) }
             Process.exit(0)
           else
-            $stderr.puts "*-*-* Invalid api value (#{api}) in message."
+            $stderr.puts WAB::Impl.format_error("Invalid api value (#{api}) in message.")
           end
         }
       end

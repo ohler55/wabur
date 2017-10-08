@@ -93,33 +93,6 @@ module WAB
         a.push(val)
       end
 
-      # Builds a map from the default options passed in.
-      def build_default_map(options, path='')
-        options.each_pair { |k,v|
-          next unless v.is_a?(Hash)
-          key_path = path.empty? ? k.to_s : "#{path}.#{k}"
-          if v.has_key?(:val)
-            set(key_path, v[:val])
-          else
-            build_default_map(v, key_path)
-          end
-        }
-      end
-
-      # Recursive merge of other into prime.
-      def merge_map(prime, other)
-        prime.merge(other) { |key,prime_value,other_value|
-          case prime_value
-          when Hash
-            merge_map(prime_value, other_value)
-          when Array
-            prime_value + other_value
-          else
-            other_value
-          end
-        }
-      end
-      
       # Returns a Hash of configuration data.
       #
       # TBD: Add validation to ensure only a Hash object is returned
@@ -183,6 +156,33 @@ Bundler or directly, and try loading again.
 
       private
 
+      # Builds a map from the default options passed in.
+      def build_default_map(options, path='')
+        options.each_pair { |k,v|
+          next unless v.is_a?(Hash)
+          key_path = path.empty? ? k.to_s : "#{path}.#{k}"
+          if v.has_key?(:val)
+            set(key_path, v[:val])
+          else
+            build_default_map(v, key_path)
+          end
+        }
+      end
+
+      # Recursive merge of other into prime.
+      def merge_map(prime, other)
+        prime.merge(other) { |key,prime_value,other_value|
+          case prime_value
+          when Hash
+            merge_map(prime_value, other_value)
+          when Array
+            prime_value + other_value
+          else
+            other_value
+          end
+        }
+      end
+      
       def log_level_adjust(log_increase)
         return if log_increase.zero?
 

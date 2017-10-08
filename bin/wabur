@@ -132,7 +132,7 @@ mode = config[:mode]
 case mode
 when 'new'
   dir = File.expand_path(config[:base] || '.')
-  abort("*-*-* Error: #{dir} already exists. Refusing to over-write. Use init instead.") if Dir.exist?(dir)
+  abort(WAB::Impl.format_error("#{dir} already exists. Refusing to over-write. Use init instead.")) if Dir.exist?(dir)
   FileUtils.mkdir_p(dir)
   WAB::Impl::Init.setup(dir, config)
 when 'init'
@@ -153,7 +153,7 @@ when 'run'
   # Start a shell initialized with the final configuration.
   WAB::Impl::Shell.new(config).start
 else
-  puts "*-*-* Error: unknown mode: #{mode}."
+  puts WAB::Impl.format_error("unknown mode: #{mode}.")
   config.usage
   Process.exit!(-1)
 end
