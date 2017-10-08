@@ -90,7 +90,7 @@ module WAB
         body = { code: -1, error: "#{e.class}: #{e.message}" }
         body[:backtrace] = e.backtrace
         res.body = @shell.data(body).json(@shell.indent)
-        @shell.logger.warn(format_error(e))
+        @shell.logger.warn(Impl.format_error(e))
       end
 
     end # Handler
