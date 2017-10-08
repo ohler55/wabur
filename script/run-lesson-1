@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+$LOAD_PATH << File.expand_path(File.join('..', 'lib'), __dir__)
+
+require 'wab'
+
+begin
+  # Create a new project.
+  out = `wabur new --base blog Entry`
+  abort if out.empty?
+  puts out
+
+  # Insert title and content attributes into the lib/ui_controller.rb file.
+  File.open('blog/lib/ui_controller.rb', 'r+') { |f|
+    content = f.read
+
+    # Modify the contents to follow the lesson.
+    content.sub!("kind: 'Entry',",
+                %{kind: 'Entry',
+                                     title: '',
+                                     content: "\\n\\n\\n\\n",})
+    content.sub!("['$ref']", "['title', 'content']")
+
+    # re-write the contents
+    f.rewind
+    f.write(content)
+  }
+
+  # Generate the site
+  out = `cd blog && wabur init --site`
+  abort if out.empty?
+  puts out
+
+  # Change the title of the blog.
+  File.open('blog/site/index.html', 'r+') { |f|
+    content = f.read
+    content.sub!(/<title>.*<\/title>/, "<title>Welcome to My Blog</title>")
+    f.rewind
+    f.write(content)
+  }
+
+rescue Exception => e
+  puts "#{e.class}: #{e.message}"
+  e.backtrace.each { |line| puts "    #{line}" }
+end
