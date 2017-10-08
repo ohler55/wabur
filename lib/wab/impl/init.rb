@@ -22,12 +22,12 @@ module WAB
       private
 
       def initialize(path, config)
-        types      = config[:rest] || []
+        @types     = config[:rest] || []
         config_dir = "#{path}/config"
         lib_dir    = "#{path}/lib"
         init_site  = config[:site]
 
-        if (types.nil? || types.empty?) && !init_site
+        if (@types.nil? || @types.empty?) && !init_site
           raise WAB::Error.new("At least one record type is required for 'new' or 'init'.")
         end
 
@@ -39,12 +39,12 @@ module WAB
 
         FileUtils.mkdir_p([config_dir, lib_dir])
 
-        write_ui_controllers(lib_dir, types)
-        write_spawn(lib_dir, types)
+        write_ui_controllers(lib_dir)
+        write_spawn(lib_dir)
 
-        write_wabur_conf(config_dir, types)
-        write_opo_conf(config_dir, types)
-        write_opo_rub_conf(config_dir, types)
+        write_wabur_conf(config_dir)
+        write_opo_conf(config_dir)
+        write_opo_rub_conf(config_dir)
 
         copy_site(File.expand_path("#{__dir__}/../../../export"), "#{path}/site") if init_site
 
@@ -58,9 +58,9 @@ module WAB
         abort
       end
 
-      def write_ui_controllers(dir, types)
+      def write_ui_controllers(dir)
         rest_flows = ''
-        types.each { |type|
+        @types.each { |type|
           rest_flows << %|
     add_flow(WAB::UI::RestFlow.new(shell,
                                    {
@@ -70,34 +70,34 @@ module WAB
         write_file(dir, 'ui_controller.rb', { rest_flows: rest_flows })
       end
 
-      def write_spawn(dir, types)
+      def write_spawn(dir)
         controllers = ''
-        types.each { |type|
+        @types.each { |type|
           controllers << %|
 shell.register_controller('#{type}', WAB::OpenController.new(shell))|
         }
         write_file(dir, 'spawn.rb', { controllers: controllers })
       end
 
-      def write_wabur_conf(dir, types)
+      def write_wabur_conf(dir)
         handlers = ''
-        types.each_index { |index|
+        @types.each_index { |index|
           natural_index = index + 1
           handlers << %|
-handler.#{natural_index}.type = #{types[index]}
+handler.#{natural_index}.type = #{@types[index]}
 handler.#{natural_index}.handler = WAB::OpenController|
         }
         write_file(dir, 'wabur.conf', { handlers: handlers })
       end
 
-      def write_opo_conf(dir, _types)
+      def write_opo_conf(dir)
         write_file(dir, 'opo.conf')
       end
 
-      def write_opo_rub_conf(dir, types)
+      def write_opo_rub_conf(dir)
         handlers = ''
-        types.each_index { |index|
-          type = types[index]
+        @types.each_index { |index|
+          type = @types[index]
           slug = type.downcase
           handlers << %|
 handler.#{slug}.path = /v1/#{type}/**
