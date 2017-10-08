@@ -33,6 +33,9 @@ module WAB
 
         @verbose = config[:verbosity]
         @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose || Logger::INFO == @verbose || Logger::DEBUG == @verbose
+        @write_cnt = 0
+        @exist_cnt = 0
+        @base_len = path.length + 1
 
         FileUtils.mkdir_p([config_dir, lib_dir])
 
@@ -44,6 +47,10 @@ module WAB
         write_opo_rub_conf(config_dir)
 
         copy_site(File.expand_path("#{__dir__}/../../../export"), "#{path}/site") if init_site
+
+        puts "Successfully initialized a WAB workspace at #{path}."
+        puts "  Wrote #{@write_cnt} files." unless @write_cnt.zero?
+        puts "  Skipped #{@exist_cnt} files that already existed" unless @exist_cnt.zero?
 
       rescue StandardError => e
         # TBD: Issue more helpful error message
@@ -111,12 +118,14 @@ handler.#{slug}.class = WAB::OpenController
             copy_site(src_path, dest_path)
           elsif File.file?(src_path)
             if File.exist?(dest_path)
-              puts "#{dest_path} already exists." if @verbose
+              puts "exists: #{dest_path[@base_len..-1]}" if @verbose
+              @exist_cnt += 1
               next
             end
             out = `cp #{src_path} #{dest_path}`
+            @write_cnt += 1
             if out.empty?
-              puts "#{dest_path} copied." if @verbose
+              puts "wrote:  #{dest_path[@base_len..-1]}" if @verbose
             else
               # the error message from the OS
               puts out
@@ -128,12 +137,14 @@ handler.#{slug}.class = WAB::OpenController
       def write_file(dir, filename, gsub_data=nil)
         filepath = "#{dir}/#{filename}"
         if File.exist?(filepath)
-          puts "#{filepath} already exists." if @verbose
+          puts "exists: #{filepath[@base_len..-1]}" if @verbose
+          @exist_cnt += 1
         else
           template = File.open("#{__dir__}/templates/#{filename}.template", 'rb') { |f| f.read }
           content  = gsub_data.nil? ? template : template % gsub_data
           File.open(filepath, 'wb') { |f| f.write(content) }
-          puts "#{filepath} written." if @verbose
+          puts "wrote:  #{filepath[@base_len..-1]}" if @verbose
+          @write_cnt += 1
         end
       end
 
