@@ -23,19 +23,21 @@ module WAB
 
       def initialize(path, config)
         @types     = config[:rest] || []
-        config_dir = "#{path}/config"
-        lib_dir    = "#{path}/lib"
-        init_site  = config[:site]
 
         if (@types.nil? || @types.empty?) && !init_site
           raise WAB::Error.new("At least one record type is required for 'new' or 'init'.")
         end
+        check_dup_type
 
         @verbose = config[:verbosity]
         @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose || Logger::INFO == @verbose || Logger::DEBUG == @verbose
         @write_cnt = 0
         @exist_cnt = 0
         @base_len = path.length + 1
+
+        config_dir = "#{path}/config"
+        lib_dir    = "#{path}/lib"
+        init_site  = config[:site]
 
         FileUtils.mkdir_p([config_dir, lib_dir])
 
@@ -58,6 +60,15 @@ module WAB
         abort
       end
 
+      def check_dup_type
+        type_map = {}
+        @types.each { |type|
+          key = type.downcase
+          raise DuplicateError.new(key) if type_map.has_key?(key)
+          type_map[key] = true
+        }
+      end
+      
       def write_ui_controllers(dir)
         rest_flows = ''
         @types.each { |type|
