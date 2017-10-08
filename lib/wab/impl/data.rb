@@ -6,7 +6,7 @@ require 'oj'
 module WAB
   module Impl
 
-    # The class representing the cananical data structure in WAB. Typically
+    # The class representing the canonical data structure in WAB. Typically
     # the Data instances are factory created by the Shell and will most likely
     # not be instance of this class but rather a class that is a duck-type of
     # this class (has the same methods and behavior).
@@ -43,7 +43,7 @@ module WAB
       #
       # value:: initial value
       # repair:: flag indicating invalid value should be repaired if possible
-      def initialize(value, repair, check=true)
+      def initialize(value, repair=false, check=true)
         if repair
           value = fix(value)
         elsif check
@@ -137,7 +137,7 @@ module WAB
       # Make a deep copy of the Data instance.
       def deep_dup()
         # avoid validation by using a empty Hash for the intial value.
-        c = self.class.new({}, false)
+        c = Data.new({})
         c.instance_variable_set(:@root, deep_dup_value(@root))
         c
       end
@@ -315,7 +315,7 @@ module WAB
         when Array
           detect_array(item)
         when String
-          element = WAB::Impl::Data.detect_string(item)
+          element = Data.detect_string(item)
           collection[key] = element unless element == item
         end
       end

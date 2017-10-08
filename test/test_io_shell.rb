@@ -155,7 +155,7 @@ class TestIoShell < Minitest::Test
       # desired.
       script.each { |pair|
         unless pair[0].nil?
-          to_w.puts(WAB::Impl::Data.new(pair[0], false).json)
+          to_w.puts(WAB::Impl::Data.new(pair[0]).json)
           to_w.flush
         end
 
@@ -179,7 +179,7 @@ class TestIoShell < Minitest::Test
       # fail. Thats okay as the write is only to tell the child to shutdown
       # and it already has.
       begin
-        to_w.puts(WAB::Impl::Data.new({ api: -2 }, false).json)
+        to_w.puts(WAB::Impl::Data.new({ api: -2 }).json)
         to_w.flush
       rescue Exception
       end

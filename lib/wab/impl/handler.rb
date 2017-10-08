@@ -65,8 +65,9 @@ module WAB
         if request_body.nil?
           body = nil
         else
-          body = Oj.strict_load(request_body, symbol_keys: true)
-          body = Data.new(body, false)
+          body = Data.new(
+            Oj.strict_load(request_body, symbol_keys: true)
+          )
           body.detect
         end
         [@shell.path_controller(path), path, query, body]
