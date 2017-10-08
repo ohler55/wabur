@@ -3,6 +3,15 @@
 
 require 'wab'
 
+# This script executes the steps described in lesson-1 of the tutorial.
+
+# If running and the gem is installed then no additional setup is needed. If
+# running from a cloned github repo then the build-export script must be run
+# first. In addition, as with any ruby script, a loadpath update to the repo
+# lib directory is needed. As an example
+#
+#   $ ruby -I lib script/run-lesson-1
+
 begin
   # Create a new project.
   out = `wabur new --base blog Entry`

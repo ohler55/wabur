@@ -248,4 +248,5 @@ A script is available in the [wabur github
 repository](https://github.com/ohler55/wabur) that will execute all the steps
 in this lesson. It can be used to compare what you have already done in the
 lesson or to shortcut the lesson if desired. The script is
-`script/run-lesson-1`.
+`script/run-lesson-1`. If running without the gem installed please ready the
+comments at the start of the script.
