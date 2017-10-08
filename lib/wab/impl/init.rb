@@ -22,28 +22,35 @@ module WAB
       private
 
       def initialize(path, config)
-        types      = config[:rest] || []
+        @types     = config[:rest] || []
         config_dir = "#{path}/config"
         lib_dir    = "#{path}/lib"
         init_site  = config[:site]
 
-        if (types.nil? || types.empty?) && !init_site
+        if (@types.nil? || @types.empty?) && !init_site
           raise WAB::Error.new("At least one record type is required for 'new' or 'init'.")
         end
 
         @verbose = config[:verbosity]
         @verbose = 'INFO' == @verbose || 'DEBUG' == @verbose || Logger::INFO == @verbose || Logger::DEBUG == @verbose
+        @write_cnt = 0
+        @exist_cnt = 0
+        @base_len = path.length + 1
 
         FileUtils.mkdir_p([config_dir, lib_dir])
 
-        write_ui_controllers(lib_dir, types)
-        write_spawn(lib_dir, types)
+        write_ui_controllers(lib_dir)
+        write_spawn(lib_dir)
 
-        write_wabur_conf(config_dir, types)
-        write_opo_conf(config_dir, types)
-        write_opo_rub_conf(config_dir, types)
+        write_wabur_conf(config_dir)
+        write_opo_conf(config_dir)
+        write_opo_rub_conf(config_dir)
 
         copy_site(File.expand_path("#{__dir__}/../../../export"), "#{path}/site") if init_site
+
+        puts "Successfully initialized a WAB workspace at #{path}."
+        puts "  Wrote #{@write_cnt} files." unless @write_cnt.zero?
+        puts "  Skipped #{@exist_cnt} files that already existed" unless @exist_cnt.zero?
 
       rescue StandardError => e
         # TBD: Issue more helpful error message
@@ -51,9 +58,9 @@ module WAB
         abort
       end
 
-      def write_ui_controllers(dir, types)
+      def write_ui_controllers(dir)
         rest_flows = ''
-        types.each { |type|
+        @types.each { |type|
           rest_flows << %|
     add_flow(WAB::UI::RestFlow.new(shell,
                                    {
@@ -63,34 +70,34 @@ module WAB
         write_file(dir, 'ui_controller.rb', { rest_flows: rest_flows })
       end
 
-      def write_spawn(dir, types)
+      def write_spawn(dir)
         controllers = ''
-        types.each { |type|
+        @types.each { |type|
           controllers << %|
 shell.register_controller('#{type}', WAB::OpenController.new(shell))|
         }
         write_file(dir, 'spawn.rb', { controllers: controllers })
       end
 
-      def write_wabur_conf(dir, types)
+      def write_wabur_conf(dir)
         handlers = ''
-        types.each_index { |index|
+        @types.each_index { |index|
           natural_index = index + 1
           handlers << %|
-handler.#{natural_index}.type = #{types[index]}
+handler.#{natural_index}.type = #{@types[index]}
 handler.#{natural_index}.handler = WAB::OpenController|
         }
         write_file(dir, 'wabur.conf', { handlers: handlers })
       end
 
-      def write_opo_conf(dir, _types)
+      def write_opo_conf(dir)
         write_file(dir, 'opo.conf')
       end
 
-      def write_opo_rub_conf(dir, types)
+      def write_opo_rub_conf(dir)
         handlers = ''
-        types.each_index { |index|
-          type = types[index]
+        @types.each_index { |index|
+          type = @types[index]
           slug = type.downcase
           handlers << %|
 handler.#{slug}.path = /v1/#{type}/**
@@ -111,12 +118,14 @@ handler.#{slug}.class = WAB::OpenController
             copy_site(src_path, dest_path)
           elsif File.file?(src_path)
             if File.exist?(dest_path)
-              puts "#{dest_path} already exists." if @verbose
+              puts "exists: #{dest_path[@base_len..-1]}" if @verbose
+              @exist_cnt += 1
               next
             end
             out = `cp #{src_path} #{dest_path}`
+            @write_cnt += 1
             if out.empty?
-              puts "#{dest_path} copied." if @verbose
+              puts "wrote:  #{dest_path[@base_len..-1]}" if @verbose
             else
               # the error message from the OS
               puts out
@@ -128,12 +137,14 @@ handler.#{slug}.class = WAB::OpenController
       def write_file(dir, filename, gsub_data=nil)
         filepath = "#{dir}/#{filename}"
         if File.exist?(filepath)
-          puts "#{filepath} already exists." if @verbose
+          puts "exists: #{filepath[@base_len..-1]}" if @verbose
+          @exist_cnt += 1
         else
           template = File.open("#{__dir__}/templates/#{filename}.template", 'rb') { |f| f.read }
           content  = gsub_data.nil? ? template : template % gsub_data
           File.open(filepath, 'wb') { |f| f.write(content) }
-          puts "#{filepath} written." if @verbose
+          puts "wrote:  #{filepath[@base_len..-1]}" if @verbose
+          @write_cnt += 1
         end
       end
 
