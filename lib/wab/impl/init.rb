@@ -54,7 +54,7 @@ module WAB
 
       rescue StandardError => e
         # TBD: Issue more helpful error message
-        puts %|*-*-* #{e.class}: #{e.message}\n      #{e.backtrace.join("\n      ")}|
+        puts WAB::Impl.format_error(e)
         abort
       end
 

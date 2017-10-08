@@ -4,6 +4,19 @@ require 'wab'
 module WAB
   # Web Application Builder implementation of the WAB APIs.
   module Impl
+
+    # For an error message string.
+    def self.format_error(msg, error_class="Error", backtrace=[])
+      if msg.is_a?(Exception)
+        error_class = msg.class
+        backtrace = msg.backtrace
+        msg = msg.message
+      end
+      if !backtrace.empty?
+        backtrace.unshift('')
+      end
+      %|*-*-* #{error_class}: #{msg}#{backtrace.join("\n    ")}|
+    end
   end
 end
 
