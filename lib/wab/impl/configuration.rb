@@ -13,27 +13,21 @@ module WAB
       
       def initialize(usage, options)
         @map = {}
-        opts = OptionParser.new(usage)
+        @opts = OptionParser.new(usage)
         config_file = nil
         log_increase = 0
         
-        opts.on('-c', '--config PATH', String, 'Configuration file.') { |c| config_file = c }
-        opts.on('-r', '--require LIBRARY', String, 'Require.')        { |r| require r }
-        opts.on('-v', '--verbose', 'Increase verbosity.')             { log_increase += 1 }
-        opts.on('-h', '--help', 'Show this display.')                 { puts opts.help; Process.exit!(0) }
+        @opts.on('-c', '--config PATH', String, 'Configuration file.') { |c| config_file = c }
+        @opts.on('-r', '--require LIBRARY', String, 'Require.')        { |r| require r }
+        @opts.on('-v', '--verbose', 'Increase verbosity.')             { log_increase += 1 }
+        @opts.on('-h', '--help', 'Show this display.')                 { puts opts.help; Process.exit!(0) }
 
         # Process command-line arguments and append them, in order, to an empty hash @map
-        add_options(opts, options)
+        add_options(@opts, options)
 
-        modes = opts.parse(ARGV)
+        modes = @opts.parse(ARGV)
         @map[:mode] = 0 < modes.length ? modes[0] : 'run'
         @map[:rest] =  modes[1..-1] if 1 < modes.length
-
-        unless ['run', 'new', 'init'].include?(@map[:mode])
-          puts "\n*-*-* #{@map[:mode]} is not a valid mode"
-          puts opts.help
-          Process.exit!(-1)
-        end
 
         # Move the @map sideways and replace with defaults.
         command_line_map = @map
@@ -51,16 +45,8 @@ module WAB
         log_level_adjust(log_increase)
       end
 
-      def log_level_adjust(log_increase)
-        return if log_increase.zero?
-
-        verbosity = @map[:verbosity] || 'INFO'
-        @map[:verbosity] = {
-          'ERROR' => Logger::ERROR,
-          'WARN'  => Logger::WARN,
-          'INFO'  => Logger::INFO,
-          'DEBUG' => Logger::DEBUG,
-        }[verbosity].to_i - log_increase
+      def usage
+        puts @opts.help
       end
 
       # Walks the options map and calls +opts.on+ for each option so that all
@@ -194,6 +180,20 @@ Bundler or directly, and try loading again.
         Utils.get_node(@map, path)
       end
       alias [] get
+
+      private
+
+      def log_level_adjust(log_increase)
+        return if log_increase.zero?
+
+        verbosity = @map[:verbosity] || 'INFO'
+        @map[:verbosity] = {
+          'ERROR' => Logger::ERROR,
+          'WARN'  => Logger::WARN,
+          'INFO'  => Logger::INFO,
+          'DEBUG' => Logger::DEBUG,
+        }[verbosity].to_i - log_increase
+      end
 
     end # Configuration
   end # Impl

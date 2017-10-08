@@ -37,18 +37,22 @@ URL path to be handled.
 
 Modes (the first non-option) available are:
 
-   run: Runs wabur as a runner and shell. Also the default. Any types
-        specified will be ignored.
+      run: Runs wabur as a runner and shell. Also the default. Any types
+           specified will be ignored.
 
-   new: New project directory created and set up. The `--base` options must be
-        provided to specify the directory to create and initialize. Not
-        providing the `--base` switch will revert to the `init` mode.
+      new: New project directory created and set up. The `--base` options must
+           be provided to specify the directory to create and initialize. Not
+           providing the `--base` switch will revert to the `init` mode.
 
-          e.g.: wabur new Entry Article --base my_app
+            e.g.: wabur new Entry Article --base my_app
 
-  init: Initialize a project into the current directory.
+     init: Initialize a project into the current directory.
 
-          e.g.: wabur init Entry Article
+            e.g.: wabur init Entry Article
+
+  version: Displays the current version.
+
+     help: Displays this help page.
 
 }
 
@@ -125,16 +129,20 @@ options = {
 
 config = WAB::Impl::Configuration.new(usage, options)
 mode = config[:mode]
-
-if 'new' == mode
+case mode
+when 'new'
   dir = File.expand_path(config[:base] || '.')
   abort("*-*-* Error: #{dir} already exists. Refusing to over-write. Use init instead.") if Dir.exist?(dir)
   FileUtils.mkdir_p(dir)
   WAB::Impl::Init.setup(dir, config)
-elsif 'init' == mode
+when 'init'
   dir = File.expand_path('.')
   WAB::Impl::Init.setup(dir, config)
-else
+when 'version'
+  puts "wabur version #{WAB::VERSION}"
+when 'help'
+  config.usage
+when 'run'
   # The Configuration object can be modified before initializing the Shell. By
   # setting the +config[:logger]+ the Shell will use that as the logger. The
   # +config[:handler]+ array can also be modified by setting path values along
@@ -144,4 +152,8 @@ else
 
   # Start a shell initialized with the final configuration.
   WAB::Impl::Shell.new(config).start
+else
+  puts "*-*-* Error: unknown mode: #{mode}."
+  config.usage
+  Process.exit!(-1)
 end
