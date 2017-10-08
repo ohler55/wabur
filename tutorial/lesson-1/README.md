@@ -10,6 +10,7 @@ This first lesson of the WABuR Tutorial covers.
  - [Implementation](#implementation)
  - [Running](#running)
  - [Index.html](#index-html)
+ - [Shortcut](#shortcut)
 
 ## Application Design
 
@@ -240,3 +241,9 @@ pull in the wab UI JavaScript.
 ```
 
 Now when wabur is run the frame identifies the page as your blog.
+
+## Shortcut
+
+A script is available in the wabur gem that will execute all the steps in this
+lesson. It can be used to compare what you have already done in the lesson or
+to shortcut the lesson if desired. The script is `script/run-lesson-1`.
