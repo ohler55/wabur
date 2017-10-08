@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+
+require 'wab'
+
+# This script executes the steps described in lesson-1 of the tutorial.
+
+# If running and the gem is installed then no additional setup is needed. If
+# running from a cloned github repo then the build-export script must be run
+# first. In addition, as with any ruby script, a loadpath update to the repo
+# lib directory is needed. As an example
+#
+#   $ ruby -I lib script/run-lesson-1
+
+begin
+  # Create a new project.
+  out = `wabur new --base blog Entry`
+  abort if out.empty?
+  puts out
+
+  # Insert title and content attributes into the lib/ui_controller.rb file.
+  File.open('blog/lib/ui_controller.rb', 'r+') { |f|
+    content = f.read
+
+    # Modify the contents to follow the lesson.
+    content.sub!("kind: 'Entry',",
+                %{kind: 'Entry',
+                                     title: '',
+                                     content: "\\n\\n\\n\\n",})
+    content.sub!("['$ref']", "['title', 'content']")
+
+    # re-write the contents
+    f.rewind
+    f.write(content)
+  }
+
+  # Generate the site
+  out = `cd blog && wabur init --site`
+  abort if out.empty?
+  puts out
+
+  # Change the title of the blog.
+  File.open('blog/site/index.html', 'r+') { |f|
+    content = f.read
+    content.sub!(/<title>.*<\/title>/, "<title>Welcome to My Blog</title>")
+    f.rewind
+    f.write(content)
+  }
+
+rescue Exception => e
+  puts "#{e.class}: #{e.message}"
+  e.backtrace.each { |line| puts "    #{line}" }
+end
