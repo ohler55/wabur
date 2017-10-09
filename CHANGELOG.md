@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.6.1 - 2017-10-09
+
+	wabur full site generator - bug fix
+	- minor bug fix in wabur init -s with not types
+
 ## 0.6.0 - 2017-10-09
 
 	wabur full site generator
