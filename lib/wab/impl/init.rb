@@ -23,6 +23,7 @@ module WAB
 
       def initialize(path, config)
         @types     = config[:rest] || []
+        init_site  = config[:site]
 
         if (@types.nil? || @types.empty?) && !init_site
           raise WAB::Error.new("At least one record type is required for 'new' or 'init'.")
@@ -37,7 +38,6 @@ module WAB
 
         config_dir = "#{path}/config"
         lib_dir    = "#{path}/lib"
-        init_site  = config[:site]
 
         FileUtils.mkdir_p([config_dir, lib_dir])
 
