@@ -18,4 +18,3 @@ test_script:
   - gem --version
   - bundler --version
   - bundle exec ruby test/test_impl.rb
-  - sh ./script/test-app
