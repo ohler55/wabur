@@ -11,4 +11,6 @@ rvm:
   - 2.4.2
   - 2.3.5
 
-script: script/travis
+script:
+  - script/travis
+  - script/test-app

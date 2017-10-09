@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+
+echo "Test WAB Help Mode.."
+bundle exec wabur help
+echo ""
+
+testdir=./test/tmp/blog
+rm -Rf $testdir
+
+echo "Create new test app.."
+bundle exec wabur new --base $testdir Article
+echo ""
+
+cd $testdir
+
+echo "Initialising frontend.."
+bundle exec wabur init --site
+echo ""
+
+echo "------------"
+echo "VERBOSE MODE"
+echo "------------"
+
+cd ../../../
+rm -Rf $testdir
+
+echo "Create new test app.."
+bundle exec wabur new --base $testdir Article --verbose
+echo ""
+
+cd $testdir
+
+echo "Initialising frontend.."
+bundle exec wabur init --site --verbose
+echo ""
+
