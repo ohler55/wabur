@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.6.0 - 2017-10-10
+## 0.6.0 - 2017-10-09
 
 	wabur full site generator
 	- A --site option has been added to the wabur app that populates a full web site content.

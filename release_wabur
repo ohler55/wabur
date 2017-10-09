@@ -5,6 +5,8 @@ name = ARGV.empty? ? File.basename(home) : ARGV[0]
 
 require File.join(home, 'lib/wab/version')
 
+`script/build-export`
+
 version = WAB::VERSION
 
 def log(str, dash = '-')
