@@ -41,14 +41,14 @@ Modes (the first non-option) available are:
            specified will be ignored.
 
       new: New project directory created and set up. The `--base` options must
-           be provided to specify the directory to create and initialize. Not
-           providing the `--base` switch will revert to the `init` mode.
+           be provided to specify the directory to create and initialize.
 
-            e.g.: wabur new Entry Article --base my_app
+             e.g.: wabur new Entry Article --base my_app
 
-     init: Initialize a project into the current directory.
+     init: Initialize a project into the current directory or into an existing
+           sub-directory.
 
-            e.g.: wabur init Entry Article
+             e.g.: wabur init Entry Article
 
   version: Displays the current version.
 
@@ -129,15 +129,24 @@ options = {
 
 config = WAB::Impl::Configuration.new(usage, options)
 mode = config[:mode]
+# TBD: sanitize path to ensure ancestor-level directories cannot be written to.
+dir = File.expand_path(config[:base] || '.')
 case mode
 when 'new'
-  dir = File.expand_path(config[:base] || '.')
-  abort(WAB::Impl.format_error("#{dir} already exists. Refusing to over-write. Use init instead.")) if Dir.exist?(dir)
+  if Dir.exist?(dir)
+    if Dir.pwd == dir
+      msg = "Refusing to over-write current directory. Either try again with a path to `--base` or use `wabur init` instead."
+    else
+      msg = "#{dir} already exists. Refusing to over-write. Use `wabur init` with '--base #{config[:base]}' instead."
+    end
+    abort(WAB::Impl.format_error(msg))
+  end
   FileUtils.mkdir_p(dir)
   WAB::Impl::Init.setup(dir, config)
 when 'init'
-  dir = File.expand_path('.')
-  WAB::Impl::Init.setup(dir, config)
+  Dir.chdir(dir) do
+    WAB::Impl::Init.setup(dir, config)
+  end
 when 'version'
   puts "wabur version #{WAB::VERSION}"
 when 'help'
