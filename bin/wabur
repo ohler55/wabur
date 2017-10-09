@@ -129,7 +129,6 @@ options = {
 
 config = WAB::Impl::Configuration.new(usage, options)
 mode = config[:mode]
-# TBD: sanitize path to ensure ancestor-level directories cannot be written to.
 dir = File.expand_path(config[:base] || '.')
 case mode
 when 'new'
@@ -144,9 +143,7 @@ when 'new'
   FileUtils.mkdir_p(dir)
   WAB::Impl::Init.setup(dir, config)
 when 'init'
-  Dir.chdir(dir) do
-    WAB::Impl::Init.setup(dir, config)
-  end
+  WAB::Impl::Init.setup(dir, config)
 when 'version'
   puts "wabur version #{WAB::VERSION}"
 when 'help'
