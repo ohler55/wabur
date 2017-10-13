@@ -1,5 +1,5 @@
 
-# WABuR Tutorial Lesson 3
+# WABuR Tutorial Lesson 2
 
 Logging is discussed in this lesson.
 
