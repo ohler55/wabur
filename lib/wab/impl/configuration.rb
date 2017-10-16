@@ -20,7 +20,7 @@ module WAB
         @opts.on('-c', '--config PATH', String, 'Configuration file.') { |c| config_file = c }
         @opts.on('-r', '--require LIBRARY', String, 'Require.')        { |r| require r }
         @opts.on('-v', '--verbose', 'Increase verbosity.')             { log_increase += 1 }
-        @opts.on('-h', '--help', 'Show this display.')                 { puts opts.help; Process.exit!(0) }
+        @opts.on('-h', '--help', 'Show this display.')                 { puts @opts.help; Process.exit!(0) }
 
         # Process command-line arguments and append them, in order, to an empty hash @map
         add_options(@opts, options)

@@ -134,14 +134,9 @@ handler.#{slug}.class = WAB::OpenController
               @exist_cnt += 1
               next
             end
-            out = `cp #{src_path} #{dest_path}`
+            FileUtils.cp(src_path, dest_path)
             @write_cnt += 1
-            if out.empty?
-              verbose_log('wrote', rel_path)
-            else
-              # the error message from the OS
-              puts out
-            end
+            verbose_log('wrote', rel_path)
           end
         }
       end

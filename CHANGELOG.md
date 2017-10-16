@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.6.2 - 2017-10-16
+
+	wabur full site generator - bug fix
+	- wabur --help failure fix
+
 ## 0.6.1 - 2017-10-09
 
 	wabur full site generator - bug fix
