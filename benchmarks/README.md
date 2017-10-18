@@ -97,6 +97,13 @@ with an average latency of 0.171 msecs
 
 #### Summary
 
+| Runner      | Throughput    | Latency   |
+| ----------- | ------------- | --------- |
+| Pure Ruby   | 2.6K GETS/sec | 1.5 msecs |
+| OpO IO      | 14K GETS/sec  | 3.0 msecs |
+| OpO-Rub     | 228K GETS/sec | 0.7 msecs |
+| OpO Direct  | 348K GETS/sec | 0.1 msecs |
+
 At more than 300K fetches per second the direct access with keep-alive
 connections is clearly the fastest of the bunch but it bypasses the Ruby
 controller. Of the two remaining, the use of embedded Ruby gives excellent

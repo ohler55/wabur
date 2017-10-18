@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -wW1
+#!/usr/bin/env ruby
 
 home = File.expand_path('.')
 name = ARGV.empty? ? File.basename(home) : ARGV[0]
