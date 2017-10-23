@@ -11,7 +11,11 @@ module WAB
     end
     raise ForbiddenError.new(path) if path.include?('..')
     path = File.expand_path("#{__dir__}/../export#{path}")
-    File.open(path) { |f| f.read() }
+    begin
+      File.open(path) { |f| f.read() }
+    rescue Exception
+      nil
+    end
   end
 
 end
