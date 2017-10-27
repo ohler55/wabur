@@ -2,7 +2,7 @@
 
 TBD bar graph
 
-|               | Read                        | Create                        |
+
 | Runner        | Throughput     | Latency    | Throughput       | Latency    | Setup time |
 | ------------- | -------------- | ---------- | ---------------- | ---------- | ---------- |
 | WAB Pure Ruby | 2.8K Reads/sec | 1.4 msecs  | 2.2K Creates/sec | 1.8 msecs  |  1 minute  |
