@@ -1,22 +1,23 @@
 # WABuR Benchmarks
 
-TBD bar graph
+![](setup.svg)
 
+![](throughput.svg)
 
-| Runner        | Throughput     | Latency    | Throughput       | Latency    | Setup time |
-| ------------- | -------------- | ---------- | ---------------- | ---------- | ---------- |
-| WAB Pure Ruby | 2.8K Reads/sec | 1.4 msecs  | 2.2K Creates/sec | 1.8 msecs  |  1 minute  |
-| OpO-Rub       | 200K Reads/sec | 0.1 msecs  | 134K Creates/sec | 0.15 msecs |  1 minute  |
-| OpO Direct    | 347K Reads/sec | 0.06 msecs | 157K Creates/sec | 0.13 msecs |  1 minute  |
-| Ruby on Rails |  123 Reads/sec | 175 msecs  | ---- Creates/sec | ---- msecs | 20 minutes |
-| Sinatra       | 1.5K Reads/sec |  13 msecs  | ---- Creates/sec | ---- msecs | 60 minutes |
+![](latency.svg)
 
-At more than 300K fetches per second the direct access with keep-alive
-connections is clearly the fastest of the bunch but it bypasses the Ruby
-controller. Of the two remaining, the use of embedded Ruby gives excellent
-results that surpass the 100K fetch per second goal by a sizeable amount at
-more than double the goal with keep-alive and nearly 40% over target with
-connection closes.
+| Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
+| ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
+| WAB Pure Ruby | 2.8K Reads/sec  | 1.4 msecs    | 2.2K Creates/sec  | 1.8 msecs      |  1 minute  |
+| OpO-Rub       | 200K Reads/sec  | 0.1 msecs    | 134K Creates/sec  | 0.15 msecs     |  1 minute  |
+| OpO Direct    | 347K Reads/sec  | 0.06 msecs   | 157K Creates/sec  | 0.13 msecs     |  1 minute  |
+| Ruby on Rails |  123 Reads/sec  | 175 msecs    | ---- Creates/sec  | ---- msecs     | 20 minutes |
+| Sinatra       | 1.5K Reads/sec  |  13 msecs    | ---- Creates/sec  | ---- msecs     | 60 minutes |
+
+At more than 300K fetches per second the direct access is clearly the fastest
+of the bunch but it bypasses the Ruby controller. OpO-Rub with embedded Ruby
+gives results that surpass the other option by a sizeable amount. Noting the
+setup time, WABuR was much simplier to setup.
 
 ## Details
 

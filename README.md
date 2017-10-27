@@ -9,13 +9,19 @@ WABuR is a Web Application Builder using Ruby and it is __FAST__, hitting over
 200,000 fetches a second with a Ruby core!  It employs a modern NoSQL JSON
 data store and a single-page UI using JavaScript.
 
-|               | Read                        | Create                        |
-| Runner        | Throughput     | Latency    | Throughput       | Latency    | Setup time |
-| ------------- | -------------- | ---------- | ---------------- | ---------- | ---------- |
-| WAB Pure Ruby | 2.8K Reads/sec | 1.4 msecs  | 2.2K Creates/sec | 1.8 msecs  |  1 minute  |
-| OpO-Rub       | 200K Reads/sec | 0.1 msecs  | 134K Creates/sec | 0.15 msecs |  1 minute  |
-| Ruby on Rails |  123 Reads/sec | 175 msecs  | ---- Creates/sec | ---- msecs | 20 minutes |
-| Sinatra       | 1.5K Reads/sec |  13 msecs  | ---- Creates/sec | ---- msecs | 60 minutes |
+![](pages/setup.svg)
+
+![](pages/throughput.svg)
+
+![](pages/latency.svg)
+
+| Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
+| ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
+| WAB Pure Ruby | 2.8K Reads/sec  | 1.4 msecs    | 2.2K Creates/sec  | 1.8 msecs      |  1 minute  |
+| OpO-Rub       | 200K Reads/sec  | 0.1 msecs    | 134K Creates/sec  | 0.15 msecs     |  1 minute  |
+| OpO Direct    | 347K Reads/sec  | 0.06 msecs   | 157K Creates/sec  | 0.13 msecs     |  1 minute  |
+| Ruby on Rails |  123 Reads/sec  | 175 msecs    | ---- Creates/sec  | ---- msecs     | 20 minutes |
+| Sinatra       | 1.5K Reads/sec  |  13 msecs    | ---- Creates/sec  | ---- msecs     | 60 minutes |
 
 It is pluggable and extendable in many ways to allow new additions,
 alternative databases, and any number of UIs.
