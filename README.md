@@ -5,7 +5,7 @@
 [![Gem Version](https://badge.fury.io/rb/wabur.svg)](https://rubygems.org/gems/wabur)
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
-WABuR is a Web Application Builder using Ruby and it is __FAST__, hitting over
+WABuR is a Web Application Builder using Ruby and it is _FAST_, hitting over
 200,000 fetches a second with a Ruby core!  It employs a modern NoSQL JSON
 data store and a single-page UI using JavaScript.
 

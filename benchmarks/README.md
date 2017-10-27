@@ -1,10 +1,10 @@
 # WABuR Benchmarks
 
-![](setup.svg)
+![](../pages/setup.svg)
 
-![](throughput.svg)
+![](../pages/throughput.svg)
 
-![](latency.svg)
+![](../pages/latency.svg)
 
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
@@ -28,7 +28,7 @@ invoked. For all the runs at least the read operations were run. Setup times
 are estimates and based on how long someone with Ruby knowledge only would
 need to finish a tutorial available online.
 
-Benchmarks were run on a desktop with an i7-6700@4.00GHz with 4 cores (8
+Benchmarks were run on a desktop with an 4.00GHz i7-6700 with 4 cores (8
 hyperthreads.
 
 The benchmark driver is a special purpose tool included in the OpO
