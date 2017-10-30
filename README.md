@@ -32,7 +32,8 @@ $ cd blog
 ```
 
 Define attributes for the data elements along with the attributes that will be
-displayed in a list view. Open lib/ui_controller.rb and modify by adding two lines and changing one.
+displayed in a list view. Open `lib/ui_controller.rb` and modify by adding two
+lines and changing one.
 
 ```ruby
 # encoding: UTF-8
@@ -65,9 +66,8 @@ directory. It takes a couple of minutes to go through the first lesson.
 
 ## Fast Benchmarks
 
-<img src="pages/setup.svg" width="300" height="100">
-<img src="pages/throughput.svg" width="300" height="100">
-<img src="pages/latency.svg" width="300" height="100">
+<img src="pages/setup.svg" width="450" height="150">
+<img src="pages/throughput.svg" width="450" height="150"><img src="pages/latency.svg" width="450" height="150">
 
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
