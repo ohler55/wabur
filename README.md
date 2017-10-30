@@ -18,15 +18,11 @@ alternative databases, and any number of UIs.
 With WABuR you are up and running in minutes with only one file to modify to
 specify attributes. It doesn't get any simplier. Heres how.
 
-### Install
-
 Install the wabur gem.
 
 ```
 $ gem install wabur
 ```
-
-### New project
 
 Create a new project and cd into the directory.
 
@@ -35,21 +31,27 @@ $ wabur new --base blog Entry
 $ cd blog
 ```
 
-### Define Attributes
-
 Define attributes for the data elements along with the attributes that will be
-displayed in a list view.
+displayed in a list view. Open lib/ui_controller.rb and modify by adding two lines and changing one.
 
 ```ruby
+# encoding: UTF-8
+
+require 'wab/ui'
+
+class UIController < WAB::UI::MultiFlow
+
+  def initialize(shell)
+    super
     add_flow(WAB::UI::RestFlow.new(shell,
                                    {
                                      kind: 'Entry',
                                      title: '',
                                      content: "\n\n\n\n",
-                                   }, ['title']))
+                                   }, ['$ref', 'title']))
+  end
+end
 ```
-
-### Run
 
 Just run the `wabur` command from inside the project directory. Open
 `localhost:6363` in a browser.
@@ -63,13 +65,9 @@ directory. It takes a couple of minutes to go through the first lesson.
 
 ## Fast Benchmarks
 
-![](pages/setup.svg)
-
-![](pages/throughput.svg)
-
-![](pages/latency.svg =200x100)
-
-<img src="pages/latency.svg" width="200" height="100">
+<img src="pages/setup.svg" width="300" height="100">
+<img src="pages/throughput.svg" width="300" height="100">
+<img src="pages/latency.svg" width="300" height="100">
 
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
