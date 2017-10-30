@@ -66,8 +66,8 @@ directory. It takes a couple of minutes to go through the first lesson.
 
 ## Fast Benchmarks
 
-<img src="pages/setup.svg" width="450" >
-<img src="pages/throughput.svg" width="450" height="150"><img src="pages/latency.svg" width="450" height="150">
+<img src="pages/setup.svg" width="400">
+<img src="pages/throughput.svg" width="400"><img src="pages/latency.svg" width="400">
 
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
