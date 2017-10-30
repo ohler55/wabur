@@ -1,0 +1,9 @@
+PUT /v1/Entry HTTP/1.1
+Host: localhost:6363
+Connection: keep-alive
+Content-Length: 79
+Origin: http://localhost:6363
+Content-Type: application/json
+Accept: */*
+
+{"kind":"Entry","title":"${sequence}","content":"This is entry ${sequence}."}
