@@ -5,10 +5,10 @@
 [![Gem Version](https://badge.fury.io/rb/wabur.svg)](https://rubygems.org/gems/wabur)
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
-WABuR is a Web Application Builder using Ruby and it is _FAST_, hitting over
-200,000 fetches a second with a Ruby core!  It is simple to use, taking just a
-minute to create a hello world web application. It employs a modern NoSQL
-JSON data store and a single-page UI using JavaScript.
+WABuR is a Web Application Builder using Ruby. It is easy to use, taking just
+a minute to create a hello world web application and it is _FAST_, hitting
+over 200,000 fetches a second with a Ruby core! It employs a modern NoSQL JSON
+data store and a single-page UI using JavaScript.
 
 It is pluggable and extendable in many ways to allow new additions,
 alternative databases, and any number of UIs.
