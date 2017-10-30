@@ -6,14 +6,70 @@
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
 WABuR is a Web Application Builder using Ruby and it is _FAST_, hitting over
-200,000 fetches a second with a Ruby core!  It employs a modern NoSQL JSON
-data store and a single-page UI using JavaScript.
+200,000 fetches a second with a Ruby core!  It is simple to use, taking just a
+minute to create a hello world web application. It employs a modern NoSQL
+JSON data store and a single-page UI using JavaScript.
+
+It is pluggable and extendable in many ways to allow new additions,
+alternative databases, and any number of UIs.
+
+## Simple to use Quick Start
+
+With WABuR you are up and running in minutes with only one file to modify to
+specify attributes. It doesn't get any simplier. Heres how.
+
+### Install
+
+Install the wabur gem.
+
+```
+$ gem install wabur
+```
+
+### New project
+
+Create a new project and cd into the directory.
+
+```
+$ wabur new --base blog Entry
+$ cd blog
+```
+
+### Define Attributes
+
+Define attributes for the data elements along with the attributes that will be
+displayed in a list view.
+
+```ruby
+    add_flow(WAB::UI::RestFlow.new(shell,
+                                   {
+                                     kind: 'Entry',
+                                     title: '',
+                                     content: "\n\n\n\n",
+                                   }, ['title']))
+```
+
+### Run
+
+Just run the `wabur` command from inside the project directory. Open
+`localhost:6363` in a browser.
+
+```
+$ wabur
+```
+
+Want to know more? A tutorial is available in the [tutorial](tutorial/README.md)
+directory. It takes a couple of minutes to go through the first lesson.
+
+## Fast Benchmarks
 
 ![](pages/setup.svg)
 
 ![](pages/throughput.svg)
 
-![](pages/latency.svg)
+![](pages/latency.svg =200x100)
+
+<img src="pages/latency.svg" width="200" height="100">
 
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
@@ -23,16 +79,7 @@ data store and a single-page UI using JavaScript.
 | Ruby on Rails |  123 Reads/sec  | 175 msecs    | ---- Creates/sec  | ---- msecs     | 20 minutes |
 | Sinatra       | 1.5K Reads/sec  |  13 msecs    | ---- Creates/sec  | ---- msecs     | 60 minutes |
 
-It is pluggable and extendable in many ways to allow new additions,
-alternative databases, and any number of UIs.
-
-With WABuR you are up and running in minutes with only one file to modify to
-specify attributes. It doesn't get any simplier.
-
-A natural question is *"What about Rails?"*. Rails is well established and has
-a huge user base. WABuR is not a replacement for Rails. It is an alternative
-for those who want to explore using JSON databases with a single-page dynamic
-JavaScript UI.
+More interested in the benchmarks? Then take a look at the [benchmarks page](benchmarks/README.md).
 
 ## Where to use WABuR
 
@@ -59,12 +106,15 @@ Ruby. Some examples that WABuR is suitable for are:
  * Mapping - Systems that display data on a map can use WABuRs flexibility
    with regard to the UI.
 
-## Try It!
+ * Directory - As an example of a quick and easy build, an directory or
+   address book can be started in minutes.
 
-Want to know more? A tutorial is available in the [tutorial](tutorial/README.md)
-directory. It takes a couple of minutes to go through the first lesson.
+## Rails
 
-More interested in the benchmarks? Then take a look at the [benchmarks page](benchmarks/README.md).
+A natural question is *"What about Rails?"*. Rails is well established and has
+a huge user base. WABuR is not a replacement for Rails. It is an alternative
+for those who want to explore using JSON databases with a single-page dynamic
+JavaScript UI.
 
 ## Participate and Contribute
 
