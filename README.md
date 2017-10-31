@@ -74,8 +74,8 @@ directory. It takes a couple of minutes to go through the first lesson.
 | Runner        | Read Throughput | Read Latency | Create Throughput | Create Latency | Setup time |
 | ------------- | --------------- | ------------ | ----------------- | -------------- | ---------- |
 | WAB Pure Ruby | 2.8K Reads/sec  | 1.4 msecs    | 2.2K Creates/sec  | 1.8 msecs      |  1 minute  |
-| OpO-Rub       | 200K Reads/sec  | 0.1 msecs    | 134K Creates/sec  | 0.15 msecs     |  1 minute  |
-| OpO Direct    | 347K Reads/sec  | 0.06 msecs   | 157K Creates/sec  | 0.13 msecs     |  1 minute  |
+| OpO-Rub       | 212K Reads/sec  | 0.09 msecs   | 134K Creates/sec  | 0.15 msecs     |  1 minute  |
+| OpO Direct    | 364K Reads/sec  | 0.05 msecs   | 157K Creates/sec  | 0.13 msecs     |  1 minute  |
 | Ruby on Rails |  123 Reads/sec  | 175 msecs    | ---- Creates/sec  | ---- msecs     | 20 minutes |
 | Sinatra       | 1.5K Reads/sec  |  13 msecs    | ---- Creates/sec  | ---- msecs     | 60 minutes |
 
