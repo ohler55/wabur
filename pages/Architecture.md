@@ -158,12 +158,21 @@ API. From the view perspective a REST over HTTP is used.
 
 #### Just Data
 
-  - just data and data helpers (get, set, inspect, to_s)
-   - nothing like to_json
-   - reasoning it that different uses require different behavior
-    - different stores, view, processing, etc
-   - use of delgate is encouraged
+WABuR keeps data and behavior separate. The data portion of a system is
+represented by `WAB::Data` class. Behavior is implemented by support
+classes. This alows extensions to be added without conflict as the `Data`
+class is not modified by adding new features. This avoids the conflicts
+encountered with Rails when it monkey patches core classes to add `to_json`
+which conflicts with the JSON gem and locks out other better performing
+extensions.
 
+The reasoning behind the separation of data and behavior to improve
+extendability is that different features often need similar but different
+features. As an example data might need to be stored in multiple data stores
+or be encoded for a view, external processing, or writing to a file. If the
+behavior is encoded in the data object then care must be taken to avoid using
+the same method names which is difficult if separate authors are contributing
+or open source gems are used.
 
 ### View/Controller
 
