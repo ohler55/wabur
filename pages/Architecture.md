@@ -159,10 +159,10 @@ API. From the view perspective a REST over HTTP is used.
 #### Just Data
 
 WABuR keeps data and behavior separate. The data portion of a system is
-represented by _WAB::Data_ class. Behavior is implemented by support
-classes. This alows extensions to be added without conflict as the _Data_
+represented by `WAB::Data` class. Behavior is implemented by support
+classes. This alows extensions to be added without conflict as the `Data`
 class is not modified by adding new features. This avoids the conflicts
-encountered with Rails when it monkey patches core classes to add _to_json_
+encountered with Rails when it monkey patches core classes to add `to_json`
 which conflicts with the JSON gem and locks out other better performing
 extensions.
 

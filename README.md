@@ -6,14 +6,14 @@
 [![Gem](https://img.shields.io/gem/dt/wabur.svg)](https://rubygems.org/gems/wabur)
 
 WABuR is a Web Application Builder using Ruby. It is easy to use, taking just
-a minute to create a hello world web application and it is _FAST_, hitting
+a minute to create a `Hello World` web application and it is _FAST_, hitting
 over 200,000 fetches a second with a Ruby core! It employs a modern NoSQL JSON
 data store and a single-page UI using JavaScript.
 
 It is pluggable and extendable in many ways to allow new additions,
 alternative databases, and any number of UIs.
 
-## Simple to use Quick Start
+## Quick Start
 
 With WABuR you are up and running in minutes with only one file to modify to
 specify attributes. It doesn't get any simplier. Heres how.
@@ -24,7 +24,7 @@ Install the wabur gem.
 $ gem install wabur
 ```
 
-Create a new project and cd into the directory.
+Create a new project and `cd` into the directory.
 
 ```
 $ wabur new --base blog Entry
@@ -36,8 +36,6 @@ displayed in a list view. Open `lib/ui_controller.rb` and modify by adding two
 lines and changing one.
 
 ```ruby
-# encoding: UTF-8
-
 require 'wab/ui'
 
 class UIController < WAB::UI::MultiFlow
@@ -131,7 +129,7 @@ These are the simple guidelines for contributing.
 2. Coordinate with me first before getting started to avoid duplication of
    effort or implementing something in conflict with the plans.
 
-3. Branch off the develop branch and submit a PR.
+3. Branch off the `develop` branch and submit a PR.
 
 4. Write unit tests.
 

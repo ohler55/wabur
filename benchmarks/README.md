@@ -23,8 +23,8 @@ setup time, WABuR was much simplier to setup.
 
 The benchmarks compare two different WABuR runners along with a Ruby on Rails
 sample and a Sinatra sample. An OpO direct comparison is also given for
-comparisone although it is a direct database access without Ruby code being
-invoked. For all the runs at least the read operations were run. Setup times
+comparison although it is a direct database access without Ruby code being
+invoked. For all the runs, at least the read operations were run. Setup times
 are estimates and based on how long someone with Ruby knowledge only would
 need to finish a tutorial available online.
 
