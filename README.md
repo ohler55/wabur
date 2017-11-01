@@ -16,7 +16,7 @@ alternative databases, and any number of UIs.
 ## Quick Start
 
 With WABuR you are up and running in minutes with only one file to modify to
-specify attributes. It doesn't get any simplier. Heres how.
+specify attributes. It doesn't get any simpler. Heres how.
 
 Install the wabur gem.
 
