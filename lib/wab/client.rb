@@ -51,7 +51,7 @@ module WAB
 
     def connect
       return unless @http.nil?
-      @http = Net::HTTP.new(@host, @port)
+      @http = Net::HTTP.new(@server_address, @server_port)
     end
 
     def form_path(kind, query)
@@ -70,31 +70,27 @@ module WAB
         }
       elsif !query.nil?
         path << '/'
-        path << query
+        path << query.to_s
       end
       path
     end
     
     def send_request(method, kind, query, content)
       connect
-      header = {'Connection' => (@keep-alive ? 'Keep-Alive' : 'Close') }
+      header = {'Connection' => (@keep_alive ? 'Keep-Alive' : 'Close') }
       unless content.nil?
         if content.is_a?(Data)
           content = content.json
         else
-          content = Oj.dump(@root, mode: :wab, indent: 0)
+          content = Oj.dump(content, mode: :wab, indent: 0)
         end
         header['Content-Type'] = 'application/json'
         resp = @http.send_request(method, form_path(kind, query), content, header)
       else
         resp = @http.send_request(method, form_path(kind, query))
       end
-      begin
-        raise Error.new('TBD - get error from resp') if Net::HTTPOK != resp.class
-        reply = Oj.load(resp.body, mode: wab)
-      rescue Exception => e
-        raise Error.new(resp.body)
-      end
+      raise Error.new(resp.body) if Net::HTTPOK != resp.class
+      reply = Oj.load(resp.body, mode: :wab)
     end
 
   end # Client
