@@ -60,6 +60,7 @@ module WAB
                                          MimeTypes: mime_types)
         server.logger.level = 5 - @logger.level unless @logger.nil?
         server.mount(@pre_path, Handler, self)
+        server.mount(@tql_path, TqlHandler, self)
         server.mount('/', ExportProxy, @http_dir) if @export_proxy
 
         trap 'INT' do server.shutdown end

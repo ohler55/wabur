@@ -28,4 +28,10 @@ module WAB
     end
   end
 
+  class ArgError < Error
+    def initialize(arg)
+      super("#{arg} missing or nil")
+    end
+  end
+
 end # WAB
