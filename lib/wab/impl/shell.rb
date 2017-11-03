@@ -1,5 +1,6 @@
 
 require 'wab/impl/handler'
+require 'wab/impl/tql_handler'
 require 'wab/impl/model'
 
 module WAB
@@ -26,6 +27,7 @@ module WAB
         @indent       = config[:indent].to_i || 0
         @pre_path     = config[:path_prefix] || '/v1'
         @path_pos     = @pre_path.split('/').length - 1
+        @tql_path     = config[:tql_path] || '/tql'
         base          = config[:base] || '.'
         @model        = Model.new((config['store.dir'] || File.join(base, 'data')).gsub('$BASE', base), indent)
         @type_key     = config[:type_key] || 'kind'
