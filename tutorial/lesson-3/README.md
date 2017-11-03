@@ -62,6 +62,9 @@ functionality. This lesson will follow my personal preference to keep things
 working and make small incremental change, testing after each change. This
 starts with creating a set of stubs for the classes that will be created.
 
+Not that the reference UI implemenation uses straight HTML and not ERB. This
+is explained on the page [Why Not ERB](erb.md).
+
 ## Stubs
 
 Four files will be created in the `lib` directory, `entry_flow.rb`,
