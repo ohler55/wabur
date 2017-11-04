@@ -126,10 +126,11 @@ end
 ```
 
 The final step is to switch the `ui_controller.rb` to use the new
-classes. Change the `add_flow` line as shown.
+classes. Change the `add_flow` line as indicated
 
 ```ruby
-    add_flow(EntryFlow.new(shell,
+-   add_flow(WAB::UI::RestFlow.new(shell,
++   add_flow(EntryFlow.new(shell,
 ```
 
 Run with `wabur` and make sure everything works as before. It should look
