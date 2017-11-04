@@ -137,7 +137,7 @@ module WAB
       else
         resp = @http.send_request(method, form_path(kind, query))
       end
-      raise Error.new(resp.body) if Net::HTTPOK != resp.class
+      raise Error.new(resp.body) unless resp.is_a?(Net::HTTPOK)
       reply = Oj.load(resp.body, mode: :wab)
     end
 
