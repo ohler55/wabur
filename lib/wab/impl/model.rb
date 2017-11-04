@@ -114,11 +114,18 @@ module WAB
         result
       end
 
-      def update(obj, _rid, where, _filter)
+      def update(obj, _rid, where, filter)
         updated = []
         @lock.synchronize {
           if where.is_a?(Expr)
             # TBD must be able to update portions of an object
+            @map.each_pair { |ref, v|
+              if where.eval(v) && (filter.nil? || filter.eval(v))
+                @map[ref] = Data.new(obj, true)
+                updated << ref
+                write_to_file(ref, obj)
+              end
+            }
           else
             # A reference.
             @map[where] = Data.new(obj, true)

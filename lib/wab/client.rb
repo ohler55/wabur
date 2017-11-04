@@ -4,14 +4,25 @@ require 'oj'
 
 module WAB
 
+  # A client for a WAB server. It is not specific to any particular
+  # runner. The client allows direct access to the server data. It is just
+  # another view implementation.
   class Client
+    # Address of the WAB server.
     attr_accessor :server_address
+    # The port the WAB serer is listening on.
     attr_accessor :server_port
+    # Prefix to add to the URL path.
     attr_accessor :path_prefix
+    # The URL path to execute TQL,
     attr_accessor :tql_path
+    # The key for the type. The default is 'kind'.
     attr_accessor :type_key
+    # If true the connection to the server is Keep-Alive.
     attr_accessor :keep_alive
-  
+
+    # Create a new Client for the server at +addr+ and +port+. The provided
+    # options should match the attribute names and types.
     def initialize(addr, port, options={})
       @server_address = addr
       @server_port = port
@@ -22,29 +33,67 @@ module WAB
       @http = nil
     end
 
+    # Create a new data object. If a query is provided it is treated as a
+    # check against an existing object with the same key/value pairs.
+    #
+    # On error an Exception will be raised.
+    #
+    # data:: the data to use as a new object.
+    # kind:: the kind of the data. If nil the kind is taken from the data
+    # query:: query parameters to match against existing instances. A match fails the insert.
     def create(data, kind=nil, query=nil)
       kind = data[@type_key] if kind.nil?
       send_request('PUT', kind, query, data)
     end
 
-    def read(kind, query)
-      raise ArgError.new('query') if query.nil?
+    # Return the objects according to the kind and query arguments. The
+    # following patterns supported:
+    #
+    # * query is a ref [12345] looks for MyType with reference ID of 12345
+    # * query is a Hash {name:fred,age:63} looks for all MyTypes with a name
+    #                                      of 'fred' and an age of 63.
+    #
+    # kind:: the data type
+    # query:: query parameters as a Hash.
+    def read(kind, query=nil)
       send_request('GET', kind, query, nil)
     end
     
+    # Replaces the object data for the identified object. The query can be a
+    # reference to a specific object or a set of parameters to match.
+    #
+    # The return should be the identifiers for the object updated.
+    #
+    # On error an Exception should be raised.
+    #
+    # kind:: the data type
+    # data:: the data to use as a new object.
+    # query:: query parameters.
     def update(kind, data, query)
       raise ArgError.new('data') if data.nil?
       raise ArgError.new('query') if query.nil?
       send_request('POST', kind, query, data)
     end
 
+    # Deletes the data for the identified object(s). The query can be a
+    # reference to a specific object or a set of parameters to match.
+    #
+    # The return is the identifiers for the object updated.
+    #
+    # On error an Exception should be raised.
+    #
+    # kind:: the data type
+    # query:: query parameters.
     def delete(kind, query=nil)
       send_request('DELETE', kind, query, nil)
     end
 
+    # Request the server evaluate a TQL query.
+    #
+    # tql:: query to evaluate.
     def find(tql)
       raise ArgError.new('tql') if tql.nil?
-      send_request('POST', 'tql', nil, data)
+      send_request('POST', 'tql', nil, tql)
     end
     
     private
@@ -61,7 +110,7 @@ module WAB
         first = true
         query.each_pair { |k,v|
           if first
-            path << '&'
+            path << '?'
             first = false
           else
             path << '&'
