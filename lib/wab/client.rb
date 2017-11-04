@@ -29,7 +29,7 @@ module WAB
       @path_prefix = options.fetch(:path_prefix, '/v1/')
       @tql_path = options.fetch(:tql_path, '/tql')
       @type_key = options.fetch(:type_key, 'kind')
-      @keep_alive = options.fetch(:keep_alive, true)
+      @keep_alive = !!options.fetch(:keep_alive, true)
       @http = nil
     end
 
@@ -99,8 +99,7 @@ module WAB
     private
 
     def connect
-      return unless @http.nil?
-      @http = Net::HTTP.new(@server_address, @server_port)
+      @http ||= Net::HTTP.new(@server_address, @server_port)
     end
 
     def form_path(kind, query)
