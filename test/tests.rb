@@ -5,4 +5,3 @@ require_relative 'helper'
 
 require 'test_impl'
 require 'test_io_shell'
-require 'test_client'

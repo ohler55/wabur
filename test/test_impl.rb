@@ -37,3 +37,5 @@ require 'test_data'
 require 'test_expr'
 require 'test_init'
 require 'test_model'
+
+require 'test_client'
