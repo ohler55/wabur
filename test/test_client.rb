@@ -17,7 +17,7 @@ class TestClient < Minitest::Test
 
   def setup
     FileUtils.remove_dir("#{__dir__}/client_test/data", true)
-    _, @out, wt = Open3.popen2e("#{__dir__}/../bin/wabur", '-I', "#{__dir__}/../lib", '-c', "#{__dir__}/client_test/wabur.conf")
+    _, @out, wt = Open3.popen2e("ruby", "#{__dir__}/../bin/wabur", '-I', "#{__dir__}/../lib", '-c', "#{__dir__}/client_test/wabur.conf")
     @pid = wt.pid
     20.times {
       begin
