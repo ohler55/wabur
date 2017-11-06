@@ -95,7 +95,7 @@ module WAB
       raise ArgError.new('tql') if tql.nil?
       send_request('POST', 'tql', nil, tql)
     end
-    
+
     private
 
     def connect

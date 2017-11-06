@@ -27,6 +27,7 @@ module WAB
       private
 
       def log_request_with_body(caller, path, query, body)
+        body = Data.new(body) unless body.is_a?(WAB::Data)
         @shell.logger.info("#{caller} #{path.join('/')}#{query}\n#{body.json(@shell.indent)}")
       end
 

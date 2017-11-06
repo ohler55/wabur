@@ -15,30 +15,33 @@ class TestClient < Minitest::Test
 
   # All tests must leave the DB state of the server unchanged.
 
-  def setup
-    FileUtils.remove_dir("#{__dir__}/client_test/data", true)
-    _, @out, wt = Open3.popen2e("ruby", "#{__dir__}/../bin/wabur", '-I', "#{__dir__}/../lib", '-c', "#{__dir__}/client_test/wabur.conf")
-    @pid = wt.pid
+  def run_wabur(port)
+    store_dir = "#{__dir__}/client_test/data#{port}"
+    FileUtils.remove_dir(store_dir, true)
+    _, @out, wt = Open3.popen2e("ruby", "#{__dir__}/../bin/wabur", '-I', "#{__dir__}/../lib", '-c', "#{__dir__}/client_test/wabur.conf", '--http.port', port.to_s, '--store.dir', store_dir)
     20.times {
       begin
-        Net::HTTP.get_response(URI('http://localhost:6373'))
+        Net::HTTP.get_response(URI("http://localhost:#{port}"))
         break
       rescue Exception => e
         sleep(0.1)
       end
     }
+    wt.pid
   end
   
-  def teardown
-    Process.kill('HUP', @pid)
-    #puts @out.read
+  def shutdown_wabur(pid)
+    Process.kill('HUP', pid)
+    puts @out.read
     Process.wait
   rescue
     # ignore
   end
 
   def test_simple
-    client = WAB::Client.new('localhost', 6373)
+    port = 6371
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     result = client.create({kind: 'Test', value: 123})
     assert_equal(0, result[:code], 'create result code mismatch')
     ref = result[:ref]
@@ -57,10 +60,15 @@ class TestClient < Minitest::Test
     result = client.read('Test', ref)
     assert_equal(0, result[:code], 'read after delete result code mismatch')
     assert_equal(0, result[:results].length, 'read after delete result wrong length')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_types
-    client = WAB::Client.new('localhost', 6373)
+    port = 6372
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     t = Time.now
     uuid = WAB::UUID.new('b0ca922d-372e-41f4-8fea-47d880188ba3')
     uri = URI("http://wab.systems/sample")
@@ -89,10 +97,15 @@ class TestClient < Minitest::Test
     result = client.delete('Test', ref)
     assert_equal(0, result[:code], 'delete result code mismatch')
     assert_equal([ref], result[:deleted], 'delete list mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_create_query
-    client = WAB::Client.new('localhost', 6373)
+    port = 6373
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
 
     result = client.create({kind: 'Test', value: 123}, 'Test', {value: 123})
     assert_equal(0, result[:code], 'create result code mismatch')
@@ -110,10 +123,15 @@ class TestClient < Minitest::Test
     result = client.delete('Test', ref)
     assert_equal(0, result[:code], 'delete result code mismatch')
     assert_equal([ref], result[:deleted], 'delete list mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_delete_all
-    client = WAB::Client.new('localhost', 6373)
+    port = 6374
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     refs = []
     3.times { |i|
       result = client.create({kind: 'Test', value: i})
@@ -128,10 +146,15 @@ class TestClient < Minitest::Test
     result = client.delete('Test')
     assert_equal(0, result[:code], 'delete result code mismatch')
     assert_equal(3, result[:deleted].length, 'delete list length mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_update_ref
-    client = WAB::Client.new('localhost', 6373)
+    port = 6375
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
 
     result = client.create({kind: 'Test', value: 123})
     assert_equal(0, result[:code], 'create result code mismatch')
@@ -150,10 +173,15 @@ class TestClient < Minitest::Test
     result = client.delete('Test', ref)
     assert_equal(0, result[:code], 'delete result code mismatch')
     assert_equal([ref], result[:deleted], 'delete list mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_update_query
-    client = WAB::Client.new('localhost', 6373)
+    port = 6376
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     refs = []
     3.times { |i|
       result = client.create({kind: 'Test', value: i})
@@ -174,10 +202,15 @@ class TestClient < Minitest::Test
 
     result = client.delete('Test')
     assert_equal(0, result[:code], 'delete result code mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_delete_query
-    client = WAB::Client.new('localhost', 6373)
+    port = 6377
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     refs = []
     3.times { |i|
       result = client.create({kind: 'Test', value: i})
@@ -195,10 +228,15 @@ class TestClient < Minitest::Test
 
     result = client.delete('Test')
     assert_equal(0, result[:code], 'delete result code mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_read_query
-    client = WAB::Client.new('localhost', 6373)
+    port = 6378
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     3.times { |i|
       result = client.create({kind: 'Test', value: i})
       assert_equal(0, result[:code], "create #{i} result code mismatch")
@@ -210,10 +248,15 @@ class TestClient < Minitest::Test
 
     result = client.delete('Test')
     assert_equal(0, result[:code], 'delete result code mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
   def test_tql
-    client = WAB::Client.new('localhost', 6373)
+    port = 6379
+    pid = run_wabur(port)
+    client = WAB::Client.new('localhost', port)
     3.times { |i|
       result = client.create({kind: 'Test', value: i})
       assert_equal(0, result[:code], "create #{i} result code mismatch")
@@ -229,6 +272,10 @@ class TestClient < Minitest::Test
 
     result = client.delete('Test')
     assert_equal(0, result[:code], 'delete result code mismatch')
+
+    ensure
+    shutdown_wabur(pid)
   end
 
 end
+
