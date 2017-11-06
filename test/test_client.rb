@@ -32,7 +32,8 @@ class TestClient < Minitest::Test
   
   def shutdown_wabur(pid)
     Process.kill('HUP', pid)
-    puts @out.read
+    # Uncomment to get verbose output from the server.
+    #puts @out.read
     Process.wait
   rescue
     # ignore
