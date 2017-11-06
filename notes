@@ -16,27 +16,10 @@ http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
+- WAB::Client
 
-- build script
-- tutorial setup, symlink, script to so that
-- implement basic /v1/ui read
-- wab module
- - request (get, create, updated, delete)
+- add tql controller for tql queries (on update)
 
-- es6
- - view/es6
-
-- export dir
- - build and put assets into this for copy to wab.systems
- - links from tutorial to export
- 
-- better place for wabfonts and css
- - maybe view/fonts
-
-
-- wabur home page
- - key points
-  - extendable - separate data from behavior
-  - APIs
-
-   
+ - use data in calls and responses
+  - if not data then convert to data before sending
+  

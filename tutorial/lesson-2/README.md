@@ -6,6 +6,7 @@ Logging is discussed in this lesson.
  - [Configure Logging](#configure-logging)
  - [Flow](#flow)
  - [Logging](#logging)
+ - [Client](#client)
 
 ## Configure Logging
 
@@ -246,3 +247,10 @@ Turning different logging categories on or off will change the number of
 entries. Turning on http_debug becomes more verbose while turning off the http
 categories will leave them off and just show handler calls if they are turned
 on.
+
+# Client
+
+Another useful tool is the WAB::Client. This client uses the data APIs to
+interact with a WABuR server. It can be used from withing `irb` for inspecting
+the contents of a server or for writing reporting tools. It has the CRUD
+method as well as a more generic `find` method.

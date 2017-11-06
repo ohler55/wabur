@@ -60,7 +60,23 @@ module WAB
       def extract_req(req)
         path = req.path.split('/')[1..-1]
         query = {}
-        req.query.each { |k,v| query[k.to_sym] = v }
+        if !req.query_string.nil? && !req.query_string.empty? && req.query.empty?
+          # WEBRick does not parse queries on PUT and some others so do it
+          # manually.
+          req.query_string.split('&').each { |opt|
+            k, v = opt.split('=')
+            # TBD convert %xx to char
+            query[k] = v
+          }
+        else
+          req.query.each { |k,v| query[k.to_sym] = v }
+        end
+        # Detect numbers (others later
+        query.each_pair { |k,v|
+          i = Utils.attempt_key_to_int(v)
+          query[k] = i unless i.nil?
+          # TBD how about float
+        }
         request_body = req.body
         if request_body.nil?
           body = nil
