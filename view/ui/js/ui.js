@@ -189,6 +189,24 @@ export class ObjectDisplay extends Display {
                 value = obj[key];
                 if (value instanceof Object) {
                     this._setFields(`${path}.${key}`, value);
+                } else if (undefined != element.alt) {
+                    switch (element.getAttribute('alt')) {
+                    case 'local-time':
+                        element.value = new Date(obj[key]).toLocaleString();
+                        break;
+                    case 'zulu-time':
+                        element.value = new Date(obj[key]).toUTCString();
+                        break;
+                    case 'long-time':
+                        element.value = new Date(obj[key]).toString();
+                        break;
+                    case 'date':
+                        element.value = new Date(obj[key]).toDateString();
+                        break;
+                    default:
+                        element.value = obj[key];
+                        break;
+                    }
                 } else {
                     element.value = obj[key];
                 }
