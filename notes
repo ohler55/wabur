@@ -16,10 +16,9 @@ http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
-- WAB::Client
 
-- add tql controller for tql queries (on update)
 
- - use data in calls and responses
-  - if not data then convert to data before sending
-  
+- lesson-4
+ - use alt for hints on how to display field
+  - make a local-time and zulu-time
+ - docs for various formats
