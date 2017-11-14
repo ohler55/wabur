@@ -67,3 +67,4 @@ export/assets/js/ui.js
 export/assets/js/transpile.js
 
 test/client_test/data*
+test/data

@@ -18,7 +18,11 @@ https://ponyfoo.com/articles/es6#promises
 
 
 
-- lesson-4
- - use alt for hints on how to display field
-  - make a local-time and zulu-time
- - docs for various formats
+- runner compat tests
+ - migrate to client
+  # TBD test failure modes as well
+   - not found
+   - malformed requests
+  # TBD test multiple matches on update and delete
+  # TBD test no matches on update and delete
+  # TBD test queries

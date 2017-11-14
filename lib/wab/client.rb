@@ -28,7 +28,7 @@ module WAB
       @server_port = port
       @path_prefix = options.fetch(:path_prefix, '/v1/')
       @tql_path = options.fetch(:tql_path, '/tql')
-      @type_key = options.fetch(:type_key, 'kind')
+      @type_key = options.fetch(:type_key, 'kind').to_sym
       @keep_alive = !!options.fetch(:keep_alive, true)
       @http = nil
     end
@@ -43,6 +43,7 @@ module WAB
     # query:: query parameters to match against existing instances. A match fails the insert.
     def create(data, kind=nil, query=nil)
       kind = data[@type_key] if kind.nil?
+      kind = data[@type_key.to_s] if kind.nil?
       send_request('PUT', kind, query, data)
     end
 
@@ -138,7 +139,7 @@ module WAB
         resp = @http.send_request(method, form_path(kind, query))
       end
       raise Error.new(resp.body) unless resp.is_a?(Net::HTTPOK)
-      reply = Oj.load(resp.body, mode: :wab)
+      Oj.load(resp.body, mode: :wab)
     end
 
   end # Client

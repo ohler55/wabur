@@ -12,12 +12,15 @@ require 'wab/io'
 # This is to verify that WAB-Runners behave as expected.
 #
 # Requirements:
-#   - The Runner (e.g. OpO daemon) should be started with the MirrorController
-#     class.
-#   - The host and port must be the last argument on the command line when
-#     invoking the test.
+#   - A Runner such as wabur or opo-rub.
+#   - The Runner should be started with the MirrorController class in
+#     mirror_controller.rb
+#   - The configuration files for the wabur and opo-rub Runners are in the
+#     runner directory.
 #
-# Example usage:
+# Start the runner using local code (in a separate terminal):
+#    ../bin/wabur -I ../lib -I . -c runner/wabur.conf
+# Run the test:
 #    runner_test.rb localhost:6363
 # -----------------------------------------------------------------------------
 
@@ -33,55 +36,67 @@ class TestRunner < Minitest::Test
   # separate function though.
   def test_runner_basics
     http = Net::HTTP.new($host, $port)
+    client = WAB::Client.new($host, $port)
 
     # Delete all records to start with a clean database
-    clear_records(http)
-    ref = create_record(http)
-    read_record(http, ref)
-    list_records(http, ref)
+    puts "\n  --- deleting existing records" if $VERBOSE
+    clear_records(client)
+    puts "  --- create record" if $VERBOSE
+    ref = create_record(client)
+    puts "  --- get record" if $VERBOSE
+    get_record(client, ref)
+    puts "  --- read record" if $VERBOSE
+    read_record(client, ref)
+    puts "  --- list records" if $VERBOSE
+    list_records(client, ref)
 
-    ref = update_record(http, ref)
-    read_after_update(http, ref)
+    puts "  --- update record" if $VERBOSE
+    ref = update_record(client, ref)
+    puts "  --- read updated record" if $VERBOSE
+    read_after_update(client, ref)
 
-    delete_record(http, ref)
-    read_after_delete(http, ref)
+    puts "  --- delete record" if $VERBOSE
+    delete_record(client, ref)
+    puts "  --- read deleted record" if $VERBOSE
+    read_after_delete(client, ref)
   end
 
-  def clear_records(http)
-    resp = http.send_request('DELETE', '/v1/Article')
-    # Response should be an OK with a JSON body.
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
+  def clear_records(client)
+    result = client.delete('Article')
+    assert_equal(0, result[:code], 'delete result code was not zero')
   end
 
   # Returns the reference of the created record.
-  def create_record(http)
-    json = %|{
-    "kind": "Article",
-    "title": "Sample",
-    "text": "Just some random text."
-}|
-    resp = http.send_request('PUT', '/v1/Article', json, { 'Content-Type' => 'application/json' })
-    # Response should be an OK with a JSON body.
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
+  def create_record(client)
+    record = {
+      kind: 'Article',
+      title: 'Sample',
+      text: 'Just some random text.'
+    }
+    result = client.create(record)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, reply[:code], 'create reply.code should be 0 meaning no error')
-    ref = reply[:ref]
+    assert_equal(0, result[:code], 'create reply.code should be 0 meaning no error')
+    ref = result[:ref]
     refute_equal(nil, ref, 'create reply record reference can not be nil')
     refute_equal(0, ref, 'create reply record reference can not be 0')
+
+    # create a couple more records
+    client.create({
+                    kind: 'Article',
+                    title: 'Second',
+                    text: 'More random text.'})
+    client.create({
+                    kind: 'Article',
+                    title: 'Third',
+                    text: 'Even more random text.'})
     ref
   end
 
-  def read_record(http, ref)
-    resp = http.send_request('GET', "/v1/Article/#{ref}")
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
+  def get_record(client, ref)
+    result = client.read('Article', ref)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, reply[:code], 'read reply.code should be 0 meaning no error')
-    results = reply[:results]
+    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    results = result[:results]
     assert_equal(1, results.length, 'read reply.results should contain exactly one member')
     record = results[0]
     assert_equal(ref, record[:id], 'read reply.results[0].id should match the record reference')
@@ -90,52 +105,54 @@ class TestRunner < Minitest::Test
     assert_equal('Sample', obj[:title], 'read reply obj.title incorrect')
   end
 
-  def list_records(http, ref)
-    resp = http.send_request('GET', '/v1/Article')
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
+  def read_record(client, ref)
+    result = client.read('Article', {title: 'Sample'})
     # Make sure the message has the correct fields and values.
-    assert_equal(0, reply[:code], 'read reply.code should be 0 meaning no error')
-    results = reply[:results]
+    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    results = result[:results]
     assert_equal(1, results.length, 'read reply.results should contain exactly one member')
     record = results[0]
     assert_equal(ref, record[:id], 'read reply.results[0].id should match the record reference')
     obj = record[:data]
     assert_equal('Article', obj[:kind], 'read reply obj.kind incorrect')
     assert_equal('Sample', obj[:title], 'read reply obj.title incorrect')
+  end
+
+  def list_records(client, ref)
+    result = client.read('Article')
+    # Make sure the message has the correct fields and values.
+    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    results = result[:results]
+    assert_equal(3, results.length, 'read reply.results should contain all member')
+    # TBD verify all have a kind of Article and also have a title and content field
   end
 
   # Returns the reference of the updated record. There is no requirement that
   # the reference will not change.
-  def update_record(http, ref)
-    json = %|{
-    "kind": "Article",
-    "title": "Sample",
-    "text": "Updated text."
-}|
-    resp = http.send_request('POST', "/v1/Article/#{ref}", json, { 'Content-Type' => 'application/json' })
-    # Response should be an OK with a JSON body.
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
+  def update_record(client, ref)
+    record = {
+      kind: 'Article',
+      title: 'Sample',
+      text: 'Updated text.'
+    }
+    result = client.update('Article', record, ref)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, reply[:code], 'update reply.code should be 0 meaning no error')
-    updated = reply[:updated]
+    assert_equal(0, result[:code], 'update reply.code should be 0 meaning no error')
+    updated = result[:updated]
     assert_equal(1, updated.length, 'update reply.updated should contain exactly one member')
     ref = updated[0]
     refute_equal(nil, ref, 'update reply record reference can not be nil')
     refute_equal(0, ref, 'update reply record reference can not be 0')
+
+    # TBD update different record with query
+
     ref
   end
 
-  def read_after_update(http, ref)
-    resp = http.send_request('GET', "/v1/Article/#{ref}")
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
-    assert_equal(0, reply[:code], 'read after update reply.code should be 0 meaning no error')
-    results = reply[:results]
+  def read_after_update(client, ref)
+    result = client.read('Article', ref)
+    assert_equal(0, result[:code], 'read after update reply.code should be 0 meaning no error')
+    results = result[:results]
     assert_equal(1, results.length, 'read after update reply.results should contain exactly one member')
     record = results[0]
     assert_equal(ref, record[:id], 'read after update reply.results[0].id should match the record reference')
@@ -143,28 +160,21 @@ class TestRunner < Minitest::Test
     assert_equal('Updated text.', obj[:text], 'read after update reply obj.text incorrect')
   end
 
-  def delete_record(http, ref)
-    resp = http.send_request('DELETE', "/v1/Article/#{ref}")
-    # Response should be an OK with a JSON body.
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
+  def delete_record(client, ref)
+    result = client.delete('Article', ref)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, reply[:code], 'delete reply.code should be 0 meaning no error')
-    deleted = reply[:deleted]
+    assert_equal(0, result[:code], 'delete reply.code should be 0 meaning no error')
+    deleted = result[:deleted]
     assert_equal(1, deleted.length, 'delete reply.deleted should contain exactly one member')
     ref = deleted[0]
     refute_equal(nil, ref, 'delete reply record reference can not be nil')
     refute_equal(0, ref, 'delete reply record reference can not be 0')
   end
 
-  def read_after_delete(http, ref)
-    resp = http.send_request('GET', "/v1/Article/#{ref}")
-    assert_equal(Net::HTTPOK, resp.class, 'response not an OK')
-    reply = Oj.strict_load(resp.body, symbol_keys: true)
-
-    assert_equal(0, reply[:code], 'read after delete reply.code should be 0 meaning no error')
-    results = reply[:results]
+  def read_after_delete(client, ref)
+    result = client.read('Article', ref)
+    assert_equal(0, result[:code], 'read after delete reply.code should be 0 meaning no error')
+    results = result[:results]
     assert_equal(0, results.length, 'read after delete reply.results should contain no members')
   end
 
