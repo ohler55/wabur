@@ -34,40 +34,145 @@ class TestRunner < Minitest::Test
   # The Runner or rather it's storage is stateful so all steps in the test
   # must be made in order to keep the test self contained. Each step is a
   # separate function though.
-  def test_runner_basics
-    http = Net::HTTP.new($host, $port)
+  def test_runner_using_refs
     client = WAB::Client.new($host, $port)
 
     # Delete all records to start with a clean database
-    puts "\n  --- deleting existing records" if $VERBOSE
     clear_records(client)
-    puts "  --- create record" if $VERBOSE
-    ref = create_record(client)
-    puts "  --- get record" if $VERBOSE
+
+    ref = create_records(client)
     get_record(client, ref)
-    puts "  --- read record" if $VERBOSE
-    read_record(client, ref)
-    puts "  --- list records" if $VERBOSE
-    list_records(client, ref)
-
-    puts "  --- update record" if $VERBOSE
-    ref = update_record(client, ref)
-    puts "  --- read updated record" if $VERBOSE
-    read_after_update(client, ref)
-
-    puts "  --- delete record" if $VERBOSE
+    update_record(client, ref)
     delete_record(client, ref)
-    puts "  --- read deleted record" if $VERBOSE
-    read_after_delete(client, ref)
+  end
+
+  def test_runner_using_queries
+    client = WAB::Client.new($host, $port)
+
+    clear_records(client)
+    ref = create_records(client)
+
+    read_record(client, ref)
+    list_records(client)
+    query_records(client)
+    update_query(client)
+    delete_query(client)
+  end
+
+  def test_runner_missing
+    client = WAB::Client.new($host, $port)
+
+    clear_records(client)
+    create_records(client)
+
+    result = client.read('Article', {title: 'Missing'})
+    check_result_code(result)
+    assert_equal(0, result[:results].length, 'read results should be empty')
+
+    result = client.update('Article', {kind: 'Article'}, {title: 'Missing'})
+    check_result_code(result)
+    assert_equal(0, result[:updated].length, 'updated should be empty')
+    
+    result = client.delete('Article', {title: 'Missing'})
+    check_result_code(result)
+    assert_equal(0, result[:deleted].length, 'deleted should be empty')
+  end
+
+  def test_runner_wrong_kind
+    client = WAB::Client.new($host, $port)
+    assert_raises('should fail to create an unsupported kind') {
+      client.create({kind: 'Unknown', num: 1})
+    }
+  end
+
+  def test_runner_duplicate
+    client = WAB::Client.new($host, $port)
+    clear_records(client)
+    create_records(client)
+
+    assert_raises('should fail to create an unsupported kind') {
+      client.create({
+                      kind: 'Article',
+                      title: 'Sample',
+                      text: 'Different.'}, {title: 'Sample'})
+    }
+  end
+
+  def test_runner_multi_match
+    client = WAB::Client.new($host, $port)
+
+    clear_records(client)
+    # create records twice so there are duplicates
+    create_records(client)
+    create_records(client)
+
+    result = client.update('Article', {kind: 'Article', title:'Second', text: 'Number two'}, {title: 'Second'})
+    check_result_code(result)
+    assert_equal(2, result[:updated].length, 'update reply.updated should contain exactly two member')
+
+    result = client.delete('Article', {title: 'Second'})
+    check_result_code(result)
+    assert_equal(2, result[:deleted].length, 'delete reply.deleted should contain exactly two member')
+
+    result = client.read('Article')
+    check_result_code(result)
+    assert_equal(4, result[:results].length, 'read reply.results should contain all member')
+  end
+
+  def test_runner_query
+    client = WAB::Client.new($host, $port)
+
+    clear_records(client)
+    10.times { |i|
+      result = client.create({kind: 'Article', title: "Article-#{i}", num: i})
+    }
+
+    check_query(client, {where: ['EQ', 'num', 3], select: 'title'}, ['Article-3'])
+    check_query(client, {where: ['EQ', 'title', 'Article-4'], select: 'title'}, ['Article-4'])
+
+    check_query(client, {where: ['LT', 'num', 3], select: 'title'}, ['Article-0','Article-1','Article-2'])
+    check_query(client, {where: ['LTE', 'num', 2], select: 'title'}, ['Article-0','Article-1','Article-2'])
+
+    check_query(client, {where: ['GT', 'num', 7], select: 'title'}, ['Article-8','Article-9'])
+    check_query(client, {where: ['GTE', 'num', 7], select: 'title'}, ['Article-7','Article-8','Article-9'])
+
+    check_query(client, {where: ['BETWEEN', 'num', 5, 7], select: 'title'}, ['Article-5','Article-6','Article-7'])
+    check_query(client, {where: ['BETWEEN', 'num', 5, 7, false, false], select: 'title'}, ['Article-6'])
+    check_query(client, {where: ['BETWEEN', 'num', 5, 7, false, true], select: 'title'}, ['Article-6','Article-7'])
+    check_query(client, {where: ['BETWEEN', 'num', 5, 7, true, false], select: 'title'}, ['Article-5','Article-6'])
+
+    check_query(client, {where: ['IN', 'num', 1, 3, 5, 7], select: 'title'}, ['Article-1','Article-3','Article-5','Article-7'])
+
+    check_query(client, {where: ['OR', ['LT', 'num', 2], ['GT', 'num', 7]], select: 'title'}, ['Article-0','Article-1','Article-8','Article-9'])
+    check_query(client, {where: ['EQ', 'kind', 'Article'], filter: ['NOT', ['BETWEEN', 'num', 2, 7]], select: 'num'}, [0, 1, 8, 9])
+
+    check_query(client, {where: ['has', 'title'], filter: ['eq', 'title', 'Article-3'], select: 'num'}, [3])
+    check_query(client, {where: ['has', 'title'], filter: ['regex', 'title', 'A.*-[3,4,5]'], select: 'num'}, [3, 4, 5])
+
+    check_query(client, {where: ['and', ['LT', 'num', 5], ['GT', 'num', 2]], select: 'num'}, [3, 4])
+
+    check_query(client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
+  end
+
+  def check_query(client, query, expect)
+    result = client.find(query)
+    check_result_code(result)
+    assert_equal(expect, result[:results].sort, 'result mistmatch')
+  end
+
+  def check_result_code(result)
+    assert_equal(0, result[:code], 'result.code should be 0 meaning no error')
   end
 
   def clear_records(client)
+    puts "\n  --- deleting existing records" if $VERBOSE
     result = client.delete('Article')
-    assert_equal(0, result[:code], 'delete result code was not zero')
+    check_result_code(result)
   end
 
   # Returns the reference of the created record.
-  def create_record(client)
+  def create_records(client)
+    puts "  --- create records" if $VERBOSE
     record = {
       kind: 'Article',
       title: 'Sample',
@@ -75,7 +180,7 @@ class TestRunner < Minitest::Test
     }
     result = client.create(record)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'create reply.code should be 0 meaning no error')
+    check_result_code(result)
     ref = result[:ref]
     refute_equal(nil, ref, 'create reply record reference can not be nil')
     refute_equal(0, ref, 'create reply record reference can not be 0')
@@ -93,9 +198,10 @@ class TestRunner < Minitest::Test
   end
 
   def get_record(client, ref)
+    puts "  --- get record" if $VERBOSE
     result = client.read('Article', ref)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    check_result_code(result)
     results = result[:results]
     assert_equal(1, results.length, 'read reply.results should contain exactly one member')
     record = results[0]
@@ -106,9 +212,10 @@ class TestRunner < Minitest::Test
   end
 
   def read_record(client, ref)
+    puts "  --- read record" if $VERBOSE
     result = client.read('Article', {title: 'Sample'})
     # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    check_result_code(result)
     results = result[:results]
     assert_equal(1, results.length, 'read reply.results should contain exactly one member')
     record = results[0]
@@ -118,18 +225,19 @@ class TestRunner < Minitest::Test
     assert_equal('Sample', obj[:title], 'read reply obj.title incorrect')
   end
 
-  def list_records(client, ref)
+  def list_records(client)
+    puts "  --- list records" if $VERBOSE
     result = client.read('Article')
     # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'read reply.code should be 0 meaning no error')
+    check_result_code(result)
     results = result[:results]
     assert_equal(3, results.length, 'read reply.results should contain all member')
-    # TBD verify all have a kind of Article and also have a title and content field
   end
 
   # Returns the reference of the updated record. There is no requirement that
   # the reference will not change.
   def update_record(client, ref)
+    puts "  --- update record" if $VERBOSE
     record = {
       kind: 'Article',
       title: 'Sample',
@@ -137,21 +245,68 @@ class TestRunner < Minitest::Test
     }
     result = client.update('Article', record, ref)
     # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'update reply.code should be 0 meaning no error')
+    check_result_code(result)
     updated = result[:updated]
     assert_equal(1, updated.length, 'update reply.updated should contain exactly one member')
     ref = updated[0]
     refute_equal(nil, ref, 'update reply record reference can not be nil')
     refute_equal(0, ref, 'update reply record reference can not be 0')
-
-    # TBD update different record with query
-
+    # verify
+    result = client.read('Article', ref)
+    check_result_code(result)
+    results = result[:results]
+    assert_equal(1, results.length, 'read after update reply.results should contain exactly one member')
+    record = results[0]
+    assert_equal(ref, record[:id], 'read after update reply.results[0].id should match the record reference')
+    obj = record[:data]
+    assert_equal('Updated text.', obj[:text], 'read after update reply obj.text incorrect')
     ref
   end
 
-  def read_after_update(client, ref)
+  def delete_record(client, ref)
+    puts "  --- delete record" if $VERBOSE
+    result = client.delete('Article', ref)
+    # Make sure the message has the correct fields and values.
+    check_result_code(result)
+    deleted = result[:deleted]
+    assert_equal(1, deleted.length, 'delete reply.deleted should contain exactly one member')
+    ref = deleted[0]
+    refute_equal(nil, ref, 'delete reply record reference can not be nil')
+    refute_equal(0, ref, 'delete reply record reference can not be 0')
+    # verify
     result = client.read('Article', ref)
-    assert_equal(0, result[:code], 'read after update reply.code should be 0 meaning no error')
+    check_result_code(result)
+    results = result[:results]
+    assert_equal(0, results.length, 'read after delete reply.results should contain no members')
+  end
+
+  def query_records(client)
+    puts "  --- query records" if $VERBOSE
+    result = client.read('Article', {title: 'Second'})
+    check_result_code(result)
+    results = result[:results]
+    assert_equal(1, results.length, 'read reply.results should contain matching members')
+    assert_equal({kind: 'Article', title: 'Second', text: 'More random text.'}, results[0][:data], 'first result should match the inserted')
+  end
+
+  def update_query(client)
+    puts "  --- update query" if $VERBOSE
+    record = {
+      kind: 'Article',
+      title: 'Sample',
+      text: 'Updated text.'
+    }
+    result = client.update('Article', record, {title: 'Sample'})
+    # Make sure the message has the correct fields and values.
+    check_result_code(result)
+    updated = result[:updated]
+    assert_equal(1, updated.length, 'update reply.updated should contain exactly one member')
+    ref = updated[0]
+    refute_equal(nil, ref, 'update reply record reference can not be nil')
+    refute_equal(0, ref, 'update reply record reference can not be 0')
+    # verify
+    result = client.read('Article', {title: 'Sample'})
+    check_result_code(result)
     results = result[:results]
     assert_equal(1, results.length, 'read after update reply.results should contain exactly one member')
     record = results[0]
@@ -160,27 +315,19 @@ class TestRunner < Minitest::Test
     assert_equal('Updated text.', obj[:text], 'read after update reply obj.text incorrect')
   end
 
-  def delete_record(client, ref)
-    result = client.delete('Article', ref)
-    # Make sure the message has the correct fields and values.
-    assert_equal(0, result[:code], 'delete reply.code should be 0 meaning no error')
+  def delete_query(client)
+    puts "  --- delete query" if $VERBOSE
+    result = client.delete('Article', {title: 'Second'})
+    check_result_code(result)
     deleted = result[:deleted]
     assert_equal(1, deleted.length, 'delete reply.deleted should contain exactly one member')
     ref = deleted[0]
     refute_equal(nil, ref, 'delete reply record reference can not be nil')
     refute_equal(0, ref, 'delete reply record reference can not be 0')
+    # verify
+    result = client.read('Article', {title: 'Second'})
+    check_result_code(result)
+    assert_equal(0, result[:results].length, 'read after delete reply.results should contain no members')
   end
-
-  def read_after_delete(client, ref)
-    result = client.read('Article', ref)
-    assert_equal(0, result[:code], 'read after delete reply.code should be 0 meaning no error')
-    results = result[:results]
-    assert_equal(0, results.length, 'read after delete reply.results should contain no members')
-  end
-
-  # TBD test failure modes as well
-  # TBD test multiple matches on update and delete
-  # TBD test no matches on update and delete
-  # TBD test queries
 
 end # TestRunner
