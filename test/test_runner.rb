@@ -120,8 +120,6 @@ class TestRunner < Minitest::Test
       client.create({kind: 'Article', title: "Article-#{i}", num: i})
     }
 
-    client.read('Article')[:results].each {|x| puts x}
-
     check_query(client, {where: ['EQ', 'num', 3], select: 'title'}, ['Article-3'])
     check_query(client, {where: ['EQ', 'title', 'Article-4'], select: 'title'}, ['Article-4'])
 
@@ -152,7 +150,6 @@ class TestRunner < Minitest::Test
   def check_query(client, query, expect)
     puts "  --- query #{query}" if $VERBOSE
     result = client.find(query)
-    puts "*** #{result}"
     check_result_code(result)
     assert_equal(expect, result[:results].sort, 'result mistmatch')
   end
