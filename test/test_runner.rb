@@ -65,24 +65,20 @@ class TestRunner < Minitest::Test
     clear_records(client)
     create_records(client)
 
+    puts "  --- read missing" if $VERBOSE
     result = client.read('Article', {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:results].length, 'read results should be empty')
 
+    puts "  --- update missing" if $VERBOSE
     result = client.update('Article', {kind: 'Article'}, {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:updated].length, 'updated should be empty')
     
+    puts "  --- delete missing" if $VERBOSE
     result = client.delete('Article', {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:deleted].length, 'deleted should be empty')
-  end
-
-  def test_runner_wrong_kind
-    client = WAB::Client.new($host, $port)
-    assert_raises('should fail to create an unsupported kind') {
-      client.create({kind: 'Unknown', num: 1})
-    }
   end
 
   def test_runner_duplicate
@@ -106,10 +102,7 @@ class TestRunner < Minitest::Test
     create_records(client)
     create_records(client)
 
-    result = client.update('Article', {kind: 'Article', title:'Second', text: 'Number two'}, {title: 'Second'})
-    check_result_code(result)
-    assert_equal(2, result[:updated].length, 'update reply.updated should contain exactly two member')
-
+    puts "  --- delete multi" if $VERBOSE
     result = client.delete('Article', {title: 'Second'})
     check_result_code(result)
     assert_equal(2, result[:deleted].length, 'delete reply.deleted should contain exactly two member')
@@ -124,8 +117,10 @@ class TestRunner < Minitest::Test
 
     clear_records(client)
     10.times { |i|
-      result = client.create({kind: 'Article', title: "Article-#{i}", num: i})
+      client.create({kind: 'Article', title: "Article-#{i}", num: i})
     }
+
+    client.read('Article')[:results].each {|x| puts x}
 
     check_query(client, {where: ['EQ', 'num', 3], select: 'title'}, ['Article-3'])
     check_query(client, {where: ['EQ', 'title', 'Article-4'], select: 'title'}, ['Article-4'])
@@ -146,8 +141,8 @@ class TestRunner < Minitest::Test
     check_query(client, {where: ['OR', ['LT', 'num', 2], ['GT', 'num', 7]], select: 'title'}, ['Article-0','Article-1','Article-8','Article-9'])
     check_query(client, {where: ['EQ', 'kind', 'Article'], filter: ['NOT', ['BETWEEN', 'num', 2, 7]], select: 'num'}, [0, 1, 8, 9])
 
-    check_query(client, {where: ['has', 'title'], filter: ['eq', 'title', 'Article-3'], select: 'num'}, [3])
-    check_query(client, {where: ['has', 'title'], filter: ['regex', 'title', 'A.*-[3,4,5]'], select: 'num'}, [3, 4, 5])
+    check_query(client, {where: ['eq', 'kind', 'Article'], filter: ['eq', 'title', 'Article-3'], select: 'num'}, [3])
+    check_query(client, {where: ['eq', 'kind', 'Article'], filter: ['regex', 'title', 'A.*-[3,4,5]'], select: 'num'}, [3, 4, 5])
 
     check_query(client, {where: ['and', ['LT', 'num', 5], ['GT', 'num', 2]], select: 'num'}, [3, 4])
 
@@ -155,7 +150,9 @@ class TestRunner < Minitest::Test
   end
 
   def check_query(client, query, expect)
+    puts "  --- query #{query}" if $VERBOSE
     result = client.find(query)
+    puts "*** #{result}"
     check_result_code(result)
     assert_equal(expect, result[:results].sort, 'result mistmatch')
   end
