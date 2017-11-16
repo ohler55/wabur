@@ -42,8 +42,7 @@ module WAB
     # kind:: the kind of the data. If nil the kind is taken from the data
     # query:: query parameters to match against existing instances. A match fails the insert.
     def create(data, kind=nil, query=nil)
-      kind = data[@type_key] if kind.nil?
-      kind = data[@type_key.to_s] if kind.nil?
+      kind ||= data[@type_key] || data[@type_key.to_s]
       send_request('PUT', kind, query, data)
     end
 

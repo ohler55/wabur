@@ -31,63 +31,56 @@ $port = $port.to_i
 
 class TestRunner < Minitest::Test
 
+  def setup
+    @client = WAB::Client.new($host, $port)
+    # Delete all records to start with a clean database
+    clear_records(@client)
+  end
+
   # The Runner or rather it's storage is stateful so all steps in the test
   # must be made in order to keep the test self contained. Each step is a
   # separate function though.
   def test_runner_using_refs
-    client = WAB::Client.new($host, $port)
-
-    # Delete all records to start with a clean database
-    clear_records(client)
-
-    ref = create_records(client)
-    get_record(client, ref)
-    update_record(client, ref)
-    delete_record(client, ref)
+    ref = create_records(@client)
+    get_record(@client, ref)
+    update_record(@client, ref)
+    delete_record(@client, ref)
   end
 
   def test_runner_using_queries
-    client = WAB::Client.new($host, $port)
+    ref = create_records(@client)
 
-    clear_records(client)
-    ref = create_records(client)
-
-    read_record(client, ref)
-    list_records(client)
-    query_records(client)
-    update_query(client)
-    delete_query(client)
+    read_record(@client, ref)
+    list_records(@client)
+    query_records(@client)
+    update_query(@client)
+    delete_query(@client)
   end
 
   def test_runner_missing
-    client = WAB::Client.new($host, $port)
-
-    clear_records(client)
-    create_records(client)
+    create_records(@client)
 
     puts "  --- read missing" if $VERBOSE
-    result = client.read('Article', {title: 'Missing'})
+    result = @client.read('Article', {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:results].length, 'read results should be empty')
 
     puts "  --- update missing" if $VERBOSE
-    result = client.update('Article', {kind: 'Article'}, {title: 'Missing'})
+    result = @client.update('Article', {kind: 'Article'}, {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:updated].length, 'updated should be empty')
     
     puts "  --- delete missing" if $VERBOSE
-    result = client.delete('Article', {title: 'Missing'})
+    result = @client.delete('Article', {title: 'Missing'})
     check_result_code(result)
     assert_equal(0, result[:deleted].length, 'deleted should be empty')
   end
 
   def test_runner_duplicate
-    client = WAB::Client.new($host, $port)
-    clear_records(client)
-    create_records(client)
+    create_records(@client)
 
     assert_raises('should fail to create an unsupported kind') {
-      client.create({
+      @client.create({
                       kind: 'Article',
                       title: 'Sample',
                       text: 'Different.'}, {title: 'Sample'})
@@ -95,56 +88,50 @@ class TestRunner < Minitest::Test
   end
 
   def test_runner_multi_match
-    client = WAB::Client.new($host, $port)
-
-    clear_records(client)
     # create records twice so there are duplicates
-    create_records(client)
-    create_records(client)
+    create_records(@client)
+    create_records(@client)
 
     puts "  --- delete multi" if $VERBOSE
-    result = client.delete('Article', {title: 'Second'})
+    result = @client.delete('Article', {title: 'Second'})
     check_result_code(result)
     assert_equal(2, result[:deleted].length, 'delete reply.deleted should contain exactly two member')
 
-    result = client.read('Article')
+    result = @client.read('Article')
     check_result_code(result)
     assert_equal(4, result[:results].length, 'read reply.results should contain all member')
   end
 
   def test_runner_query
-    client = WAB::Client.new($host, $port)
-
-    clear_records(client)
     10.times { |i|
-      client.create({kind: 'Article', title: "Article-#{i}", num: i})
+      @client.create({kind: 'Article', title: "Article-#{i}", num: i})
     }
 
-    check_query(client, {where: ['EQ', 'num', 3], select: 'title'}, ['Article-3'])
-    check_query(client, {where: ['EQ', 'title', 'Article-4'], select: 'title'}, ['Article-4'])
+    check_query(@client, {where: ['EQ', 'num', 3], select: 'title'}, ['Article-3'])
+    check_query(@client, {where: ['EQ', 'title', 'Article-4'], select: 'title'}, ['Article-4'])
 
-    check_query(client, {where: ['LT', 'num', 3], select: 'title'}, ['Article-0','Article-1','Article-2'])
-    check_query(client, {where: ['LTE', 'num', 2], select: 'title'}, ['Article-0','Article-1','Article-2'])
+    check_query(@client, {where: ['LT', 'num', 3], select: 'title'}, ['Article-0','Article-1','Article-2'])
+    check_query(@client, {where: ['LTE', 'num', 2], select: 'title'}, ['Article-0','Article-1','Article-2'])
 
-    check_query(client, {where: ['GT', 'num', 7], select: 'title'}, ['Article-8','Article-9'])
-    check_query(client, {where: ['GTE', 'num', 7], select: 'title'}, ['Article-7','Article-8','Article-9'])
+    check_query(@client, {where: ['GT', 'num', 7], select: 'title'}, ['Article-8','Article-9'])
+    check_query(@client, {where: ['GTE', 'num', 7], select: 'title'}, ['Article-7','Article-8','Article-9'])
 
-    check_query(client, {where: ['BETWEEN', 'num', 5, 7], select: 'title'}, ['Article-5','Article-6','Article-7'])
-    check_query(client, {where: ['BETWEEN', 'num', 5, 7, false, false], select: 'title'}, ['Article-6'])
-    check_query(client, {where: ['BETWEEN', 'num', 5, 7, false, true], select: 'title'}, ['Article-6','Article-7'])
-    check_query(client, {where: ['BETWEEN', 'num', 5, 7, true, false], select: 'title'}, ['Article-5','Article-6'])
+    check_query(@client, {where: ['BETWEEN', 'num', 5, 7], select: 'title'}, ['Article-5','Article-6','Article-7'])
+    check_query(@client, {where: ['BETWEEN', 'num', 5, 7, false, false], select: 'title'}, ['Article-6'])
+    check_query(@client, {where: ['BETWEEN', 'num', 5, 7, false, true], select: 'title'}, ['Article-6','Article-7'])
+    check_query(@client, {where: ['BETWEEN', 'num', 5, 7, true, false], select: 'title'}, ['Article-5','Article-6'])
 
-    check_query(client, {where: ['IN', 'num', 1, 3, 5, 7], select: 'title'}, ['Article-1','Article-3','Article-5','Article-7'])
+    check_query(@client, {where: ['IN', 'num', 1, 3, 5, 7], select: 'title'}, ['Article-1','Article-3','Article-5','Article-7'])
 
-    check_query(client, {where: ['OR', ['LT', 'num', 2], ['GT', 'num', 7]], select: 'title'}, ['Article-0','Article-1','Article-8','Article-9'])
-    check_query(client, {where: ['EQ', 'kind', 'Article'], filter: ['NOT', ['BETWEEN', 'num', 2, 7]], select: 'num'}, [0, 1, 8, 9])
+    check_query(@client, {where: ['OR', ['LT', 'num', 2], ['GT', 'num', 7]], select: 'title'}, ['Article-0','Article-1','Article-8','Article-9'])
+    check_query(@client, {where: ['EQ', 'kind', 'Article'], filter: ['NOT', ['BETWEEN', 'num', 2, 7]], select: 'num'}, [0, 1, 8, 9])
 
-    check_query(client, {where: ['eq', 'kind', 'Article'], filter: ['eq', 'title', 'Article-3'], select: 'num'}, [3])
-    check_query(client, {where: ['eq', 'kind', 'Article'], filter: ['regex', 'title', 'A.*-[3,4,5]'], select: 'num'}, [3, 4, 5])
+    check_query(@client, {where: ['eq', 'kind', 'Article'], filter: ['eq', 'title', 'Article-3'], select: 'num'}, [3])
+    check_query(@client, {where: ['eq', 'kind', 'Article'], filter: ['regex', 'title', 'A.*-[3,4,5]'], select: 'num'}, [3, 4, 5])
 
-    check_query(client, {where: ['and', ['LT', 'num', 5], ['GT', 'num', 2]], select: 'num'}, [3, 4])
+    check_query(@client, {where: ['and', ['LT', 'num', 5], ['GT', 'num', 2]], select: 'num'}, [3, 4])
 
-    check_query(client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
+    check_query(@client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
   end
 
   def check_query(client, query, expect)
