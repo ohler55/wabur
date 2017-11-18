@@ -44,9 +44,9 @@ Controllers, such as the Entry controller, provides only the data, not
 display. The display is left up to the JavaScript.
 
 HTML templates are provided to the JavaScript but one more bit of information
-is needed is needed. Transitions between displays occur when a button is
-pressed. This transition information is included with the templates that are
-passed from the UI controller to the JavaScript.
+is needed. Transitions between displays occur when a button is pressed. This
+transition information is included with the templates that are passed from the
+UI controller to the JavaScript.
 
 ## Approach
 

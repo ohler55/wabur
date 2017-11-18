@@ -40,7 +40,7 @@ Sending ERB instead of HTML during the bootstrap process would mean the ERB
 would have to be evaluated by the JavaScript code in the browser when JSON
 data arrived. ERB is not used in JavaScript. There is no need for it. It is
 easier and more clear to use the JavaScript tools available to update HTML
-elements directly. For this reason there is no OSS JaaScript ERB evaluator.
+elements directly. For this reason there is no OSS JavaScript ERB evaluator.
 
 There is always a way to force a technology to be used but in this case it
 would mean sacrificing functionality or making the UI much more difficult to
