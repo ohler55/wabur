@@ -67,8 +67,8 @@ is explained on the page [Why Not ERB](erb.md).
 
 ## Stubs
 
-Four files will be created in the `lib` directory, `entry_flow.rb`,
-`entry_view.rb`, `entry_update.rb`, and `entry_list.rb`.
+For this lesson, four files will be created in the `lib` directory,
+`entry_flow.rb`, `entry_view.rb`, `entry_update.rb`, and `entry_list.rb`.
 
 `lib/entry_flow.rb`
 
@@ -131,6 +131,7 @@ looks like the following.
 
 ```ruby
 require 'wab/ui'
+require 'entry_flow'
 
 class UIController < WAB::UI::MultiFlow
 
@@ -154,7 +155,14 @@ exactly the same.
 ## Change the View
 
 The view subclass need only change the `html` method. Copy the `html` method
-from `WAB::UI::View` and remove the line that adds the delete button'
+from `WAB::UI::View` and remove the line that adds the delete button'. The
+implementation of the `html` method builds an HTML string by appending one
+line at a time. There is no reason another approach could not be taken such as
+specifying the complete HTML string as just a string. If you are from a Rails
+background your first inclination might be to use ERB in some way. [Why Not
+ERB](erb.md) explains why using ERB is not a viable approach.
+
+`lib/entry_view.rb`
 
 ```ruby
 require 'wab/ui'
@@ -181,6 +189,8 @@ Now modify the `entry_flow.rb` to use the new view class by overriding the
 be moved to the view class but keeping the transitions in the flow class makes
 it easier to keep track of the overall flow or transition specification.
 
+`lib/entry_flow.rb`
+
 ```ruby
   def add_view(kind, template)
     add_display(EntryView.new(template,
@@ -197,6 +207,8 @@ Run again and make sure the view display no longer includes the delete button.
 
 The same steps are taken to change the update display. Copy the `html` method
 from the `WAB::UI::Update` class and remove the delete button.
+
+`lib/entry_update.rb`
 
 ```ruby
 require 'wab/ui'
@@ -223,6 +235,8 @@ Then add an `add_update` method to the flow class. It is just a copy of the
 `WAB::UI::RestFlow#add_update` method with the transition modified and the new
 `EntryUpdate` class use instead of the `WAB::UI::Update` class.
 
+`lib/entry_flow.rb`
+
 ```ruby
   def add_update(kind, template)
       add_display(EntryUpdate.new(template,
@@ -241,7 +255,12 @@ Run again and verify the delete button is not in the update or edit display.
 The list display include a delete option for each Entry listed. To remove this
 the primary HTML is modified to change the `Actions` label to span two table
 columns instead of three. Then the `html_row` is changed to not include the
-delete icon.
+delete icon. The reference UI implemenation uses a table to display items. The
+JavaScript for the reference UI expects a table but an alternative JavaScript
+implemenation could take a different approach such as a list, or just using
+`<div>`, or even displaying each on a map.
+
+`lib/entry_list.rb`
 
 ```ruby
 require 'wab/ui'
@@ -275,6 +294,8 @@ end
 
 Like the view and update, the flow must be modified to use the new class. Add the following.
 
+`lib/entry_flow.rb`
+
 ```ruby
   def add_list(kind, template, list_paths)
     add_display(EntryList.new(template, list_paths,
@@ -291,6 +312,8 @@ Run again and make sure the list view no longer includes the delete option.
 ## Change the Flow
 
 The flow file is `entry_flow.rb`. When completed it will look like the following.
+
+`lib/entry_flow.rb`
 
 ```ruby
 require 'wab/ui'
