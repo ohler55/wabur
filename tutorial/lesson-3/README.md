@@ -262,7 +262,8 @@ delete icon. The reference UI implemenation uses a table to display items. The
 JavaScript for the reference UI expects a table but an alternative JavaScript
 implemenation could take a different approach such as a list, or just using
 `<div>`, or even displaying each on a map. A later lesson will cover modifying
-or replacing the JavaScript.
+or replacing the JavaScript which is in the reference UI as mentioned at the
+start of this lesson.
 
 ```ruby
 # lib/entry_list.rb
