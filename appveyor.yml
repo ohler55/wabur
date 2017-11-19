@@ -16,5 +16,5 @@ platform:
 test_script:
   - ruby --version
   - gem --version
-  - bundle --version
+  - bundler --version
   - bundle exec ruby test/test_impl.rb
