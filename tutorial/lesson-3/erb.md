@@ -1,7 +1,7 @@
 
 # Why Not ERB?
 
-If you asked the question, "Why not use ERB?" then you probably hae a Ruby on
+If you asked the question, "Why not use ERB?" then you probably have a Ruby on
 Rails background. For those of you who do not, ERB is Ruby on Rails
 technology.
 
