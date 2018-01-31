@@ -21,6 +21,7 @@ module WAB
 end
 
 require 'wab/controller'
+require 'wab/racker'
 require 'wab/data'
 require 'wab/errors'
 require 'wab/open_controller'

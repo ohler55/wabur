@@ -17,6 +17,14 @@ https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
 
+- wab/impl/shell.rb
+ - change handing of handlers
+  - maybe check respond_to for handler type
+   - call() for rack
+   - all other, controller
+ - test with current tests
+ - check with racker
+ - implement in opo-rub
 
 - runner compat tests
  - migrate to client

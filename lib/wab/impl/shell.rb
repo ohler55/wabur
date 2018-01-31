@@ -1,5 +1,6 @@
 
 require 'wab/impl/handler'
+require 'wab/impl/rack_handler'
 require 'wab/impl/tql_handler'
 require 'wab/impl/model'
 
@@ -38,6 +39,7 @@ module WAB
         @export_proxy = config[:export_proxy]
         @export_proxy = true if @export_proxy.nil? # The default is true if not present.
         @controllers  = {}
+	@mounts       = []
 
         requires      = config[:require]
         case requires
@@ -47,8 +49,15 @@ module WAB
           requires.split(',').each { |r| require r.strip }
         end
 
+	# TBD if hh has a type the register controller else if it has a path register as rack
+	# need to mount on webrick in the correct order, separate mount for each
+	#  prepare array of mounts (path/handler)
         if config[:handler].is_a?(Array)
-          config[:handler].each { |hh| register_controller(hh[:type], hh[:handler]) }
+	  @mounts = config[:handler]
+          @mounts.each { |hh|
+	    next unless hh.has_key?(:type)
+	    register_controller(hh[:type], hh[:handler])
+	  }
         end
       end
 
@@ -61,7 +70,16 @@ module WAB
                                          DocumentRoot: @http_dir,
                                          MimeTypes: mime_types)
         server.logger.level = 5 - @logger.level unless @logger.nil?
-        server.mount(@pre_path, Handler, self)
+        @mounts.each { |hh|
+	  if hh.has_key?(:type)
+            server.mount("#{@pre_path}/#{hh[:type]}", Handler, self)
+	  elsif hh.has_key?(:path)
+            server.mount(hh[:path], RackHandler, self, hh[:handler])
+	  else
+            raise WAB::Error.new("Invalid handle configuration. Missing path or type.")
+	  end
+	}
+        #server.mount(@pre_path, Handler, self)
         server.mount(@tql_path, TqlHandler, self)
         server.mount('/', ExportProxy, @http_dir) if @export_proxy
 

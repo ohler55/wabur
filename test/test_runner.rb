@@ -134,6 +134,21 @@ class TestRunner < Minitest::Test
     check_query(@client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
   end
 
+  def tbd_test_runner_rack
+    puts "\n  --- calling rack" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/rack/hello")
+    req = Net::HTTP::Post.new(uri)
+    req['Accept-Encoding'] = '*'
+    req['Accept'] = 'application/json'
+    req['User-Agent'] = 'Ruby'
+    req['Connection'] = 'Close'
+    req.body = 'hello'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    puts "\n\n**** resp: #{resp.class} - #{resp.body}\n\n"
+  end
+
   def check_query(client, query, expect)
     puts "  --- query #{query}" if $VERBOSE
     result = client.find(query)
