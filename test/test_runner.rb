@@ -134,7 +134,7 @@ class TestRunner < Minitest::Test
     check_query(@client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
   end
 
-  def tbd_test_runner_rack
+  def test_runner_rack
     puts "\n  --- calling rack" if $VERBOSE
     uri = URI("http://#{$host}:#{$port}/rack/hello")
     req = Net::HTTP::Post.new(uri)
@@ -146,7 +146,8 @@ class TestRunner < Minitest::Test
     resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
       h.request(req)
     }
-    puts "\n\n**** resp: #{resp.class} - #{resp.body}\n\n"
+    assert_equal(Net::HTTPOK, resp.class)
+    assert_equal('A WABuR Rack Application', resp.body)
   end
 
   def check_query(client, query, expect)

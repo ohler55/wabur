@@ -34,3 +34,12 @@ https://ponyfoo.com/articles/es6#promises
   # TBD test multiple matches on update and delete
   # TBD test no matches on update and delete
   # TBD test queries
+
+ - tqlhandler must be for each
+  - maybe make a WAB::Impl::WEBrick module with helpers to include
+   - WAB::Impl::WEBrick::Handler
+   - WAB::Impl::WEBrick::TqlHandler
+   - WAB::Impl::WEBrick::Sender (send_result and send_error)
+   
+ - Agoo::Handler
+ - Sinatra::Handler

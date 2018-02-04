@@ -1,7 +1,8 @@
 module WAB
 
-  # A Racker or a duck-typed alternative should be created and
-  # registered with a Shell for paths that expected to follow the Ruby rack API.
+  # A Racker or a duck-typed alternative should be created and registered with
+  # a Shell for paths that expected to follow the Ruby rack API. The shell is
+  # included so that queries can be made when responding to requests.
   class Racker # :doc: all
     attr_accessor :shell
 

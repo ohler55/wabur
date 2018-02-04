@@ -107,6 +107,12 @@ options = {
       doc: 'HTTP Port to listen on.',
       arg: 'PORT',
     },
+    server: {
+      val: 'WEBrick',
+      type: String,
+      doc: 'Web server to use. Can be Agoo, Sinatra, or WEBRick.',
+      arg: 'GEM',
+    },
   },
   indent: {
     val: 0,
