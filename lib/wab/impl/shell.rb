@@ -110,6 +110,31 @@ module WAB
         controller
       end
 
+      def log_call(controller, op, path, query, body=nil)
+	if @logger.debug?
+	  if body.nil?
+	    @logger.debug("#{controller.class}.#{op}(#{path_to_s(path)}#{query})")
+	  else
+	    body = body.json(@indent) unless body.is_a?(String)
+	    @logger.debug("#{controller.class}.#{op}(#{path_to_s(path)}#{query})\n#{body}")
+	  end
+	elsif @logger.info?
+	  @logger.info("#{controller.class}.#{op}(#{path_to_s(path)}#{query})") if @logger.info?
+	end
+      end
+
+      private
+
+      def path_to_s(path)
+	if path.is_a?(String)
+	  path
+	elsif path.is_a?(Array)
+	  path.join('/')
+	else
+	  path.to_s
+	end
+      end
+
     end # Shell
   end # Impl
 end # WAB

@@ -16,16 +16,6 @@ http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
-
-- wab/impl/shell.rb
- - change handing of handlers
-  - maybe check respond_to for handler type
-   - call() for rack
-   - all other, controller
- - test with current tests
- - check with racker
- - implement in opo-rub
-
 - runner compat tests
  - migrate to client
   # TBD test failure modes as well
@@ -35,11 +25,11 @@ https://ponyfoo.com/articles/es6#promises
   # TBD test no matches on update and delete
   # TBD test queries
 
- - tqlhandler must be for each
-  - maybe make a WAB::Impl::WEBrick module with helpers to include
-   - WAB::Impl::WEBrick::Handler
-   - WAB::Impl::WEBrick::TqlHandler
-   - WAB::Impl::WEBrick::Sender (send_result and send_error)
-   
+
  - Agoo::Handler
+  - ExportProxy
+  
  - Sinatra::Handler
+
+- config options pass some part to server start
+- add test for export and statics

@@ -24,16 +24,16 @@ module WAB
             path, query, body = extract_path_query(req)
 	    case req.request_method
 	    when 'GET'
-	      log_call('read', path, query)
+	      @shell.log_call(@controller, 'read', path, query)
               send_result(@controller.read(path, query), res, path, query)
 	    when 'PUT'
-	      log_call('create', path, query, body)
+	      @shell.log_call(@controller, 'create', path, query, body)
               send_result(@controller.create(path, query, body), res, path, query)
 	    when 'POST'
-	      log_call('update', path, query, body)
+	      @shell.log_call(@controller, 'update', path, query, body)
               send_result(@controller.update(path, query, body), res, path, query)
 	    when 'DELETE'
-	      log_call('delete', path, query)
+	      @shell.log_call(@controller, 'delete', path, query)
               send_result(@controller.delete(path, query), res, path, query)
 	    else
 	      raise StandardError.new("#{method} is not a supported method") if op.nil?
@@ -60,7 +60,9 @@ module WAB
 	    'rack.multiprocess' => false,
 	    'rack.run_once' => false,
 	  }
-	  log_call('call', req.script_name + req.path_info, req.query_string, req.body)
+	  path = req.script_name + req.path_info
+	  
+	  @shell.log_call(@controller, 'call', path, req.query_string, req.body)
 	  req.each { |k| env['HTTP_' + k] = req[k] }
 	  env['rack.input'] = StringIO.new(req.body) unless req.body.nil?
 	  rres = @controller.call(env)
@@ -70,7 +72,7 @@ module WAB
 	    res.body = ''
 	    rres[2].each { |s| res.body << s }
 	  end
-          @shell.logger.debug("reply to #{path.join('/')}#{query}: #{res.body}") if @shell.logger.debug?
+          @shell.logger.debug("reply to #{path}#{req.query_string}: #{res.body}") if @shell.logger.debug?
 	rescue StandardError => e
           send_error(e, res)
 	end
