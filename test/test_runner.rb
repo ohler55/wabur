@@ -37,6 +37,29 @@ class TestRunner < Minitest::Test
     clear_records(@client)
   end
 
+  def test_runner_static
+    puts "\n  --- static content" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/hello.txt")
+    req = Net::HTTP::Get.new(uri)
+    req['Connection'] = 'Close'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    assert_equal(Net::HTTPOK, resp.class)
+    assert_equal("Hello\n", resp.body)
+  end
+
+  def test_runner_export
+    puts "\n  --- export" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/index.html")
+    req = Net::HTTP::Get.new(uri)
+    req['Connection'] = 'Close'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    assert_equal(Net::HTTPOK, resp.class)
+  end
+
   # The Runner or rather it's storage is stateful so all steps in the test
   # must be made in order to keep the test self contained. Each step is a
   # separate function though.

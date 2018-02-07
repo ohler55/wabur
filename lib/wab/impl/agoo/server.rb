@@ -27,9 +27,7 @@ module WAB
 	    }
 	  }
 	  server = ::Agoo::Server.new(shell.http_port, shell.http_dir, options)
-
-          # mime_types['es6'] = 'application/javascript'
-
+	  
           shell.mounts.each { |hh|
 	    if hh.has_key?(:type)
 	      handler = WAB::Impl::Agoo::Handler.new(shell, shell.create_controller(hh[:handler]))
@@ -49,8 +47,7 @@ module WAB
 	    end
 	  }
           server.handle(:POST, shell.tql_path, WAB::Impl::Agoo::TqlHandler.new(shell)) unless (shell.tql_path.nil? || shell.tql_path.empty?)
-	  # TBD use agoo default handler
-          #server.handle(:GET, '/**', WAB::Impl::Agoo::ExportProxy.new(shell)) if shell.export_proxy
+          server.handle_not_found(WAB::Impl::Agoo::ExportProxy.new(shell)) if shell.export_proxy
 
           trap 'INT' do server.shutdown end
           server.start

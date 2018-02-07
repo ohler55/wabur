@@ -16,20 +16,7 @@ http://exploringjs.com/es6/ch_modules.html
 https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
-- runner compat tests
- - migrate to client
-  # TBD test failure modes as well
-   - not found
-   - malformed requests
-  # TBD test multiple matches on update and delete
-  # TBD test no matches on update and delete
-  # TBD test queries
 
-
- - Agoo::Handler
-  - ExportProxy
-  
  - Sinatra::Handler
 
 - config options pass some part to server start
-- add test for export and statics

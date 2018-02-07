@@ -17,9 +17,7 @@ module WAB
 	  query = parse_query(req.query_string)
           tql = Oj.load(req.body, mode: :wab)
           log_request_with_body('TQL', path, query, tql) if @shell.logger.info?
-	  puts "\n*** before TQL"
           send_result(@shell.query(tql), res, path, query)
-	  puts "\n*** after TQL"
 	rescue StandardError => e
           send_error(e, res)
 	end
