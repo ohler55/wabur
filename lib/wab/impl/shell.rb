@@ -62,7 +62,7 @@ module WAB
 	  WAB::Impl::Agoo::Server::start(self)
 	when 'sinatra'
 	  require 'wab/impl/sinatra'
-	  WAB::Impl::Sinatra::Server::start(self)
+	   WAB::Impl::Sinatra::Server::start(self)
 	else
 	  require 'wab/impl/webrick'
 	  WAB::Impl::WEBrick::Server::start(self)

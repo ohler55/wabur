@@ -11,8 +11,8 @@ module WAB
   end # Impl
 end # WAB
 
-#require 'wab/impl/sinatra/sender'
-#require 'wab/impl/sinatra/handler'
-#require 'wab/impl/sinatra/tql_handler'
-#require 'wab/impl/sinatra/export_proxy'
+require 'wab/impl/sinatra/sender'
+require 'wab/impl/sinatra/handler'
+require 'wab/impl/sinatra/tql_handler'
+require 'wab/impl/sinatra/export_proxy'
 require 'wab/impl/sinatra/server'
