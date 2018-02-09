@@ -33,7 +33,7 @@ export_proxy = true
 # JSON sent as a response to View requests.
 indent = 0
 
-# Handlers for each type of record and for the UI shich are Ruby generated UI
+# Handlers for each type of record and for the UI which are Ruby generated UI
 # configuration records.
 handler.0.type = ui
 handler.0.handler = UIController%{handlers}

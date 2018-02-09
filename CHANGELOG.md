@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.7.0 - 2018-02-09
+
+	Rack support added along with options for different web servers in
+	the default implementation.
+	- rack support added
+	- Aggo, Sinatra, and WEBrick web servers supported
+
 ## 0.6.2 - 2017-10-16
 
 	wabur full site generator - bug fix

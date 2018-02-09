@@ -134,3 +134,21 @@ separately. Just read operations are shown.
 localhost:4567 processed 1539 requests in 1.000 seconds for a rate of 1539 Requests/sec.
 with an average latency of 12.980 msecs
 ```
+
+## Even More Benchmarks
+
+The WABuR reference implementation supports three web server options
+[Agoo](https://github.com/ohler55/agoo),
+[http://guides.railsgirls.com/sinatra-app](http://guides.railsgirls.com/sinatra-app),
+and WEBrick. There are significant differences in performance between the
+three. Here are the results of a hello world fetch that uses a simple Ruby
+controller.
+
+The benchmarks were run on a laptop running Ubuntub 17.04. It has a 4 core CPU.
+
+| Web Server | Read Throughput     | Read Latency |
+| ---------- | ------------------- | ------------ |
+| Agoo       | 42199 Requests/sec  |  0.9 msecs   |
+| Sinatra    |  3594 Requests/sec  |  5.7 msecs   |
+| WEBrick    |  1714 Requests/sec  | 19.0 msecs   |
+

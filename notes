@@ -17,12 +17,6 @@ https://webapplog.com/es6/
 https://ponyfoo.com/articles/es6#promises
 
 
+ - Sinatra::Handler
 
-- runner compat tests
- - migrate to client
-  # TBD test failure modes as well
-   - not found
-   - malformed requests
-  # TBD test multiple matches on update and delete
-  # TBD test no matches on update and delete
-  # TBD test queries
+- config options pass some part to server start

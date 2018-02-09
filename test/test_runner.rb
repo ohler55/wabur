@@ -37,6 +37,29 @@ class TestRunner < Minitest::Test
     clear_records(@client)
   end
 
+  def test_runner_static
+    puts "\n  --- static content" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/hello.txt")
+    req = Net::HTTP::Get.new(uri)
+    req['Connection'] = 'Close'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    assert_equal(Net::HTTPOK, resp.class)
+    assert_equal("Hello\n", resp.body)
+  end
+
+  def test_runner_export
+    puts "\n  --- export" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/index.html")
+    req = Net::HTTP::Get.new(uri)
+    req['Connection'] = 'Close'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    assert_equal(Net::HTTPOK, resp.class)
+  end
+
   # The Runner or rather it's storage is stateful so all steps in the test
   # must be made in order to keep the test self contained. Each step is a
   # separate function though.
@@ -132,6 +155,22 @@ class TestRunner < Minitest::Test
     check_query(@client, {where: ['and', ['LT', 'num', 5], ['GT', 'num', 2]], select: 'num'}, [3, 4])
 
     check_query(@client, {where: ['and', ['LT', 'num', 5], ['or', ['eq', 'num', 0], ['GT', 'num', 2]]], select: 'num'}, [0, 3, 4])
+  end
+
+  def test_runner_rack
+    puts "\n  --- calling rack" if $VERBOSE
+    uri = URI("http://#{$host}:#{$port}/rack/hello")
+    req = Net::HTTP::Post.new(uri)
+    req['Accept-Encoding'] = '*'
+    req['Accept'] = 'application/json'
+    req['User-Agent'] = 'Ruby'
+    req['Connection'] = 'Close'
+    req.body = 'hello'
+    resp = Net::HTTP.start(uri.hostname, uri.port) { |h|
+      h.request(req)
+    }
+    assert_equal(Net::HTTPOK, resp.class)
+    assert_equal('A WABuR Rack Application', resp.body)
   end
 
   def check_query(client, query, expect)

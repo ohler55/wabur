@@ -21,7 +21,7 @@ module WAB
     end
 
     # Handler for paths that do not match the REST pattern or for unregistered
-    # types. Only called on the default controller.
+    # types.
     #
     # Processing result are passed back to the view which forward the result
     # on to the requester. The result, if not nil, should be a Data instance.

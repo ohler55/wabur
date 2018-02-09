@@ -62,7 +62,7 @@ $ wabur
 Want to know more? A tutorial is available in the [tutorial](tutorial/README.md)
 directory. It takes a couple of minutes to go through the first lesson.
 
-## Fast Benchmarks
+## WABuR Benchmarks
 
 <img src="pages/setup.svg" width="400">
 <table>
@@ -138,6 +138,7 @@ These are the simple guidelines for contributing.
 
 ## References and Links
 
+ - [Agoo](https://github.com/ohler55/agoo) Web Server GemBuR.
  - [Oj](https://github.com/ohler55/oj) JSON parser used in WABuR.
  - [OpO](http://opo.technology) home of the Opo-Rub runner.
  - [Sass](http://sass-lang.com) used to build the reference implementation UI CSS.
