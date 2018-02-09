@@ -139,7 +139,7 @@ with an average latency of 12.980 msecs
 
 The WABuR reference implementation supports three web server options
 [Agoo](https://github.com/ohler55/agoo),
-[http://guides.railsgirls.com/sinatra-app](http://guides.railsgirls.com/sinatra-app),
+[Sinatra](http://sinatrarb.com),
 and WEBrick. There are significant differences in performance between the
 three. Here are the results of a hello world fetch that uses a simple Ruby
 controller.
