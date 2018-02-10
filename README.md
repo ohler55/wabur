@@ -138,7 +138,7 @@ These are the simple guidelines for contributing.
 
 ## References and Links
 
- - [Agoo](https://github.com/ohler55/agoo) Web Server GemBuR.
+ - [Agoo](https://github.com/ohler55/agoo) Web Server Gem
  - [Oj](https://github.com/ohler55/oj) JSON parser used in WABuR.
  - [OpO](http://opo.technology) home of the Opo-Rub runner.
  - [Sass](http://sass-lang.com) used to build the reference implementation UI CSS.
