@@ -144,11 +144,13 @@ and WEBrick. There are significant differences in performance between the
 three. Here are the results of a hello world fetch that uses a simple Ruby
 controller.
 
-The benchmarks were run on a laptop running Ubuntub 17.04. It has a 4 core CPU.
+The benchmarks were run on a laptop running Ubuntub 17.04. It has a 4 core
+CPU. The requests make a Ruby Rack `call()` while the static serves up a
+static asset. In both cases the content is small.
 
-| Web Server | Read Throughput     | Read Latency |
-| ---------- | ------------------- | ------------ |
-| Agoo       | 42199 Requests/sec  |  0.9 msecs   |
-| Sinatra    |  3594 Requests/sec  |  5.7 msecs   |
-| WEBrick    |  1714 Requests/sec  | 19.0 msecs   |
+| Web Server | Request Throughput  | Request Latency | Static Throughput    | Static Latency |
+| ---------- | ------------------- | --------------- | -------------------- | -------------- |
+| Agoo       | 57,377 Requests/sec |       0.7 msecs | 334,829 Requests/sec |      0.1 msecs |
+| Sinatra    |  4,473 Requests/sec |       8.9 msecs |   4,659 Requests/sec |      8.5 msecs |
+| WEBrick    |  1,775 Requests/sec |      22.7 msecs |   2,544 Requests/sec |     15.3 msecs |
 
