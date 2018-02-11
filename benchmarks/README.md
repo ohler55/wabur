@@ -34,10 +34,10 @@ hyperthreads.
 The benchmark driver is a special purpose tool included in the OpO
 distribution. Using the OpO-Rub Runner, a Ruby HTTP client is not able to
 generate requests and process responses quick enough to reach the limits of
-the Runner. Instead a C based HTTP benchmarking tool is used. It is in the OpO
-download and is called **`hose`**. Tests were run with connections in
-'keep-alive' mode unless results were better or the same with a new connection
-each time.
+the Runner. Instead a C based HTTP benchmarking tool is used. It can be found
+in the [perfer](https://github.com/ohler55/perfer) github repo.  Tests were
+run with connections in 'keep-alive' mode unless results were better or the
+same with a new connection each time.
 
 ### WAB Pure Ruby
 
@@ -46,14 +46,14 @@ wabur gem tutorial was used for this benchmark application.
 
 The 'create' run starts with a clean or empty data directory.
 ```
-> bin/hose -t 1 -c 4 -p v1/Entry -r put.txt localhost:6363
+> perfer -t 1 -c 4 -p v1/Entry -r put.txt localhost:6363
 localhost:6363 processed 2154 requests in 1.000 seconds for a rate of 2154 Requests/sec.
 with an average latency of 1.841 msecs
 ```
 
 The 'read' run uses the data created with the 'create' run.
 ```
-> bin/hose -t 1 -c 4 -p v1/Entry/23 localhost:6363
+> perfer -t 1 -c 4 -p v1/Entry/23 localhost:6363
 localhost:6363 processed 2812 requests in 1.000 seconds for a rate of 2812 Requests/sec.
 with an average latency of 1.407 msecs
 ```
@@ -65,14 +65,14 @@ run the application.
 
 The 'create' run starts with a clean or empty data directory.
 ```
-> bin/hose -t 2 -c 10 -p v1/Entry -r put.txt -k localhost:6363
+> perfer -t 2 -c 10 -p v1/Entry -r put.txt -k localhost:6363
 localhost:6363 processed 133665 requests in 1.000 seconds for a rate of 133665 Requests/sec.
 with an average latency of 0.146 msecs
 ```
 
 The 'read' run uses the data created with the 'create' run.
 ```
-> ../../wush/bin/hose -t 2 -c 10 -k -p v1/Entry/267 localhost:6363
+> perfer -t 2 -c 10 -k -p v1/Entry/267 localhost:6363
 localhost:6363 processed 212318 requests in 1.000 seconds for a rate of 212318 Requests/sec.
 with an average latency of 0.092 msecs
 
@@ -85,14 +85,14 @@ access. Those APIs were used for these runs.
 
 The 'create' run starts with a clean or empty data directory.
 ```
-> bin/hose -t 2 -c 10 -p json -r jput.txt -k localhost:6363
+> perfer -t 2 -c 10 -p json -r jput.txt -k localhost:6363
 localhost:6363 processed 157067 requests in 1.000 seconds for a rate of 157067 Requests/sec.
 with an average latency of 0.125 msecs
 ```
 
 The 'read' run uses the data created with the 'create' run.
 ```
-> ../../wush/bin/hose -t 2 -c 10 -k -p json/000000000000000b localhost:6363
+> perfer -t 2 -c 10 -k -p json/000000000000000b localhost:6363
 localhost:6363 processed 364762 requests in 1.000 seconds for a rate of 364762 Requests/sec.
 with an average latency of 0.052 msecs
 ```
@@ -113,7 +113,7 @@ via a web browser. Not something that lends itself well to benchmarking.
 The run for a read operations is:
 
 ```
-> bin/hose -t 2 -c 10 -p articles/1 localhost:3000
+> perfer -t 2 -c 10 -p articles/1 localhost:3000
 localhost:3000 processed 123 requests in 1.000 seconds for a rate of 123 Requests/sec.
 with an average latency of 174.816 msecs
 ```
@@ -130,7 +130,7 @@ with support for page generation with ERB. Any data storage has to be done
 separately. Just read operations are shown.
 
 ```
-> bin/hose -t 2 -c 10 -p results localhost:4567
+> perfer -t 2 -c 10 -p results localhost:4567
 localhost:4567 processed 1539 requests in 1.000 seconds for a rate of 1539 Requests/sec.
 with an average latency of 12.980 msecs
 ```
